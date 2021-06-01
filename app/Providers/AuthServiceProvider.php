@@ -31,8 +31,13 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::hashClientSecrets();
 
+        // Todo: move message to centered file
         Gate::define('admin-required', function (User $user) {
             return $user->isAdmin() ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
+        });
+
+        Gate::define('required-permission', function (User $user, int $permission) {
+            return $user->permissions->pluck('permission_id')->contains($permission) ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
         });
 
         Passport::tokensExpireIn(Carbon::now()->addHours(24));
