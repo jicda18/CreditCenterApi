@@ -18,12 +18,16 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('tbNotifications', function (Blueprint $table) {
             $table->id('notification_id');
+            $table->unsignedBigInteger('company_id');
             $table->unsignedTinyInteger('level');
             $table->text('text');
 
             $this->addControlFields($table);
 
+            $table->foreign('company_id')->references('company_id')->on('tbCompanies');
+
             $table->index('level');
+            $table->index('company_id');
         });
     }
 

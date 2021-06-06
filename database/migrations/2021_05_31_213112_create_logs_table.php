@@ -15,7 +15,7 @@ class CreateLogsTable extends Migration
     {
         Schema::create('tbLogs', function (Blueprint $table) {
             $table->id('log_id');
-            $table->string('table');
+            $table->string('model');
             $table->unsignedBigInteger('reference_id');
             $table->unsignedBigInteger('log_type_id');
             $table->unsignedBigInteger('user_id');
@@ -27,7 +27,7 @@ class CreateLogsTable extends Migration
             $table->uuid('uuid');
 
             $table->index('uuid');
-            $table->index('table');
+            $table->index('model');
             $table->index('reference_id');
             $table->index('log_type_id');
             $table->index('user_id');
