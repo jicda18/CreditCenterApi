@@ -133,4 +133,14 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
     {
         return $this->hasMany(Log::class, 'user_id', 'user_id');
     }
+
+    /**
+     * Get all of the securities for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function securities(): HasMany
+    {
+        return $this->hasMany(SecurityLog::class, 'user_id', 'user_id');
+    }
 }
