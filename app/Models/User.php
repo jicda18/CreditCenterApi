@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
-class User extends ApiModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
+class User extends ApiModel implements AuthenticatableContract, AuthorizableContract
 {
-    use HasApiTokens, Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+    use HasApiTokens, Authenticatable, Authorizable;
 
     protected $table = 'tbUsers';
     protected $primaryKey = 'user_id';
@@ -84,7 +81,7 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
      */
     public function companies(): BelongsToMany
     {
-        return $this->belongsToMany(Company::class, 'tbCompaniesUsersPivot', 'company_id', 'user_id', 'company_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(Company::class, 'tbCompaniesUsersPivot', 'user_id', 'company_id', 'user_id', 'company_id')->withTimestamps();
     }
 
     /**
@@ -94,7 +91,7 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
      */
     public function notifications(): BelongsToMany
     {
-        return $this->belongsToMany(Notification::class, 'tbNotificationsUsersPivot', 'notification_id', 'user_id', 'notification_id', 'user_id')->withTimestamps()->withPivot(['read_at']);
+        return $this->belongsToMany(Notification::class, 'tbNotificationsUsersPivot', 'user_id', 'notification_id', 'user_id', 'notification_id')->withTimestamps()->withPivot(['read_at']);
     }
 
     /**
@@ -104,7 +101,7 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
      */
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'tbPermissionsUsersPivot', 'permission_id', 'user_id', 'permission_id', 'user_id')->withTimestamps()->withPivot(['company_id']);
+        return $this->belongsToMany(Permission::class, 'tbPermissionsUsersPivot', 'user_id', 'permission_id', 'user_id', 'permission_id')->withTimestamps()->withPivot(['company_id']);
     }
 
     /**

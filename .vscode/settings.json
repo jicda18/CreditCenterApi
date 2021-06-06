@@ -3,7 +3,9 @@
         "Accesslist",
         "Accesslists",
         "Authorizable",
+        "IFNULL",
         "Zxcvbn",
-        "fullname"
+        "fullname",
+        "migrationdata"
     ]
 }

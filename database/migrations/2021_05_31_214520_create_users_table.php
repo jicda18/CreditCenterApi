@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('email')->unique();
             $table->string('fullname');
-            $table->boolean('must_change_password');
+            $table->boolean('must_change_password')->default(true);
             $table->timestamp('blocked_at')->nullable();
             $table->timestamp('admin_at')->nullable();
 

@@ -26,7 +26,7 @@ class Company extends ApiModel
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'tbCompaniesUsersPivot', 'user_id', 'company_id', 'user_id', 'company_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'tbCompaniesUsersPivot', 'company_id', 'user_id', 'company_id', 'user_id')->withTimestamps();
     }
 
     /**

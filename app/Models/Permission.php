@@ -25,6 +25,6 @@ class Permission extends ApiModel
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'tbPermissionsUsersPivot', 'user_id', 'permission_id', 'user_id', 'permission_id')->withTimestamps()->withPivot(['company_id']);
+        return $this->belongsToMany(User::class, 'tbPermissionsUsersPivot', 'permission_id', 'user_id', 'permission_id', 'user_id')->withTimestamps()->withPivot(['company_id']);
     }
 }

@@ -39,6 +39,6 @@ class Notification extends ApiModel
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'tbNotificationsUsersPivot', 'user_id', 'notification_id', 'user_id', 'notification_id')->withTimestamps()->withPivot(['read_at']);
+        return $this->belongsToMany(User::class, 'tbNotificationsUsersPivot', 'notification_id', 'user_id', 'notification_id', 'user_id')->withTimestamps()->withPivot(['read_at']);
     }
 }
