@@ -24,6 +24,7 @@ class DefaultProvinces extends MigrationData
     {
         return [
             // Todo: Implement DefaultProvinces
+            ['country_id' => 1, 'name' => 'Santiago'],
         ];
     }
 }

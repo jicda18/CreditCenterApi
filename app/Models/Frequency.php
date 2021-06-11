@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Frequency extends ApiModel
@@ -18,6 +20,13 @@ class Frequency extends ApiModel
         'frequency_id' => 'integer',
     ];
 
+    public function nextDate(Carbon $dte)
+    {
+        $functionName = $this->function_name;
+
+        return $this->{$functionName}($dte);
+    }
+
     /**
      * Get all of the loans for the Frequency
      *
@@ -28,5 +37,51 @@ class Frequency extends ApiModel
         return $this->hasMany(Loan::class, 'frequency_id', 'frequency_id');
     }
 
-    // Todo: frequency functions and return
+    /**
+     * Return the next daily date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  \Carbon\Carbon
+     */
+    private function daily(Carbon $dte): Carbon
+    {
+        // Todo: implement daily function
+        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+    }
+
+    /**
+     * Return the next weekly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  \Carbon\Carbon
+     */
+    private function weekly(Carbon $dte): Carbon
+    {
+        // Todo: implement weekly function
+        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+    }
+
+    /**
+     * Return the next monthly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  \Carbon\Carbon
+     */
+    private function monthly(Carbon $dte): Carbon
+    {
+        // Todo: implement monthly function
+        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+    }
+
+    /**
+     * Return the next yearly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  \Carbon\Carbon
+     */
+    private function yearly(Carbon $dte): Carbon
+    {
+        // Todo: implement yearly function
+        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+    }
 }

@@ -22,8 +22,11 @@ class DefaultPermissions extends MigrationData
      */
     public function getEntities(): array
     {
+        // Todo: set real permissions fields
         return [
-            // Todo: Implement DefaultPermissions
+            ['name' => 'TEST 1', 'description' => 'TEST 1'],
+            ['name' => 'TEST 2', 'description' => 'TEST 2'],
+            ['name' => 'TEST 3', 'description' => 'TEST 3'],
         ];
     }
 }

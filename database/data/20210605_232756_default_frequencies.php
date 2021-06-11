@@ -23,7 +23,10 @@ class DefaultFrequencies extends MigrationData
     public function getEntities(): array
     {
         return [
-            // Todo: Implement DefaultFrequencies
+            ['function_name' => 'daily', 'label' => 'Diario'],
+            ['function_name' => 'weekly', 'label' => 'Semanal'],
+            ['function_name' => 'monthly', 'label' => 'Mensual'],
+            ['function_name' => 'yearly', 'label' => 'Anual'],
         ];
     }
 }

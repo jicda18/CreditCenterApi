@@ -23,7 +23,8 @@ class DefaultCurrencies extends MigrationData
     public function getEntities(): array
     {
         return [
-            // Todo: Implement DefaultCurrencies
+            ['name' => 'Dollar', 'symbol' => '$', 'default' => true, 'exchange_value' => 1],
+            ['name' => 'Peso', 'symbol' => 'RD$', 'default' => false, 'exchange_value' => 57.7],
         ];
     }
 }

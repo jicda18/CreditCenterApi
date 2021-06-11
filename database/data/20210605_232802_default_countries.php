@@ -23,7 +23,8 @@ class DefaultCountries extends MigrationData
     public function getEntities(): array
     {
         return [
-            // Todo: Implement DefaultCountries
+            ['name' => 'Repblica Dominicana', 'abbreviation' => 'DO'],
+            ['name' => 'Estados Unidos', 'abbreviation' => 'US'],
         ];
     }
 }
