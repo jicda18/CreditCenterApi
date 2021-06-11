@@ -24,11 +24,11 @@ class BusinessFactory extends Factory
         return [
             'name' => $this->faker->company,
             'type' => $this->faker->randomElement(['own', 'rent']),
-            'number_of_employee' => $this->faker->random_int(10, 50),
+            'number_of_employee' => $this->faker->numberBetween(10, 50),
             'phone' => $this->faker->phoneNumber,
             'province_id' => 1,
             'address' => $this->faker->streetAddress,
-            'comment' => $this->faker->paragraph($this->faker->random_int(1, 3)),
+            'comment' => $this->faker->paragraph($this->faker->numberBetween(1, 3)),
         ];
     }
 }

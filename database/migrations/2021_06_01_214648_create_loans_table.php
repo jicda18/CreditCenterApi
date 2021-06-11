@@ -23,14 +23,20 @@ class CreateLoansTable extends Migration
             $table->float('fee_amount');
             $table->date('start_on');
             $table->unsignedSmallInteger('thanks_days')->default(0);
+            $table->date('next_on');
             $table->unsignedBigInteger('frequency_id');
             $table->enum('status', ['active', 'settled', 'paused', 'canceled']);
 
             $this->addControlFields($table);
 
+            $table->foreign('debtor_id')->references('debtor_id')->on('tbDebtors');
+            $table->foreign('currency_id')->references('currency_id')->on('tbCurrencies');
+            $table->foreign('frequency_id')->references('frequency_id')->on('tbFrequencies');
+
             $table->index('debtor_id');
             $table->index('currency_id');
             $table->index('frequency_id');
+            $table->index('next_on');
             $table->index('status');
         });
     }

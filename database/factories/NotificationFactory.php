@@ -22,9 +22,9 @@ class NotificationFactory extends Factory
     public function definition()
     {
         return [
-            'company_id' => $this->faker->random_int(1, 2),
-            'level' => $this->faker->random_int(1, 9),
-            'text' => $this->faker->paragraph($this->faker->random_int(2, 5)),
+            'company_id' => $this->faker->numberBetween(1, 2),
+            'level' => $this->faker->numberBetween(1, 9),
+            'text' => $this->faker->paragraph($this->faker->numberBetween(2, 5)),
         ];
     }
 

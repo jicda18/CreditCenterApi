@@ -64,18 +64,19 @@ trait UseChangeLog
      * @param   mixed   $news
      * @return  void
      */
-    protected function addLog(int $type, mixed $olds, mixed $news)
+    protected function addLog(int $type, $olds, $news)
     {
         $user = Auth::user();
         $request = request();
+        $route = $request->route();
 
         Log::create([
             'model' => get_class($this),
             'reference_id' => $this->getKey(),
             'log_type_id' => $type,
-            'user_id' => null_prevent($user, 'user_id'),
+            'user_id' => null_prevent_property($user, 'user_id', 0),
             'ip' => $request->ip(),
-            'route' => $request->route()->getName(),
+            'route' => null_prevent_function($route, 'getName', null, ''),
             'at' => Carbon::now(),
             'old' => $olds,
             'new' => $news,

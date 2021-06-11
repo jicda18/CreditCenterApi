@@ -20,7 +20,6 @@ class CreateSecurityLogsTable extends Migration
             $table->id('security_log_id');
             $table->string('type');
             $table->unsignedTinyInteger('level');
-            $table->timestamp('event_at');
             $table->boolean('success');
             $table->text('description');
             $table->unsignedBigInteger('user_id')->nullable();
@@ -33,9 +32,10 @@ class CreateSecurityLogsTable extends Migration
 
             $this->addControlFields($table);
 
+            $table->foreign('user_id')->references('user_id')->on('tbUsers');
+
             $table->index('type');
             $table->index('level');
-            $table->index('event_at');
             $table->index('success');
             $table->index('user_id');
             $table->index('ip');

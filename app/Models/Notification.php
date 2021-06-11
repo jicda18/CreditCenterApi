@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Notification extends ApiModel
 {
-    protected $table = 'tNotifications';
+    protected $table = 'tbNotifications';
     protected $primaryKey = 'notification_id';
     protected $fillable = [
         'company_id',

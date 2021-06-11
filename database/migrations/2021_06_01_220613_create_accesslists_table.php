@@ -25,6 +25,8 @@ class CreateAccesslistsTable extends Migration
             $table->timestamp('until_at')->nullable();
 
             $this->addControlFields($table);
+
+            $table->index('until_at');
         });
     }
 

@@ -22,8 +22,8 @@ class BankFactory extends Factory
     public function definition()
     {
         return [
-            'company_id' => $this->faker->random_int(1, 2),
-            'currency_id' => $this->faker->random_int(1, 2),
+            'company_id' => $this->faker->numberBetween(1, 2),
+            'currency_id' => $this->faker->numberBetween(1, 2),
             'bank_name' => $this->faker->company,
             'account_number' => $this->faker->iban('DO'),
             'alias' => '',

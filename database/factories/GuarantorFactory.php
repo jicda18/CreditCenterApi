@@ -22,7 +22,7 @@ class GuarantorFactory extends Factory
     public function definition()
     {
         return [
-            'company_id' => $this->faker->random_int(1, 2),
+            'company_id' => $this->faker->numberBetween(1, 2),
             'fullname' => $this->faker->name(),
             'personal_id' => $this->faker->numerify('###-#######-#'),
             'gender' => $this->faker->randomElement(['female', 'male']),

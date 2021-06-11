@@ -21,12 +21,13 @@ class CreateGuarantorsTable extends Migration
             $table->unsignedBigInteger('company_id');
             $table->string('fullname');
             $table->string('personal_id');
+            $table->enum('gender', ['female', 'male']);
             $table->unsignedBigInteger('province_id');
             $table->string('address');
             $table->string('phone')->nullable();
             $table->string('occupation');
             $table->string('workplace');
-            $table->float('float');
+            $table->float('salary');
             $table->float('other_income');
 
             $this->addControlFields($table);
@@ -34,7 +35,8 @@ class CreateGuarantorsTable extends Migration
             $table->foreign('company_id')->references('company_id')->on('tbCompanies');
             $table->foreign('province_id')->references('province_id')->on('tbProvinces');
 
-            $table->unique('company_id');
+            $table->index('company_id');
+            $table->index('province_id');
             $table->unique('personal_id');
         });
     }

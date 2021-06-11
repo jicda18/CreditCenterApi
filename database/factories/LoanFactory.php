@@ -27,12 +27,12 @@ class LoanFactory extends Factory
 
         return [
             'debtor_id' => $this->faker->randomElement($debtors),
-            'currency_id' => $this->faker->random_int(1, 2),
-            'fee_amount' => $this->faker->randomFloat(100, 1000),
+            'currency_id' => $this->faker->numberBetween(1, 2),
+            'fee_amount' => $this->faker->randomFloat(2, 100, 1000),
             'start_on' => $dte,
-            'thanks_days' => $this->faker->random_int(0, 2),
+            'thanks_days' => $this->faker->numberBetween(0, 2),
             'next_on' => $dte,
-            'frequency_id' => $this->faker->random_int(1, 4),
+            'frequency_id' => $this->faker->numberBetween(1, 4),
             'status' => $this->faker->randomElement(['active', 'settled', 'paused', 'canceled']),
         ];
     }

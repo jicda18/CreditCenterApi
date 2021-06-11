@@ -27,6 +27,10 @@ class CreateTransactionsTable extends Migration
 
             $this->addControlFields($table);
 
+            $table->foreign('loan_id')->references('loan_id')->on('tbLoans');
+            $table->foreign('bank_id')->references('bank_id')->on('tbBanks');
+            $table->foreign('register_user_id')->references('user_id')->on('tbUsers');
+
             $table->index('loan_id');
             $table->index('bank_id');
             $table->index('register_user_id');

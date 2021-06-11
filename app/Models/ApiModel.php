@@ -17,5 +17,5 @@ class ApiModel extends Model
      *
      * @var string
      */
-    protected $dateFormat = DateTime::ISO8601;
+    protected $dateFormat = 'Y-m-d H:i:s';
 }

@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class Log extends Model
 {
-    protected $table = 'tbLog';
+    protected $table = 'tbLogs';
     protected $primaryKey = 'log_id';
     protected $fillable = [
         'model',
@@ -48,7 +48,7 @@ class Log extends Model
      *
      * @var string
      */
-    protected $dateFormat = DateTime::ISO8601;
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     /**
      * Get the type that owns the Bank

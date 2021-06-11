@@ -26,8 +26,8 @@ class CreateNotificationsTable extends Migration
 
             $table->foreign('company_id')->references('company_id')->on('tbCompanies');
 
-            $table->index('level');
             $table->index('company_id');
+            $table->index('level');
         });
     }
 

@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class DefaultDataSeed extends Command
+class MigrateDataCommand extends Command
 {
     /**
      * The name and signature of the console command.

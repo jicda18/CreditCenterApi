@@ -31,8 +31,8 @@ class TransactionFactory extends Factory
             'bank_id' => $this->faker->randomElement($banks),
             'register_user_id' => 1,
             'was_at' => $this->faker->dateTime(),
-            'amount' => $this->faker->randomFloat(10000, 100000),
-            'comment' => $this->faker->paragraph($this->faker->random_int(1, 3)),
+            'amount' => $this->faker->randomFloat(2, 10000, 100000),
+            'comment' => $this->faker->paragraph($this->faker->numberBetween(1, 3)),
         ];
     }
 }

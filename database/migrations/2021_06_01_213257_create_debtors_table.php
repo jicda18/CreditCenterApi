@@ -24,12 +24,14 @@ class CreateDebtorsTable extends Migration
             $table->string('fullname');
             $table->string('nickname')->nullable();
             $table->string('personal_id');
+            $table->enum('gender', ['female', 'male']);
             $table->unsignedBigInteger('province_id');
             $table->string('address');
             $table->date('date_of_birth')->nullable();
             $table->string('phone')->nullable();
+            $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
             $table->string('occupation');
-            $table->float('float');
+            $table->float('salary');
             $table->float('other_income');
 
             $this->addControlFields($table);
@@ -39,7 +41,10 @@ class CreateDebtorsTable extends Migration
             $table->foreign('business_id')->references('business_id')->on('tbBusinesses');
             $table->foreign('province_id')->references('province_id')->on('tbProvinces');
 
-            $table->unique('company_id');
+            $table->index('company_id');
+            $table->index('guarantor_id');
+            $table->index('business_id');
+            $table->index('province_id');
             $table->unique('personal_id');
         });
     }
