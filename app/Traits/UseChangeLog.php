@@ -2,7 +2,10 @@
 
 namespace App\Traits;
 
+use App\Models\Log;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
@@ -33,6 +36,49 @@ trait UseChangeLog
             }
         });
 
-        // Todo: add change log functions
+        static::created(function (Model $model) {
+            $news = $model->getAttributes();
+
+            $model->addLog(1, null, $news);
+        });
+
+        static::updated(function (Model $model) {
+            $news = $model->getAttributes();
+            $olds = $model->getOriginal();
+
+            $model->addLog(3, $olds, $news);
+        });
+
+        static::deleted(function (Model $model) {
+            $olds = $model->getOriginal();
+
+            $model->addLog(2, $olds, null);
+        });
+    }
+
+    /**
+     * Insert new Log.
+     *
+     * @param   int   $type
+     * @param   mixed   $olds
+     * @param   mixed   $news
+     * @return  void
+     */
+    protected function addLog(int $type, mixed $olds, mixed $news)
+    {
+        $user = Auth::user();
+        $request = request();
+
+        Log::create([
+            'model' => get_class($this),
+            'reference_id' => $this->getKey(),
+            'log_type_id' => $type,
+            'user_id' => null_prevent($user, 'user_id'),
+            'ip' => $request->ip(),
+            'route' => $request->route()->getName(),
+            'at' => Carbon::now(),
+            'old' => $olds,
+            'new' => $news,
+        ]);
     }
 }

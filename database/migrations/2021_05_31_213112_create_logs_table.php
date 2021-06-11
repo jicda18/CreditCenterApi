@@ -22,8 +22,8 @@ class CreateLogsTable extends Migration
             $table->string('ip');
             $table->string('route');
             $table->timestamp('at')->useCurrent();
-            $table->text('old');
-            $table->text('new');
+            $table->text('old')->nullable();
+            $table->text('new')->nullable();
             $table->uuid('uuid');
 
             $table->index('uuid');

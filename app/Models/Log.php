@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-class Log extends ApiModel
+class Log extends Model
 {
     protected $table = 'tbLog';
     protected $primaryKey = 'log_id';
@@ -33,6 +35,20 @@ class Log extends ApiModel
         'old' => AsArrayObject::class,
         'new' => AsArrayObject::class,
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = DateTime::ISO8601;
 
     /**
      * Get the type that owns the Bank
