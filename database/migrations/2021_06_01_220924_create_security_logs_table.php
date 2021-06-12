@@ -28,7 +28,7 @@ class CreateSecurityLogsTable extends Migration
             $table->string('route');
             $table->text('url');
             $table->text('query');
-            $table->text('geo');
+            $table->text('geo')->nullable();
 
             $this->addControlFields($table);
 
