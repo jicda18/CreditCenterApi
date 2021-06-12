@@ -77,7 +77,7 @@ class Log extends Model
      */
     public function reference(): HasMany
     {
-        $fk = (new $this->model)->getKey();
+        $fk = (new $this->model)->getKeyName();
         return $this->hasMany($this->model, $fk, 'reference_id');
     }
 

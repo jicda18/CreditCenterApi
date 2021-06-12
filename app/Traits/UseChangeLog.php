@@ -82,4 +82,9 @@ trait UseChangeLog
             'new' => $news,
         ]);
     }
+
+    public function changes()
+    {
+        return $this->hasMany(Log::class, 'reference_id', $this->getKeyName())->where('model', '=', get_class($this));
+    }
 }
