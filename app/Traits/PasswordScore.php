@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use ZxcvbnPhp\Zxcvbn;
 
-trait IpGeo
+trait PasswordScore
 {
     protected function getScore(string $password, string $user, string $name, string $email)
     {
