@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait AccesslistHelper
 {
-    const MAX_IPV4 = 4294967296;
+    protected $maxIpv4 = 4294967296;
 
     protected function isValidIp(string $ip): bool
     {
@@ -52,14 +52,14 @@ trait AccesslistHelper
     protected function networkAddress(string $ip, int $cidr): string
     {
         return long2ip(
-            ip2long($ip) & (static::MAX_IPV4 - pow(2, 32 - $cidr))
+            ip2long($ip) & ($this->maxIpv4 - pow(2, 32 - $cidr))
         );
     }
 
     protected function broadcastAddress(string $ip, int $cidr): string
     {
         return long2ip(
-            (ip2long($ip) & (static::MAX_IPV4 - pow(2, 32 - $cidr))) + (pow(2, 32 - $cidr) - 1)
+            (ip2long($ip) & ($this->maxIpv4 - pow(2, 32 - $cidr))) + (pow(2, 32 - $cidr) - 1)
         );
     }
 }
