@@ -60,16 +60,17 @@ abstract class AccesslistManagerCommand extends Command
     public function __construct(bool $blacklisted, string $caller)
     {
         $this->blacklisted = $blacklisted;
+        $this->caller = $caller;
 
         $signature = ($blacklisted ? 'blacklist' : 'whitelist');
 
-        if (!key_exists($caller, $this->callers)) {
-            throw new Exception("Action $caller isn't a valid action for $signature", 1);
+        if (!key_exists($this->caller, $this->callers)) {
+            throw new Exception("Action {$this->caller} isn't a valid action for $signature", 1);
         }
 
-        $arguments = $this->callers[$caller][0];
-        $this->signature = trim("$signature:$caller $arguments");
-        $this->description = $this->callers[$caller][1];
+        $arguments = $this->callers[$this->caller][0];
+        $this->signature = trim("$signature:$this->caller $arguments");
+        $this->description = $this->callers[$this->caller][1];
 
         parent::__construct();
     }
@@ -81,8 +82,23 @@ abstract class AccesslistManagerCommand extends Command
      */
     public function handle()
     {
-        $this->line('');
-        return 0;
+        /**
+         * @var \Illuminate\Support\Collection
+         */
+        $answers = $this->{$this->caller}();
+
+        foreach ($answers as $key => $answer) {
+            if (is_string($answer)) {
+                $this->line($answer);
+            } else {
+                $ip = '<comment>Ip:</comment> ' . $answer->ip_range;
+                $description = "<comment>Description:</comment> {$answer->description}";
+                $until = '<comment>Until:</comment> ' . ($answer->until_at === null ? 'Unlimited' : $answer->until_at);
+                $output = "<info>{$answer->accesslist_id}:</info>\n  $ip\n  $description\n  $until";
+
+                $this->line($output);
+            }
+        }
     }
 
     protected function list(): Collection
@@ -92,14 +108,13 @@ abstract class AccesslistManagerCommand extends Command
         return $list::all();
     }
 
-    protected function find(): ?Collection
+    protected function find(): Collection
     {
         $ip = $this->argument('ip');
         $list = $this->getList();
 
         if (!$this->isValidIp($ip)) {
-            $this->error('The ip must be a valid ip address.');
-            return null;
+            return collect(['The ip must be a valid ip address.']);
         }
 
         return $list::searchIp($ip)->get();
@@ -108,7 +123,7 @@ abstract class AccesslistManagerCommand extends Command
     protected function add(): ?Collection
     {
         $ips = $this->argument('ips');
-        $time = (int) $this->option('time') ?? 0;
+        $second = (int) $this->option('second') ?? 0;
         $description = $this->option('description') ?? 'Add from command.';
 
         $list = $this->getList();
@@ -117,14 +132,16 @@ abstract class AccesslistManagerCommand extends Command
         foreach ($ips as $key => $ip) {
             $validation = $this->validated($ip);
 
-            if ($validation === '') {
+            if ($validation !== '') {
                 $answers->push("<error>$validation</error>");
             } else {
                 $entry = $list::create([
                     'ip_range' => $ip,
                     'description' => $description,
-                    'until_at' => $time === 0 ? null : Carbon::now()->addSeconds($time),
+                    'until_at' => $second === 0 ? null : Carbon::now()->addSeconds($second),
                 ]);
+
+                $answers->push($entry);
             }
         }
 
@@ -141,11 +158,11 @@ abstract class AccesslistManagerCommand extends Command
             $entry = $list::find($id);
 
             if ($entry === null) {
-                $answers->push("<error>Entry wit id $id didn't found</error>");
+                $answers->push("<error>Entry with id $id didn't find.</error>");
             } else {
                 $entry->delete();
 
-                $answers->push("<comment>Entry wit id $id deleted</comment>");
+                $answers->push("<info>Entry with id $id deleted</info>");
             }
         }
 
@@ -161,11 +178,11 @@ abstract class AccesslistManagerCommand extends Command
     {
         if ($ip === '') {
             return 'No ip gave.';
-        } elseif (strpos($ip, '/') && !$this->isValidNetwork($ip)) {
-            return "$ip isn't a valid network.";
-        } elseif (strpos($ip, '-') && !$this->isValidRange($ip)) {
-            return "$ip isn't a valid range.";
-        } elseif ($this->isValidIp($ip)) {
+        } elseif (strpos($ip, '/')) {
+            if (!$this->isValidNetwork($ip)) return "$ip isn't a valid network.";
+        } elseif (strpos($ip, '-')) {
+            if (!$this->isValidRange($ip)) return "$ip isn't a valid range.";
+        } elseif (!$this->isValidIp($ip)) {
             return "$ip isn't a valid ip.";
         }
 

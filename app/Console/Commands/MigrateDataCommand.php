@@ -114,7 +114,7 @@ class MigrateDataCommand extends Command
             DB::table('migrations_data')->insert(['migration' => $this->getFilename($file), 'batch' => $batch]);
 
             $runTime = number_format((microtime(true) - $startTime) * 1000, 2);
-            $this->line("<info>Migrating:</info> {$file} ({$runTime}ms)");
+            $this->line("<info>Migrated:</info> {$file} ({$runTime}ms)");
         }
     }
 

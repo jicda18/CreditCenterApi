@@ -64,7 +64,5 @@ class PasswordScoreCommand extends Command
         if ($suggestions !== null && $suggestions !== '') {
             $this->line("<comment>$suggestions.</comment>");
         }
-
-        return $score;
     }
 }

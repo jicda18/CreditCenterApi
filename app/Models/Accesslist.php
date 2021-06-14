@@ -17,6 +17,7 @@ class Accesslist extends ApiModel
     protected $fillable = [
         'start_ip',
         'end_ip',
+        'ip_range',
         'description',
         'blacklisted',
         'until_at',
@@ -53,6 +54,17 @@ class Accesslist extends ApiModel
         } else {
             throw new InvalidIpFormatException($ip_range);
         }
+    }
+
+    public function getIpRangeAttribute()
+    {
+        if ($this->start_ip === $this->end_ip) {
+            return $this->start_ip;
+        }
+
+        $network = $this->rangeToNetwork($this->start_ip, $this->end_ip);
+
+        return $network === false ? "{$this->start_ip}-{$this->end_ip}" : $network;
     }
 
     static function searchIp(string $ip): Builder

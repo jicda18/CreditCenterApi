@@ -25,7 +25,7 @@ trait AccesslistHelper
             return false;
         }
 
-        if (!$this->is_int($arr[1])) {
+        if (is_int($arr[1])) {
             return false;
         }
 
@@ -61,5 +61,22 @@ trait AccesslistHelper
         return long2ip(
             (ip2long($ip) & ($this->maxIpv4 - pow(2, 32 - $cidr))) + (pow(2, 32 - $cidr) - 1)
         );
+    }
+
+    /**
+     * Convert range to network notation. return false if it isn't possible
+     *
+     * @param   string   var
+     * @param   string   var
+     * @return  false|string
+     */
+    protected function rangeToNetwork(string $start_ip, string $end_ip)
+    {
+        $ip1 = ip2long($start_ip);
+        $ip2 = ip2long($end_ip) + 1;
+
+        $cidr = 32 - log($ip1 ^ $ip2, 2);
+
+        return ($cidr == (int) $cidr) ? long2ip($ip1) . "/{$cidr}" : false;
     }
 }
