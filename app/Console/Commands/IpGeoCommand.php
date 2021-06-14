@@ -44,16 +44,15 @@ class IpGeoCommand extends Command
 
         $geo = $this->getGeoFromIp($ip);
 
-        $this->line("Continent: <comment>{$geo->continent}</comment>");
-        $this->line("Country: <comment>{$geo->country}</comment>");
-        $this->line("Country Code: <comment>{$geo->countryCode}</comment>");
-        $this->line("Region: <comment>{$geo->region}</comment>");
-        $this->line("Region Name: <comment>{$geo->regionName}</comment>");
-        $this->line("City: <comment>{$geo->city}</comment>");
-        $this->line("Zip: <comment>{$geo->zip}</comment>");
-        $this->line("Timezone: <comment>{$geo->timezone}</comment>");
-        $this->line("Isp: <comment>{$geo->isp}</comment>");
-
-        return $geo;
+        $this->line("<info>$ip:</info>");
+        $this->line("   <comment>Continent: </comment>{$geo->continent}");
+        $this->line("   <comment>Country: </comment>{$geo->country}");
+        $this->line("   <comment>Country Code: </comment>{$geo->countryCode}");
+        $this->line("   <comment>Region: </comment>{$geo->region}");
+        $this->line("   <comment>Region Name: </comment>{$geo->regionName}");
+        $this->line("   <comment>City: </comment>{$geo->city}");
+        $this->line("   <comment>Zip: </comment>{$geo->zip}");
+        $this->line("   <comment>Timezone: </comment>{$geo->timezone}");
+        $this->line("   <comment>Isp: </comment>{$geo->isp}");
     }
 }
