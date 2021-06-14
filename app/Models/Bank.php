@@ -55,6 +55,6 @@ class Bank extends ApiModel
      */
     public function transactions(): HasMany
     {
-        return $this->hasMany(Bank::class, 'bank_id', 'bank_id');
+        return $this->hasMany(Transaction::class, 'bank_id', 'bank_id');
     }
 }

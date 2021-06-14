@@ -79,6 +79,6 @@ class Loan extends ApiModel
      */
     public function frequency(): BelongsTo
     {
-        return $this->belongsTo(Frequency::class, 'debtor_id', 'debtor_id');
+        return $this->belongsTo(Frequency::class, 'frequency_id', 'frequency_id');
     }
 }

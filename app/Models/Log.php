@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use DateTime;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Log extends Model
@@ -75,10 +73,10 @@ class Log extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function reference(): HasMany
+    public function reference(): BelongsTo
     {
         $fk = (new $this->model)->getKeyName();
-        return $this->hasMany($this->model, $fk, 'reference_id');
+        return $this->belongsTo($this->model, 'reference_id', $fk);
     }
 
     /**
