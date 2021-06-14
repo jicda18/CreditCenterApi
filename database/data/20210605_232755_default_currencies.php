@@ -23,8 +23,9 @@ class DefaultCurrencies extends MigrationData
     public function getEntities(): array
     {
         return [
-            ['name' => 'Dollar', 'symbol' => '$', 'default' => true, 'exchange_value' => 1],
-            ['name' => 'Peso', 'symbol' => 'RD$', 'default' => false, 'exchange_value' => 57.7],
+            ['name' => 'Peso', 'symbol' => 'RD$', 'default' => true, 'exchange_value' => 1],
+            ['name' => 'Dollar', 'symbol' => '$', 'default' => false, 'exchange_value' => 57.7],
+            ['name' => 'Euro', 'symbol' => '€', 'default' => false, 'exchange_value' => 71.35],
         ];
     }
 }

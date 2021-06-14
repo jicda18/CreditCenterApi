@@ -45,8 +45,7 @@ class Frequency extends ApiModel
      */
     private function daily(Carbon $dte): Carbon
     {
-        // Todo: implement daily function
-        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+        return $dte->addDay();
     }
 
     /**
@@ -57,8 +56,7 @@ class Frequency extends ApiModel
      */
     private function weekly(Carbon $dte): Carbon
     {
-        // Todo: implement weekly function
-        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+        return $dte->addWeek();
     }
 
     /**
@@ -69,8 +67,7 @@ class Frequency extends ApiModel
      */
     private function monthly(Carbon $dte): Carbon
     {
-        // Todo: implement monthly function
-        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+        return $dte->addMonth();
     }
 
     /**
@@ -81,7 +78,6 @@ class Frequency extends ApiModel
      */
     private function yearly(Carbon $dte): Carbon
     {
-        // Todo: implement yearly function
-        throw new Exception('Not Implement function: ' . __FUNCTION__, 1);
+        return $dte->addYear();
     }
 }

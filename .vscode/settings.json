@@ -22,5 +22,10 @@
         "numerify",
         "soltero",
         "vuido"
+    ],
+    "todo-tree.filtering.excludeGlobs": [
+        "**/node_modules",
+        "**/vendor",
+        "**/stubs"
     ]
 }

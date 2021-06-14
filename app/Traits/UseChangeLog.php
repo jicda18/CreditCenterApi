@@ -76,7 +76,7 @@ trait UseChangeLog
             'log_type_id' => $type,
             'user_id' => null_prevent_property($user, 'user_id', 0),
             'ip' => $request->ip(),
-            'route' => null_prevent_function($route, 'getName', null, ''),
+            'route' => null_prevent_function($route, 'getName', null, '') ?? '',
             'at' => Carbon::now(),
             'old' => $olds,
             'new' => $news,

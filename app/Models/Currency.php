@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Currency extends ApiModel
 {
@@ -21,6 +22,42 @@ class Currency extends ApiModel
         'default' => 'boolean',
         'exchange_value' => 'float',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::updating(function (Currency $currency) {
+            $originalDefault = $currency->getOriginal('default');
+
+            if ($originalDefault === true) {
+                $currency->default = true;
+            }
+        });
+
+        static::updated(function (Currency $currency) {
+            $originalDefault = $currency->getOriginal('default');
+
+            if ($currency->default === $originalDefault) {
+                return;
+            }
+
+            if ($currency->default === false) {
+                return;
+            }
+
+            DB::table('tbCurrencies')->update(['exchange_value' => DB::raw("exchange_value/{$currency->exchange_value}"), 'default' => false]);
+
+            DB::table('tbCurrencies')->where('currency_id', '=', $currency->currency_id)->update(['default' => true, 'exchange_value' => 1]);
+
+            $currency->refresh();
+        });
+    }
 
     /**
      * Get all of the banks for the Currency
@@ -42,6 +79,8 @@ class Currency extends ApiModel
         return $this->hasMany(Loan::class, 'currency_id', 'currency_id');
     }
 
-    // Todo: add function tu convert to default and to convert to other
-    // Mutator to set to default
+    public function convertTo(Currency $currency, float $value = 1): float
+    {
+        return round($value * ($this->exchange_value / $currency->exchange_value), 4);
+    }
 }
