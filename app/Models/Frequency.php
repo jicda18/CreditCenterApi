@@ -45,7 +45,7 @@ class Frequency extends ApiModel
      */
     private function daily(Carbon $dte): Carbon
     {
-        return $dte->addDay();
+        return $dte->copy()->addDay();
     }
 
     /**
@@ -56,7 +56,7 @@ class Frequency extends ApiModel
      */
     private function weekly(Carbon $dte): Carbon
     {
-        return $dte->addWeek();
+        return $dte->copy()->addWeek();
     }
 
     /**
@@ -67,7 +67,7 @@ class Frequency extends ApiModel
      */
     private function monthly(Carbon $dte): Carbon
     {
-        return $dte->addMonth();
+        return $dte->copy()->addMonth();
     }
 
     /**
@@ -78,6 +78,6 @@ class Frequency extends ApiModel
      */
     private function yearly(Carbon $dte): Carbon
     {
-        return $dte->addYear();
+        return $dte->copy()->addYear();
     }
 }
