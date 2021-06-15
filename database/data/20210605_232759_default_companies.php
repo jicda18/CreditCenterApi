@@ -22,10 +22,9 @@ class DefaultCompanies extends MigrationData
      */
     public function getEntities(): array
     {
-        // Todo: set real companies fields
         return [
-            ['name' => 'Test 1', 'logo' => 'test1.png'],
-            ['name' => 'Test 2', 'logo' => 'test2.png'],
+            ['name' => 'Credit Center', 'logo' => 'company_logo_1.png'],
+            ['name' => 'Test 2', 'logo' => 'company_logo_2.png'],
         ];
     }
 }
