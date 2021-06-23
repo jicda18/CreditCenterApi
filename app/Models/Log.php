@@ -48,6 +48,28 @@ class Log extends Model
      */
     protected $dateFormat = 'Y-m-d H:i:s';
 
+    public function getModelNameAttribute()
+    {
+        $model = $this->model;
+        $pos = strrpos($model, '\\');
+
+        $name = $pos ? substr($model, $pos + 1) : $model;
+
+        if ($name === 'LogType') {
+            return 'type';
+        }
+
+        if ($name === 'PasswordReset') {
+            return 'reset';
+        }
+
+        if ($name === 'SecurityLog') {
+            return 'security';
+        }
+
+        return $name;
+    }
+
     /**
      * Get the type that owns the Bank
      *
@@ -89,5 +111,30 @@ class Log extends Model
         static::creating(function (Log $model) {
             $model->uuid = Str::uuid()->toString();
         });
+    }
+
+    /**
+     * Begin querying a model with eager loading.
+     *
+     * @param  array|string  $relations
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function with($relations)
+    {
+        if ($relations === 'reference') {
+            return static::query();
+        }
+
+        return parent::with($relations);
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

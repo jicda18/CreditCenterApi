@@ -54,6 +54,11 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
         $this->attributes['fullname'] = mb_strtolower($fullname);
     }
 
+    public function getAdminAttribute()
+    {
+        return $this->isAdmin();
+    }
+
     public function isAdmin(): bool
     {
         return $this->admin_at !== null;

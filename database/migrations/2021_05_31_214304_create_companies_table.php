@@ -20,6 +20,8 @@ class CreateCompaniesTable extends Migration
             $table->id('company_id');
             $table->string('name');
             $table->string('logo');
+            $table->string('icon');
+            $table->string('frontend');
 
             $this->addControlFields($table);
         });
