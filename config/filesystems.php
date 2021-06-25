@@ -29,7 +29,6 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
@@ -55,6 +54,21 @@ return [
         'resource' => [
             'driver' => 'local',
             'root' => storage_path('resources'),
+        ],
+
+        'logs' => [
+            'driver' => 'local',
+            'root' => storage_path('logs'),
+        ],
+
+        'reports' => [
+            'driver' => 'local',
+            'root' => storage_path('reports'),
+        ],
+
+        'uploads' => [
+            'driver' => 'local',
+            'root' => storage_path('uploads'),
         ],
     ],
 
