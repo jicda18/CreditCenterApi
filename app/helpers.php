@@ -69,3 +69,17 @@ if (!function_exists('auth_company')) {
         return null;
     }
 }
+
+if (!function_exists('request_ip')) {
+    /**
+     * get the current auth company.
+     *
+     * @return  \App\Models\Company|null
+     */
+    function request_ip()
+    {
+        $request = request();
+
+        return $request->header('X-Forwarded-For') ?? $request->ip();
+    }
+}

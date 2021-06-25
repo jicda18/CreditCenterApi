@@ -62,7 +62,7 @@ class SecurityLog extends ApiModel
             $request = request();
 
             $model->user_id = null_prevent_property($request->user(), 'user_id');
-            $model->ip = $request->ip();
+            $model->ip = request_ip();
             $model->user_agent = $request->userAgent();
             $model->route =  null_prevent_function($request->route(), 'getName');
             $model->url = $request->url();

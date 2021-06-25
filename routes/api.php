@@ -38,9 +38,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Authentications
-Route::post('tokens', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')
-    ->name('passport.token');
-// ->middleware('token.response'); //Todo: create middleware
+Route::post('tokens', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->name('passport.token')->middleware('token.response');
 
 // Myself
 // Todo: set myself controller and resource
