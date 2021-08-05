@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ApiModel extends Model
+abstract class ApiModel extends Model
 {
     use HasFactory, SoftDeletes, UseChangeLog;
 
@@ -54,4 +54,6 @@ class ApiModel extends Model
 
         return $this->getKeyName();
     }
+
+    abstract public function authorized(Company $company, User $user): bool;
 }

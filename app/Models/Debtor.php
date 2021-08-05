@@ -100,4 +100,9 @@ class Debtor extends ApiModel
     {
         return $this->hasMany(Loan::class, 'debtor_id', 'debtor_id');
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->company_id;
+    }
 }

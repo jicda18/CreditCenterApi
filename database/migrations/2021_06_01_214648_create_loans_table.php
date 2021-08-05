@@ -21,6 +21,7 @@ class CreateLoansTable extends Migration
             $table->unsignedBigInteger('debtor_id');
             $table->unsignedBigInteger('currency_id');
             $table->float('fee_amount');
+            $table->float('balance');
             $table->date('start_on');
             $table->unsignedSmallInteger('thanks_days')->default(0);
             $table->date('next_on');

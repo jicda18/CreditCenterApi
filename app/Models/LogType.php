@@ -26,4 +26,9 @@ class LogType extends ApiModel
     {
         return $this->hasMany(Log::class, 'log_type_id', 'log_type_id');
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return true;
+    }
 }

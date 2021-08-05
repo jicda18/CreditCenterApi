@@ -29,6 +29,7 @@ class SecurityLog extends ApiModel
     ];
     protected $hidden = ['security_log_id'];
 
+    // Todo: add company_id
     protected $casts = [
         'security_log_id' => 'integer',
         'level' => 'integer',
@@ -69,5 +70,10 @@ class SecurityLog extends ApiModel
             $model->query = $request->query();
             $model->geo = $this->getGeoFromIp($model->ip);
         });
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $user->isAdmin();
     }
 }

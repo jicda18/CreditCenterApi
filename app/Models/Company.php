@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Company extends ApiModel
 {
@@ -24,35 +23,12 @@ class Company extends ApiModel
 
     public function getImageAttribute()
     {
-        return route('companies.logo.show', $this->resource);
+        return route('companies.logo.show', $this);
     }
 
     public function getIcoAttribute()
     {
-        return route('companies.ico.show', $this->resource);
-    }
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        parent::booted();
-
-        static::created(function (Company $company) {
-            OauthClient::create([
-                'company_id' => $company->company_id,
-                'name' => "{$company->name} Client",
-                'secret' => Str::random(64),
-                'provider' => 'users',
-                'redirect' => 'http://localhost',
-                'personal_access_client' => false,
-                'password_client' => true,
-                'revoked' => false
-            ]);
-        });
+        return route('companies.ico.show', $this);
     }
 
     /**
@@ -113,5 +89,10 @@ class Company extends ApiModel
     public function clients(): HasMany
     {
         return $this->hasMany(OauthClient::class, 'company_id', 'company_id');
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->company_id;
     }
 }

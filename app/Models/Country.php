@@ -27,4 +27,9 @@ class Country extends ApiModel
     {
         return $this->hasMany(Province::class, 'country_id', 'country_id');
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return true;
+    }
 }

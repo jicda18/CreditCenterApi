@@ -21,20 +21,18 @@ class CreateFeesTable extends Migration
             $table->unsignedBigInteger('loan_id');
             $table->date('payment_on');
             $table->float('amount');
+            $table->float('balance');
             $table->date('limit_on');
             $table->timestamp('paid_at')->nullable();
-            $table->unsignedBigInteger('transaction_id')->nullable();
 
             $this->addControlFields($table);
 
             $table->foreign('loan_id')->references('loan_id')->on('tbLoans');
-            $table->foreign('transaction_id')->references('transaction_id')->on('tbTransactions');
 
             $table->index('loan_id');
             $table->index('payment_on');
             $table->index('limit_on');
             $table->index('paid_at');
-            $table->index('transaction_id');
         });
     }
 

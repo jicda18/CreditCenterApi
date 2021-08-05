@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Fee extends ApiModel
 {
@@ -12,9 +13,9 @@ class Fee extends ApiModel
         'loan_id',
         'payment_on',
         'amount',
+        'balance',
         'limit_on',
         'paid_at',
-        'transaction_id',
     ];
     protected $hidden = ['fee_id'];
 
@@ -23,9 +24,9 @@ class Fee extends ApiModel
         'loan_id' => 'integer',
         'payment_on' => 'date',
         'amount' => 'float',
+        'balance' => 'float',
         'limit_on' => 'date',
         'paid_at' => 'datetime',
-        'transaction_id' => 'integer',
     ];
 
     /**
@@ -39,12 +40,17 @@ class Fee extends ApiModel
     }
 
     /**
-     * Get the transaction that owns the Fee
+     * Get all of the fees for the Transaction
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transaction(): BelongsTo
+    public function transactions(): BelongsToMany
     {
-        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaction_id');
+        return $this->belongsToMany(Transaction::class, 'tbFeesTransactionsPivot', 'fee_id', 'transaction_id', 'fee_id', 'transaction_id')->withTimestamps()->withPivot(['payment']);
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->loan->debtor->company_id;
     }
 }

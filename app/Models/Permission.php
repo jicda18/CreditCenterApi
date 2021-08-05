@@ -27,4 +27,9 @@ class Permission extends ApiModel
     {
         return $this->belongsToMany(User::class, 'tbPermissionsUsersPivot', 'permission_id', 'user_id', 'permission_id', 'user_id')->withTimestamps()->withPivot(['company_id']);
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }

@@ -31,7 +31,6 @@ class FeeFactory extends Factory
             'amount' => $loan->fee_amount,
             'limit_on' => $loan->next_on,
             'paid_at' => null,
-            'transaction_id' => null,
         ];
     }
 }

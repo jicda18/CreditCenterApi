@@ -26,11 +26,21 @@ class Loan extends ApiModel
         'debtor_id' => 'integer',
         'currency_id' => 'integer',
         'fee_amount' => 'float',
+        'balance' => 'float',
         'start_on' => 'date',
         'thanks_days' => 'integer',
         'next_on' => 'date',
         'frequency_id' => 'integer',
     ];
+
+    protected $attributes = [
+        'balance' => 0,
+    ];
+
+    public function setBalanceAttribute($balance)
+    {
+        $this->attributes['balance'] = $balance < 0  ? 0 : $balance;
+    }
 
     /**
      * Get all of the transactions for the Loan
@@ -80,5 +90,10 @@ class Loan extends ApiModel
     public function frequency(): BelongsTo
     {
         return $this->belongsTo(Frequency::class, 'frequency_id', 'frequency_id');
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->debtor->company_id;
     }
 }

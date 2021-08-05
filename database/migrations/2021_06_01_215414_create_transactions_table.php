@@ -23,6 +23,9 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('register_user_id');
             $table->timestamp('was_at');
             $table->float('amount');
+            $table->unsignedBigInteger('currency_id');
+            $table->float('loan_amount');
+            $table->float('bank_amount');
             $table->text('comment');
 
             $this->addControlFields($table);
@@ -30,10 +33,12 @@ class CreateTransactionsTable extends Migration
             $table->foreign('loan_id')->references('loan_id')->on('tbLoans');
             $table->foreign('bank_id')->references('bank_id')->on('tbBanks');
             $table->foreign('register_user_id')->references('user_id')->on('tbUsers');
+            $table->foreign('currency_id')->references('currency_id')->on('tbCurrencies');
 
             $table->index('loan_id');
             $table->index('bank_id');
             $table->index('register_user_id');
+            $table->index('currency_id');
         });
     }
 

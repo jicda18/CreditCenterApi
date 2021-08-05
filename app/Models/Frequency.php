@@ -80,4 +80,9 @@ class Frequency extends ApiModel
     {
         return $dte->copy()->addYear();
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return true;
+    }
 }

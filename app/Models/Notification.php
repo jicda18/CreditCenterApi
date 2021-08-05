@@ -77,4 +77,9 @@ class Notification extends ApiModel
     {
         return $this->belongsToMany(User::class, 'tbNotificationsUsersPivot', 'notification_id', 'user_id', 'notification_id', 'user_id')->withTimestamps()->withPivot(['read_at']);
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->company_id && $user->user_id === $this->user_id;
+    }
 }

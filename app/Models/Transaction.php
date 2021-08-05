@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Transaction extends ApiModel
 {
@@ -15,6 +15,9 @@ class Transaction extends ApiModel
         'register_user_id',
         'was_at',
         'amount',
+        'currency_id',
+        'loan_amount',
+        'bank_amount',
         'comment',
     ];
     protected $hidden = ['transaction_id'];
@@ -24,8 +27,11 @@ class Transaction extends ApiModel
         'loan_id' => 'integer',
         'bank_id' => 'integer',
         'register_user_id' => 'integer',
+        'currency_id' => 'integer',
         'was_at' => 'datetime',
         'amount' => 'float',
+        'loan_amount' => 'float',
+        'bank_amount' => 'float',
     ];
 
     /**
@@ -61,10 +67,25 @@ class Transaction extends ApiModel
     /**
      * Get all of the fees for the Transaction
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function fees(): HasMany
+    public function fees(): BelongsToMany
     {
-        return $this->hasMany(Fee::class, 'transaction_id', 'transaction_id');
+        return $this->belongsToMany(Fee::class, 'tbFeesTransactionsPivot', 'transaction_id', 'fee_id', 'transaction_id', 'fee_id')->withTimestamps()->withPivot(['payment']);
+    }
+
+    /**
+     * Get the currency that owns the Loan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'currency_id');
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->bank->company_id;
     }
 }

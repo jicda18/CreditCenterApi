@@ -71,4 +71,9 @@ class Guarantor extends ApiModel
     {
         return $this->hasMany(Debtor::class, 'guarantor_id', 'guarantor_id');
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $company->company_id === $this->company_id;
+    }
 }

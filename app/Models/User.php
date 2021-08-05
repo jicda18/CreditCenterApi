@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Laravel\Passport\Passport;
 
 class User extends ApiModel implements AuthenticatableContract, AuthorizableContract
 {
@@ -71,12 +72,29 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
 
     public function findForPassport($username)
     {
-        return $this->where('username', $username)->first();
+        $request = request();
+        if ($request->has('client_id')) {
+            $user = $this->where('username', $username)->first();
+
+            $client = Passport::client();
+
+            $company_id = null_prevent_property($client->where($client->getKeyName(), $request->client_id)->first(), 'company_id');
+            if ($user->companies()->where('tbCompanies.company_id', '=', $company_id)->count()) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    public function validatePassword($password)
+    {
+        return Hash::check($password, $this->password);
     }
 
     public function validateForPassportPasswordGrant($password)
     {
-        return Hash::check($password, $this->password);
+        return $this->validatePassword($password);
     }
 
     /**
@@ -147,5 +165,11 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
     public function securities(): HasMany
     {
         return $this->hasMany(SecurityLog::class, 'user_id', 'user_id');
+    }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        // Todo: validate if user is from this company
+        return $user->isAdmin();
     }
 }

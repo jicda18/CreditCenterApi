@@ -59,4 +59,9 @@ class Province extends ApiModel
     {
         return $this->hasMany(Debtor::class, 'province_id', 'province_id');
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return true;
+    }
 }
