@@ -21,6 +21,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhitelistController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,8 +34,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Todo: define a login route
+
 // Authentications
-Route::post('tokens', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken')->name('passport.token')->middleware('token.response');
+Route::post('tokens', [AccessTokenController::class, 'issueToken'])->name('tokens.store')->middleware('token.response');
 
 // Myself
 // Todo: set myself controller and resource
@@ -83,7 +86,7 @@ Route::get('debtors/{debtor}/loans', [LoanController::class, 'debtorsLoansIndex'
 Route::get('loans/{loan}/transactions', [TransactionController::class, 'loansTransactionsIndex'])->name('loans.transactions.index');
 Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name('loans.fees.index');
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
-// Route::get('users/{user}/companies', [CompanyController::class, 'usersCompaniesIndex'])->name('users.companies.index');
+Route::get('users/{user}/companies', [CompanyController::class, 'usersCompaniesIndex'])->name('users.companies.index');
 Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermissionsIndex'])->name('users.permissions.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
 Route::get('users/{user}/notifications', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');

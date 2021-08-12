@@ -74,7 +74,7 @@ abstract class Controller extends BaseController
         ];
 
         // Todo: uncomment
-        // $this->middleware('auth:api')->except($this->withoutAuth);
+        $this->middleware('auth:api')->except($this->withoutAuth);
         $this->middleware('transform:' . $this->resource);
     }
 
@@ -256,7 +256,7 @@ abstract class Controller extends BaseController
 
     protected function showAll(LengthAwarePaginator $items, int $status_code = 200)
     {
-        return (new CollectionResource($this->resource, $items))
+        return (new CollectionResource($items, $this->resource))
             ->response()
             ->setStatusCode($status_code);
     }

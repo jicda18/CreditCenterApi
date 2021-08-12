@@ -8,11 +8,11 @@ class CollectionResource extends ResourceCollection
 {
     public $preserveKeys = true;
 
-    public function __construct($resource, $collects)
+    public function __construct($models, $collects)
     {
         $this->collects = $collects;
 
-        parent::__construct($resource);
+        parent::__construct($models);
     }
     /**
      * Transform the resource collection into an array.

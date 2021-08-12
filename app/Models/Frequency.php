@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Frequency extends ApiModel

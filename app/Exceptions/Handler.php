@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (AuthenticationException $exception) {
-            return $this->response($exception->getMessage(), 401);
+            return $this->response('Unauthenticated.', 401);
         });
 
         $this->renderable(function (ValidationException $exception) {

@@ -74,4 +74,9 @@ class Accesslist extends ApiModel
             ->where(DB::raw('INET_ATON(start_ip)'), '<=', $longIp)
             ->where(DB::raw('INET_ATON(end_ip)'), '>=', $longIp);
     }
+
+    public function authorized(Company $company, User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }
