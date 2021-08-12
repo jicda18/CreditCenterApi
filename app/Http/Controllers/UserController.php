@@ -18,6 +18,13 @@ class UserController extends Controller
 
     private $relations = ['companies', 'permissions'];
 
+    /**
+     * function name that don't required Authentication
+     *
+     * @var string[] withoutAuth
+     */
+    protected $withoutAuth = ['avatar'];
+
     public function __construct()
     {
         $this->resource = UserResource::class;
@@ -46,6 +53,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // Todo: Storage a image
         $rules = [
             'username' => ['required', 'alpha_num'],
             'password' => ['required', 'min:8'],
@@ -76,6 +84,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // Todo: Storage a image
         $rules = [
             'username' => ['alpha_num'],
             'old_password' => ['required_with:password'],
@@ -133,6 +142,13 @@ class UserController extends Controller
     public function companiesUsersIndex(Company $company)
     {
         return $this->modelRelationIndex($company, 'users', $this->relations);
+    }
+
+    public function avatar(User $user)
+    {
+        // return response()->file(storage_path('resources' . DIRECTORY_SEPARATOR . $user->logo));
+        // Todo: completed
+        return response()->file(storage_path('uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . 'no-user.png'));
     }
 
     protected function requestToArray(Request $request, bool $store): array

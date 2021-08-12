@@ -19,8 +19,8 @@ class FeeResource extends ApiResource
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
-            'loan' => $loan_uuid,
-            'transaction' => $transaction_uuid,
+            'loan_key' => $loan_uuid,
+            'transaction_key' => $transaction_uuid,
             'payment_at' => $this->payment_on,
             'amount' => $this->amount,
             'limit_at' => $this->limit_on,
@@ -29,7 +29,7 @@ class FeeResource extends ApiResource
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'loan' => new LoanResource($this->whenLoaded('loan')),
-            'transaction' => new TransactionResource($this->whenLoaded('transaction')),
+            'transactions' => TransactionResource::collection($this->whenLoaded('transactions')),
             'links' => [
                 [
                     'rel' => 'self',

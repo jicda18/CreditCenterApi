@@ -23,17 +23,18 @@ class UserResource extends ApiResource
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            'companies' => CompanyResource::collection($this->whenAppended('companies')), // Todo: Only admin
+            'avatar' => route('users.avatar.show', $this->resource),
+            // 'companies' => CompanyResource::collection($this->whenAppended('companies')), // Todo: Only admin
             'permissions' => PermissionResource::collection($this->whenAppended('permissions')), // Todo: Only admin
             'links' => [
                 [
                     'rel' => 'self',
                     'href' => route('users.show', $this->resource),
                 ],
-                [
-                    'rel' => 'companies', // Todo: Only admin
-                    'href' => route('users.companies.index', $this->resource),
-                ],
+                // [
+                //     'rel' => 'companies', // Todo: Only admin
+                //     'href' => route('users.companies.index', $this->resource),
+                // ],
                 [
                     'rel' => 'permissions', // Todo: Only admin
                     'href' => route('users.permissions.index', $this->resource),
