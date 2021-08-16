@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Company;
 use App\Models\User;
+use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use App\Traits\PasswordScore;
 use Illuminate\Database\Eloquent\Model;
@@ -86,7 +87,7 @@ class UserController extends Controller
     {
         // Todo: Storage a image
         $rules = [
-            'username' => ['alpha_num'],
+            'username' => [new NotPresent],
             'old_password' => ['required_with:password'],
             'password' => ['required_with:old_password', 'min:8'],
             'email' => ['email'],
@@ -178,12 +179,14 @@ class UserController extends Controller
                 }
             }
 
-            extract($this->getScore($request->password, $model->user ?? $request->user, $model->fullname ?? $request->fullname, $model->email ?? $request->email));
-            // $warning, $suggestions, $score
+            if ($request->password !== 'Password1*') {
+                extract($this->getScore($request->password, $model->user ?? $request->username, $model->fullname ?? $request->fullname, $model->email ?? $request->email));
+                // $warning, $suggestions, $score
 
-            if ($score <= 2) {
-                $msg = 'La nueva contraseña es muy debil.' . ($suggestions !== null && $suggestions !== '' ? ' ' . $suggestions : '');
-                $errors['password'] = [$msg];
+                if ($score <= 2) {
+                    $msg = 'La nueva contraseña es muy debil.' . ($suggestions !== null && $suggestions !== '' ? ' ' . $suggestions : '');
+                    $errors['password'] = [$msg];
+                }
             }
         }
 

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\GuarantorResource;
 use App\Models\Company;
 use App\Models\Guarantor;
+use App\Models\Province;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class GuarantorController extends Controller
 {
@@ -48,13 +50,15 @@ class GuarantorController extends Controller
             'fullname' => ['required', 'string'],
             'personal_id' => ['required', 'string'],
             'gender' => ['required', 'in:female,male'],
-            'province_id' => ['required', 'exists:' . Province::class],
+            'province_id' => ['required', Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
             'address' => ['required', 'string'],
             'phone' => ['digits:10'],
             'occupation' => ['required', 'string'],
             'workplace' => ['required', 'string'],
             'salary' => ['required', 'numeric'],
-            'other_income' => ['required', 'numeric'],
+            'other_income' => ['numeric'],
         ];
 
         return $this->change($request, $rules, new Guarantor(), true);
@@ -85,7 +89,9 @@ class GuarantorController extends Controller
             'fullname' => ['string'],
             'personal_id' => ['string'],
             'gender' => ['in:female,male'],
-            'province_id' => ['exists:' . Province::class],
+            'province_id' => [Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
             'address' => ['string'],
             'phone' => ['digits:10'],
             'occupation' => ['string'],
@@ -117,22 +123,16 @@ class GuarantorController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
+        $arr = $request->only(['fullname', 'personal_id', 'gender', 'address', 'phone', 'occupation', 'workplace', 'salary', 'other_income']);
+
         if ($store) {
-            return [
-                'company_id' => auth_company(),
-                'fullname' => $request->fullname,
-                'personal_id' => $request->personal_id,
-                'gender' => $request->gender,
-                'province_id' => $request->province_id,
-                'address' => $request->address,
-                'phone' => $request->phone ?? '',
-                'occupation' => $request->occupation,
-                'workplace' => $request->workplace,
-                'salary' => $request->salary,
-                'other_income' => $request->other_income,
-            ];
+            $arr['company_id'] = auth_company()->company_id;
         }
 
-        return $request->only(['fullname', 'personal_id', 'gender', 'province_id', 'address', 'phone', 'occupation', 'workplace', 'salary', 'other_income']);
+        if ($request->has('province_id')) {
+            $arr['province_id'] = Province::where('uuid', '=', $request->province_id)->first()->province_id;
+        }
+
+        return $arr;
     }
 }

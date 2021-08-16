@@ -68,6 +68,7 @@ class GuarantorResource extends ApiResource
             'key' => 'uuid',
             'name' => 'fullname',
             'gender' => 'gender',
+            'province_key' => 'province_id',
             'street' => 'address',
             'phone_number' => 'phone',
             'occupation' => 'occupation',
