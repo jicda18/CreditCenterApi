@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BankController extends Controller
 {
@@ -30,7 +31,9 @@ class BankController extends Controller
      */
     public function index()
     {
-        $query = $this->includeRelations(Bank::query(), $this->relations);
+        $company = auth_company();
+
+        $query = $this->includeRelations($company->banks()->getQuery(), $this->relations);
 
         return $this->idx($query);
     }
@@ -44,7 +47,9 @@ class BankController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'currency_id' => ['required', 'exists:' . Currency::class],
+            'currency_id' => ['required', Rule::exists('tbCurrencies', 'uuid')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
             'bank_name' => ['required', 'string'],
             'account_number' => ['required', 'string'],
             'alias' => ['required', 'string'],
@@ -105,10 +110,14 @@ class BankController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
-        $arr = $request->only(['bank_name', 'account_number', 'alias', 'currency_id']);
+        $arr = $request->only(['bank_name', 'account_number', 'alias']);
+
+        if ($request->has('currency_id')) {
+            $arr['currency_id'] = Currency::where('uuid', '=', $request->currency_id)->first()->currency_id;
+        }
 
         if ($store) {
-            $arr['company_id'] = auth_company();
+            $arr['company_id'] = auth_company()->company_id;
             $arr['balance'] = 0;
         }
 

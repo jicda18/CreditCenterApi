@@ -48,6 +48,10 @@ class Business extends ApiModel
 
     public function authorized(Company $company, User $user): bool
     {
+        if ($this->debtor === null) {
+            return true;
+        }
+
         return $company->company_id === $this->debtor->company_id;
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class CurrencyController extends Controller
 {
@@ -32,6 +33,17 @@ class CurrencyController extends Controller
         $query = $this->includeRelations(Currency::query(), $this->relations);
 
         return $this->idx($query);
+    }
+
+    public function forSelectList()
+    {
+        return $this->forSelect(Currency::all(), function (Currency $currency) {
+            return [
+                'value' => $currency->currency_id,
+                'uuid' => $currency->uuid,
+                'label' => $currency->name,
+            ];
+        });
     }
 
     /**
@@ -90,6 +102,18 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
+        if ($currency->banks()->count() > 0) {
+            throw ValidationException::withMessages(['delete' => "Can't delete {$currency->name} because is assigned in some banks."]);
+        }
+
+        // if ($currency->transactions()->count() > 0) {
+        //     throw ValidationException::withMessages(['delete' => "Can't delete {$currency->name} because is assigned in some transactions."]);
+        // }
+
+        if ($currency->loans()->count() > 0) {
+            throw ValidationException::withMessages(['delete' => "Can't delete {$currency->name} because is assigned in some loans."]);
+        }
+
         $currency->delete();
 
         return  $this->showOne($currency);

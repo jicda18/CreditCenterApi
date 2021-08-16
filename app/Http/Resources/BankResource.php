@@ -61,6 +61,7 @@ class BankResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
+            'currency_key' => 'currency_id',
             'bank' => 'bank_name',
             'account' => 'account_number',
             'nickname' => 'alias',

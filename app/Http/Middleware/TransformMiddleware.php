@@ -26,9 +26,13 @@ class TransformMiddleware
             $data = $response->getData();
 
             $msgs = json_decode(json_encode($data->error), true);
-            $tMsgs = $this->errorTransform($msgs, $resource);
+            if (is_array($msgs)) {
+                $tMsgs = $this->errorTransform($msgs, $resource);
+                $data->error = json_decode(json_encode($tMsgs));
+            } else {
+                $data->error = $msgs;
+            }
 
-            $data->error = json_decode(json_encode($tMsgs));
             $response->setData($data);
         }
 

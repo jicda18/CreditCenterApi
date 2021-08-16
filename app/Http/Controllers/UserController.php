@@ -121,6 +121,8 @@ class UserController extends Controller
             throw new ModelNotFoundException('');
         }
 
+        $user->permissions;
+
         return $this->showOne($user);
     }
 

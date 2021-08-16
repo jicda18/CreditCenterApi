@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -136,22 +137,52 @@ abstract class Controller extends BaseController
 
         foreach ($filter_options as $field => $value) {
             /**
+             * if start with '!**' or end with '**!' then not like
+             * i.e: &name=!**abc then get all where name not start with 'abc'
+             *      &name=abc**! then get all where name not end with 'abc'
+             *      &name=!**abd**! then get all where name not contains 'abc'
+             */
+            if (substr($value, 0, 3) === '!**' || substr($value, strlen($value) - 3) === '**!') {
+                $prefix = '';
+                $val = $value;
+                $suffix = '';
+
+                if (substr($value, 0, 3) === '!**') {
+                    $val = substr($val, 3);
+                    $suffix = '%';
+                }
+
+                if (substr($value, strlen($value) - 3) === '**!') {
+                    $val = substr($val, 0, -3);
+                    $prefix = '%';
+                }
+
+                $query = $query->where($field, 'not like', $prefix . $val . $suffix);
+                continue;
+            }
+
+            /**
              * if start with '**' or end with '**' then like
              * i.e: &name=**abc then get all where name start with 'abc'
              *      &name=abc** then get all where name end with 'abc'
              *      &name=**abd** then get all where name contains 'abc'
              */
             if (substr($value, 0, 2) === '**' || substr($value, strlen($value) - 2) === '**') {
+                $prefix = '';
                 $val = $value;
+                $suffix = '';
+
                 if (substr($value, 0, 2) === '**') {
-                    $val = '%' . substr($val, 2);
+                    $val = substr($val, 2);
+                    $suffix = '%';
                 }
 
                 if (substr($value, strlen($value) - 2) === '**') {
-                    $val = substr($val, 0, -2) . '%';
+                    $val = substr($val, 0, -2);
+                    $prefix = '%';
                 }
 
-                $query = $query->where($field, 'like', $val);
+                $query = $query->where($field, 'like', $prefix . $val . $suffix);
                 continue;
             }
 
@@ -172,6 +203,16 @@ abstract class Controller extends BaseController
             if (substr($value, 0, 2) === '~<') {
                 $val = substr($value, 2);
                 $query = $query->where($field, '<=', $val);
+                continue;
+            }
+
+            /**
+             * if start with '<>' then <>
+             * i.e: &age=<>18 then get all where age is not 18
+             */
+            if (substr($value, 0, 2) === '<>') {
+                $val = substr($value, 2);
+                $query = $query->where($field, '<>', $val);
                 continue;
             }
 
@@ -314,6 +355,13 @@ abstract class Controller extends BaseController
         $query = $this->includeRelations($model->{$name}()->getQuery(), $relations);
 
         return $this->idx($query);
+    }
+
+    protected function forSelect(Collection $all, callable $map)
+    {
+        return response()->json([
+            'data' => $all->map($map)
+        ]);
     }
 
     abstract protected function otherValidations(Request $request, Model $model, bool $store): ?array;

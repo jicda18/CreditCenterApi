@@ -51,6 +51,7 @@ class BusinessResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
+            'province_key' => 'province_id',
             'business' => 'name',
             'relation' => 'type',
             'noe' => 'number_of_employee',

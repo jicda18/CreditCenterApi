@@ -34,6 +34,17 @@ class ProvinceController extends Controller
         return $this->idx($query);
     }
 
+    public function forSelectList()
+    {
+        return $this->forSelect(Province::all(), function (Province $province) {
+            return [
+                'value' => $province->province_id,
+                'uuid' => $province->uuid,
+                'label' => $province->name,
+            ];
+        });
+    }
+
     /**
      * Display the specified resource.
      *

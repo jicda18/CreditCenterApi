@@ -7,12 +7,13 @@ use App\Models\Business;
 use App\Models\Province;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BusinessController extends Controller
 {
     use GenericController;
 
-    private $relations = [];
+    private $relations = ['province'];
 
     public function __construct()
     {
@@ -47,7 +48,9 @@ class BusinessController extends Controller
             'type' => ['required', 'in:own,rent'],
             'number_of_employee' => ['integer'],
             'phone' => ['required', 'digits:10'],
-            'province_id' => ['required', 'exists:' . Province::class],
+            'province_id' => ['required', Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
             'address' => ['required', 'string'],
             'comment' => ['string'],
         ];
@@ -80,7 +83,9 @@ class BusinessController extends Controller
             'type' => ['in:own,rent'],
             'number_of_employee' => ['integer'],
             'phone' => ['digits:10'],
-            'province_id' => ['exists:' . Province::class],
+            'province_id' => [Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
+                return $query->whereNull('deleted_at');
+            })],
             'address' => ['string'],
             'comment' => ['string'],
         ];
@@ -103,18 +108,25 @@ class BusinessController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
+        $arr = $request->only(['name', 'type', 'phone', 'address']);
+
         if ($store) {
-            return [
-                'name' => $request->name,
-                'type' => $request->type,
-                'number_of_employee' => $request->number_of_employee ?? 1,
-                'phone' => $request->phone,
-                'province_id' => $request->province_id,
-                'address' => $request->address,
-                'comment' => $request->comment ?? '',
-            ];
+            $arr['number_of_employee'] = $request->number_of_employee ?? 1;
+            $arr['comment'] = $request->comment ?? '';
+        } else {
+            if ($request->has('number_of_employee')) {
+                $arr['number_of_employee'] = $request->number_of_employee;
+            }
+
+            if ($request->has('comment')) {
+                $arr['comment'] = $request->comment;
+            }
         }
 
-        return $request->only(['name', 'type', 'number_of_employee', 'phone', 'province_id', 'address', 'comment']);
+        if ($request->has('province_id')) {
+            $arr['province_id'] = Province::where('uuid', '=', $request->province_id)->first()->province_id;
+        }
+
+        return $arr;
     }
 }

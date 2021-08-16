@@ -13,7 +13,7 @@ class GuarantorController extends Controller
 {
     use GenericController;
 
-    private $relations = [];
+    private $relations = ['province', 'debtors'];
 
     public function __construct()
     {

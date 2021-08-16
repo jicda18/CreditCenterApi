@@ -51,6 +51,10 @@ Route::get('users/{user}/change-password-confirm/{token}', [UserController::clas
 Route::get('companies/{company}/logo', [CompanyController::class, 'logo'])->name('companies.logo.show');
 Route::get('companies/{company}/ico', [CompanyController::class, 'ico'])->name('companies.ico.show');
 
+// For Select List
+Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
+Route::get('provinces/select', [ProvinceController::class, 'forSelectList']);
+
 // Resource
 Route::apiResource('banks', BankController::class);
 Route::apiResource('blacklists', BlacklistController::class);

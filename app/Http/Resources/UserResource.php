@@ -20,12 +20,12 @@ class UserResource extends ApiResource
             'mail' => $this->email,
             'name' => $this->fullname,
             'administrator' => $this->admin,
+            'avatar' => route('users.avatar.show', $this->resource),
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            'avatar' => route('users.avatar.show', $this->resource),
-            // 'companies' => CompanyResource::collection($this->whenAppended('companies')), // Todo: Only admin
-            'permissions' => PermissionResource::collection($this->whenAppended('permissions')), // Todo: Only admin
+            // 'companies' => CompanyResource::collection($this->whenLoaded('companies')), // Todo: Only admin
+            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')), // Todo: Only admin
             'links' => [
                 [
                     'rel' => 'self',
