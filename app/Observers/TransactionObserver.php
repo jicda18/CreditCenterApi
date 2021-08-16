@@ -55,8 +55,9 @@ class TransactionObserver
         if ($bank !== null) {
             $bank->balance += $transaction->bank_amount;
             $bank->save();
-        }
 
+            $transaction->bank_balance = $bank->balance;
+        }
 
         // Update Loan
         /**
@@ -66,6 +67,8 @@ class TransactionObserver
         if ($loan !== null) {
             $loan->balance += $transaction->loan_amount;
             $loan->save();
+
+            $transaction->loan_balance = $loan->balance;
 
             // If a payment
             if ($transaction->loan_amount < 0) {
@@ -86,5 +89,7 @@ class TransactionObserver
                 }
             }
         }
+
+        $transaction->save();
     }
 }

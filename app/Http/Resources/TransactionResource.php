@@ -26,6 +26,10 @@ class TransactionResource extends ApiResource
             'was_at' => $this->was_at,
             'amount' => $this->amount,
             'comments' => $this->comment,
+            'loan_amount' => $this->loan_amount,
+            'bank_amount' => $this->bank_amount,
+            'loan_balance' => $this->loan_balance,
+            'bank_balance' => $this->bank_balance,
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
@@ -40,11 +44,11 @@ class TransactionResource extends ApiResource
                 ],
                 [
                     'rel' => 'loan',
-                    'href' => route('loan.show', $loan_uuid),
+                    'href' => route('loans.show', $loan_uuid),
                 ],
                 [
                     'rel' => 'bank',
-                    'href' => route('bank.show', $bank_uuid),
+                    'href' => route('banks.show', $bank_uuid),
                 ],
                 [
                     'rel' => 'register',
@@ -67,9 +71,16 @@ class TransactionResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
+            'loan_key' => 'loan_id',
+            'bank_key' => 'bank_id',
+            'register_key' => 'register_id',
             'was_at' => 'was_at',
             'amount' => 'amount',
             'comments' => 'comment',
+            'loan_amount' => 'loan_amount',
+            'bank_amount' => 'bank_amount',
+            'loan_balance' => 'loan_balance',
+            'bank_balance' => 'bank_balance',
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',

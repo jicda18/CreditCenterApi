@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LoanResource;
 use App\Models\Debtor;
+use App\Models\Frequency;
 use App\Models\Loan;
+use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
 
@@ -35,6 +37,19 @@ class LoanController extends Controller
     }
 
     // Todo: update
+    public function update(Request $request, Loan $loan)
+    {
+        $rules = [
+            'currency_id' => [new NotPresent],
+            'frequency_id' => ['exists:' . Frequency::class],
+            'fee_amount' => ['numeric'],
+            'thanks_days' => ['integer'],
+            'next_on' => [new NotPresent],
+            'status' => ['in:active,settled,paused,canceled'],
+        ];
+
+        return $this->change($request, $rules, $loan, false);
+    }
 
     /**
      * Display the specified resource.
@@ -54,6 +69,10 @@ class LoanController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
-        return [];
+        if ($store) {
+            return [];
+        }
+
+        return $request->only(['frequency_id', 'thanks_days', 'status', 'fee_amount']);
     }
 }

@@ -18,6 +18,8 @@ class Transaction extends ApiModel
         'currency_id',
         'loan_amount',
         'bank_amount',
+        'loan_balance',
+        'bank_balance',
         'comment',
     ];
     protected $hidden = ['transaction_id'];
@@ -32,6 +34,8 @@ class Transaction extends ApiModel
         'amount' => 'float',
         'loan_amount' => 'float',
         'bank_amount' => 'float',
+        'loan_balance' => 'float',
+        'bank_balance' => 'float',
     ];
 
     /**

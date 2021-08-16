@@ -26,6 +26,8 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('currency_id');
             $table->float('loan_amount');
             $table->float('bank_amount');
+            $table->float('loan_balance')->nullable();
+            $table->float('bank_balance')->nullable();
             $table->text('comment');
 
             $this->addControlFields($table);

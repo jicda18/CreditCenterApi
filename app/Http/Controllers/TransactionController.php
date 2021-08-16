@@ -17,7 +17,7 @@ class TransactionController extends Controller
 {
     use GenericController;
 
-    private $relations = [];
+    private $relations = ['loan', 'bank', 'register', 'fees'];
 
     public function __construct()
     {

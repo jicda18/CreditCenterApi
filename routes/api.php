@@ -70,7 +70,7 @@ Route::apiResource('debtors', DebtorController::class);
 Route::apiResource('fees', FeeController::class)->only(['index', 'show']);
 Route::apiResource('frequencies', FrequencyController::class)->only(['index', 'show']);
 Route::apiResource('guarantors', GuarantorController::class);
-Route::apiResource('loans', LoanController::class)->only(['index', 'show']);
+Route::apiResource('loans', LoanController::class)->only(['index', 'show', 'update']);
 Route::apiResource('logs', LogController::class)->only(['index', 'show']);
 Route::apiResource('types', LogTypeController::class)->only(['index', 'show']);
 Route::apiResource('notifications', NotificationController::class)->only(['index', 'show']);
