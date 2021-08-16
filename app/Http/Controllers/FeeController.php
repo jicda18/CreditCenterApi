@@ -43,7 +43,7 @@ class FeeController extends Controller
      */
     public function show(Fee $fee)
     {
-        return  $this->showOne($fee);
+        return  $this->showOne($fee, $this->relations);
     }
 
     public function loansFeesIndex(Loan $loan)

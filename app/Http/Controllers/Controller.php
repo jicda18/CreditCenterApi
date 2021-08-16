@@ -79,11 +79,13 @@ abstract class Controller extends BaseController
         $this->middleware('transform:' . $this->resource);
     }
 
-    protected function showOne(Model $model, int $status_code = 200)
+    protected function showOne(Model $model, array $valid_relation, int $status_code = 200)
     {
         if (!$model->authorized(auth_company(), Auth::user())) {
             throw new ModelUnauthorizedException($model);
         }
+
+        $model = $this->includeRelationsToModel($model, $valid_relation);
 
         return (new $this->resource($model))
             ->response()
@@ -103,7 +105,7 @@ abstract class Controller extends BaseController
         // Todo: implement authorized
     }
 
-    protected function change(Request $request, array $rules, Model $model, bool $store)
+    protected function change(Request $request, array $rules, Model $model, bool $store, array $valid_relation)
     {
         $this->validate($request, $rules);
 
@@ -123,7 +125,7 @@ abstract class Controller extends BaseController
 
         $model = $this->afterToSave($request, $model, $store);
 
-        return $this->showOne($model, $store ? 201 : 200);
+        return $this->showOne($model, $valid_relation, $store ? 201 : 200);
     }
 
     protected function filter(Builder $query): Builder

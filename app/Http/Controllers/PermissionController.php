@@ -42,7 +42,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        return  $this->showOne($permission);
+        return  $this->showOne($permission, $this->relations);
     }
 
     public function usersPermissionsIndex(User $user)

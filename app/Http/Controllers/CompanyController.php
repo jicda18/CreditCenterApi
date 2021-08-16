@@ -49,7 +49,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        return  $this->showOne($company);
+        return  $this->showOne($company, $this->relations);
     }
 
     /**
@@ -62,7 +62,7 @@ class CompanyController extends Controller
     {
         $company->delete();
 
-        return  $this->showOne($company);
+        return  $this->showOne($company, []);
     }
 
     public function logo(Company $company)

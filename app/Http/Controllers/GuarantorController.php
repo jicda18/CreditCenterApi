@@ -69,7 +69,7 @@ class GuarantorController extends Controller
             'other_income' => ['numeric'],
         ];
 
-        return $this->change($request, $rules, new Guarantor(), true);
+        return $this->change($request, $rules, new Guarantor(), true, $this->relations);
     }
 
     /**
@@ -80,7 +80,7 @@ class GuarantorController extends Controller
      */
     public function show(Guarantor $guarantor)
     {
-        return  $this->showOne($guarantor);
+        return  $this->showOne($guarantor, $this->relations);
     }
 
     /**
@@ -106,7 +106,7 @@ class GuarantorController extends Controller
             'other_income' => ['numeric'],
         ];
 
-        return $this->change($request, $rules, $guarantor, false);
+        return $this->change($request, $rules, $guarantor, false, $this->relations);
     }
 
     /**
@@ -119,7 +119,7 @@ class GuarantorController extends Controller
     {
         $guarantor->delete();
 
-        return  $this->showOne($guarantor);
+        return  $this->showOne($guarantor, []);
     }
 
     public function companiesGuarantorsIndex(Company $company)

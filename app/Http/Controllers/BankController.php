@@ -9,7 +9,6 @@ use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class BankController extends Controller
 {
@@ -64,7 +63,7 @@ class BankController extends Controller
             'balance' => [new NotPresent()],
         ];
 
-        return $this->change($request, $rules, new Bank(), true);
+        return $this->change($request, $rules, new Bank(), true, $this->relations);
     }
 
     /**
@@ -75,7 +74,7 @@ class BankController extends Controller
      */
     public function show(Bank $bank)
     {
-        return  $this->showOne($bank);
+        return  $this->showOne($bank, $this->relations);
     }
 
     /**
@@ -95,7 +94,7 @@ class BankController extends Controller
             'balance' => [new NotPresent()],
         ];
 
-        return $this->change($request, $rules, $bank, false);
+        return $this->change($request, $rules, $bank, false, $this->relations);
     }
 
     /**
@@ -108,7 +107,7 @@ class BankController extends Controller
     {
         $bank->delete();
 
-        return  $this->showOne($bank);
+        return  $this->showOne($bank, []);
     }
 
     public function companiesBanksIndex(Company $company)

@@ -52,7 +52,7 @@ class ProvinceController extends Controller
      */
     public function show(Province $province)
     {
-        return  $this->showOne($province);
+        return  $this->showOne($province, $this->relations);
     }
 
     public function countriesProvincesIndex(Country $country)

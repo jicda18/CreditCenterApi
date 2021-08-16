@@ -60,7 +60,7 @@ class CurrencyController extends Controller
             'exchange_value' => ['required', 'numeric'],
         ];
 
-        return $this->change($request, $rules, new Currency(), true);
+        return $this->change($request, $rules, new Currency(), true, $this->relations);
     }
 
     /**
@@ -71,7 +71,7 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
-        return  $this->showOne($currency);
+        return  $this->showOne($currency, $this->relations);
     }
 
     /**
@@ -90,7 +90,7 @@ class CurrencyController extends Controller
             'exchange_value' => ['numeric'],
         ];
 
-        return $this->change($request, $rules, $currency, false);
+        return $this->change($request, $rules, $currency, false, $this->relations);
     }
 
     /**
@@ -115,7 +115,7 @@ class CurrencyController extends Controller
 
         $currency->delete();
 
-        return  $this->showOne($currency);
+        return  $this->showOne($currency, []);
     }
 
     protected function requestToArray(Request $request, bool $store): array

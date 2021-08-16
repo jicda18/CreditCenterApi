@@ -79,7 +79,7 @@ class DebtorController extends Controller
             'balance' => ['required', 'numeric', 'min:0'],
         ];
 
-        return $this->change($request, $rules, new Debtor(), true);
+        return $this->change($request, $rules, new Debtor(), true, $this->relations);
     }
 
     /**
@@ -90,7 +90,7 @@ class DebtorController extends Controller
      */
     public function show(Debtor $debtor)
     {
-        return  $this->showOne($debtor);
+        return  $this->showOne($debtor, $this->relations);
     }
 
     /**
@@ -120,7 +120,7 @@ class DebtorController extends Controller
             'other_income' => ['numeric'],
         ];
 
-        return $this->change($request, $rules, $debtor, false);
+        return $this->change($request, $rules, $debtor, false, $this->relations);
     }
 
     /**
@@ -133,7 +133,7 @@ class DebtorController extends Controller
     {
         $debtor->delete();
 
-        return  $this->showOne($debtor);
+        return  $this->showOne($debtor, []);
     }
 
     public function companiesDebtorsIndex(Company $company)

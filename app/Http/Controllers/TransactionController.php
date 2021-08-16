@@ -55,7 +55,7 @@ class TransactionController extends Controller
             'comment' => ['required', 'string'],
         ];
 
-        return $this->change($request, $rules, new Transaction(), true);
+        return $this->change($request, $rules, new Transaction(), true, $this->relations);
     }
 
     /**
@@ -66,7 +66,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        return  $this->showOne($transaction);
+        return  $this->showOne($transaction, $this->relations);
     }
 
     public function banksTransactionsIndex(Bank $bank)

@@ -63,7 +63,7 @@ class BusinessController extends Controller
             'comment' => ['string'],
         ];
 
-        return $this->change($request, $rules, new Business(), true);
+        return $this->change($request, $rules, new Business(), true, $this->relations);
     }
 
     /**
@@ -74,7 +74,7 @@ class BusinessController extends Controller
      */
     public function show(Business $business)
     {
-        return  $this->showOne($business);
+        return  $this->showOne($business, $this->relations);
     }
 
     /**
@@ -96,7 +96,7 @@ class BusinessController extends Controller
             'comment' => ['string'],
         ];
 
-        return $this->change($request, $rules, $business, false);
+        return $this->change($request, $rules, $business, false, $this->relations);
     }
 
     /**
@@ -109,7 +109,7 @@ class BusinessController extends Controller
     {
         $business->delete();
 
-        return  $this->showOne($business);
+        return  $this->showOne($business, []);
     }
 
     protected function requestToArray(Request $request, bool $store): array

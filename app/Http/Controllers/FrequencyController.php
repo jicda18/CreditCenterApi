@@ -51,7 +51,7 @@ class FrequencyController extends Controller
      */
     public function show(Frequency $frequency)
     {
-        return  $this->showOne($frequency);
+        return  $this->showOne($frequency, $this->relations);
     }
 
     protected function requestToArray(Request $request, bool $store): array

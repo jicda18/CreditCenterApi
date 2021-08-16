@@ -62,7 +62,7 @@ class UserController extends Controller
             'fullname' => ['required', 'string'],
         ];
 
-        return $this->change($request, $rules, new User(), true);
+        return $this->change($request, $rules, new User(), true, $this->relations);
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->showOne($user);
+        return  $this->showOne($user, $this->relations);
     }
 
     /**
@@ -94,7 +94,7 @@ class UserController extends Controller
             'fullname' => ['string'],
         ];
 
-        return $this->change($request, $rules, $user, false);
+        return $this->change($request, $rules, $user, false, $this->relations);
     }
 
     /**
@@ -107,7 +107,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return  $this->showOne($user);
+        return  $this->showOne($user, []);
     }
 
     public function usersMeShow()
@@ -124,7 +124,7 @@ class UserController extends Controller
 
         $user->permissions;
 
-        return $this->showOne($user);
+        return $this->showOne($user, []);
     }
 
     public function changePassword(Request $request, User $user)

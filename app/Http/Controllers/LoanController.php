@@ -48,7 +48,7 @@ class LoanController extends Controller
             'status' => ['in:active,settled,paused,canceled'],
         ];
 
-        return $this->change($request, $rules, $loan, false);
+        return $this->change($request, $rules, $loan, false, $this->relations);
     }
 
     /**
@@ -59,7 +59,7 @@ class LoanController extends Controller
      */
     public function show(Loan $loan)
     {
-        return  $this->showOne($loan);
+        return  $this->showOne($loan, $this->relations);
     }
 
     public function debtorsLoansIndex(Debtor $debtor)

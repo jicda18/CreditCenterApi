@@ -42,7 +42,7 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
-        return  $this->showOne($country);
+        return  $this->showOne($country, $this->relations);
     }
 
     protected function requestToArray(Request $request, bool $store): array

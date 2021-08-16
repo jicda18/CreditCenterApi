@@ -42,7 +42,7 @@ class NotificationController extends Controller
      */
     public function show(Notification $notification)
     {
-        return  $this->showOne($notification);
+        return  $this->showOne($notification, $this->relations);
     }
 
     public function usersNotificationsIndex(User $user)
