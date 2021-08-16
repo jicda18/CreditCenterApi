@@ -48,9 +48,7 @@ class BusinessController extends Controller
             'type' => ['required', 'in:own,rent'],
             'number_of_employee' => ['integer'],
             'phone' => ['required', 'digits:10'],
-            'province_id' => ['required', Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
-                return $query->whereNull('deleted_at');
-            })],
+            'province_id' => ['required', 'exists:' . Province::class],
             'address' => ['required', 'string'],
             'comment' => ['string'],
         ];
@@ -83,9 +81,7 @@ class BusinessController extends Controller
             'type' => ['in:own,rent'],
             'number_of_employee' => ['integer'],
             'phone' => ['digits:10'],
-            'province_id' => [Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
-                return $query->whereNull('deleted_at');
-            })],
+            'province_id' => ['exists:' . Province::class],
             'address' => ['string'],
             'comment' => ['string'],
         ];
@@ -108,7 +104,7 @@ class BusinessController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
-        $arr = $request->only(['name', 'type', 'phone', 'address']);
+        $arr = $request->only(['name', 'type', 'phone', 'address', 'province_id']);
 
         if ($store) {
             $arr['number_of_employee'] = $request->number_of_employee ?? 1;
@@ -121,10 +117,6 @@ class BusinessController extends Controller
             if ($request->has('comment')) {
                 $arr['comment'] = $request->comment;
             }
-        }
-
-        if ($request->has('province_id')) {
-            $arr['province_id'] = Province::where('uuid', '=', $request->province_id)->first()->province_id;
         }
 
         return $arr;

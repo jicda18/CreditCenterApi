@@ -82,6 +82,9 @@ class DebtorResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
+            'guarantor_key' => 'guarantor_id',
+            'business_key' => 'business_id',
+            'province_key' => 'province_id',
             'name' => 'fullname',
             'nick_name' => 'nickname',
             'personal_id' => 'personal_id',

@@ -47,9 +47,7 @@ class BankController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'currency_id' => ['required', Rule::exists('tbCurrencies', 'uuid')->where(function ($query) {
-                return $query->whereNull('deleted_at');
-            })],
+            'currency_id' => ['required', 'exists:' . Currency::class],
             'bank_name' => ['required', 'string'],
             'account_number' => ['required', 'string'],
             'alias' => ['required', 'string'],
@@ -110,11 +108,7 @@ class BankController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
-        $arr = $request->only(['bank_name', 'account_number', 'alias']);
-
-        if ($request->has('currency_id')) {
-            $arr['currency_id'] = Currency::where('uuid', '=', $request->currency_id)->first()->currency_id;
-        }
+        $arr = $request->only(['bank_name', 'account_number', 'alias', 'currency_id']);
 
         if ($store) {
             $arr['company_id'] = auth_company()->company_id;

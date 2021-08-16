@@ -48,11 +48,9 @@ class GuarantorController extends Controller
         $rules = [
             'company_id' => [new NotPresent()],
             'fullname' => ['required', 'string'],
-            'personal_id' => ['required', 'string'],
+            'personal_id' => ['required', 'string', 'unique:' . Guarantor::class . ',personal_id'],
             'gender' => ['required', 'in:female,male'],
-            'province_id' => ['required', Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
-                return $query->whereNull('deleted_at');
-            })],
+            'province_id' => ['required', 'exists:' . Province::class],
             'address' => ['required', 'string'],
             'phone' => ['digits:10'],
             'occupation' => ['required', 'string'],
@@ -87,11 +85,9 @@ class GuarantorController extends Controller
         $rules = [
             'company_id' => [new NotPresent()],
             'fullname' => ['string'],
-            'personal_id' => ['string'],
+            'personal_id' => ['string', 'unique:' . Guarantor::class . ',personal_id,' . $guarantor->guarantor_id . ',guarantor_id'],
             'gender' => ['in:female,male'],
-            'province_id' => [Rule::exists('tbProvinces', 'uuid')->where(function ($query) {
-                return $query->whereNull('deleted_at');
-            })],
+            'province_id' => ['exists:' . Province::class],
             'address' => ['string'],
             'phone' => ['digits:10'],
             'occupation' => ['string'],
@@ -123,14 +119,10 @@ class GuarantorController extends Controller
 
     protected function requestToArray(Request $request, bool $store): array
     {
-        $arr = $request->only(['fullname', 'personal_id', 'gender', 'address', 'phone', 'occupation', 'workplace', 'salary', 'other_income']);
+        $arr = $request->only(['fullname', 'province_id', 'personal_id', 'gender', 'address', 'phone', 'occupation', 'workplace', 'salary', 'other_income']);
 
         if ($store) {
             $arr['company_id'] = auth_company()->company_id;
-        }
-
-        if ($request->has('province_id')) {
-            $arr['province_id'] = Province::where('uuid', '=', $request->province_id)->first()->province_id;
         }
 
         return $arr;

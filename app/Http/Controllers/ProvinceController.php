@@ -38,8 +38,7 @@ class ProvinceController extends Controller
     {
         return $this->forSelect(Province::all(), function (Province $province) {
             return [
-                'value' => $province->province_id,
-                'uuid' => $province->uuid,
+                'value' => $province->uuid,
                 'label' => $province->name,
             ];
         });

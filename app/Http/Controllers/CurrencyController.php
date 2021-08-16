@@ -39,8 +39,7 @@ class CurrencyController extends Controller
     {
         return $this->forSelect(Currency::all(), function (Currency $currency) {
             return [
-                'value' => $currency->currency_id,
-                'uuid' => $currency->uuid,
+                'value' => $currency->uuid,
                 'label' => $currency->name,
             ];
         });
