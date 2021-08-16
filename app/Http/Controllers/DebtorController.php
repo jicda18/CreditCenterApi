@@ -75,7 +75,7 @@ class DebtorController extends Controller
             'start_on' => ['required', 'date'],
             'thanks_days' => ['integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
-            'bank_id' => ['required', 'exists' . Bank::class],
+            'bank_id' => ['required', 'exists:' . Bank::class],
             'balance' => ['required', 'numeric', 'min:0'],
         ];
 
@@ -150,7 +150,7 @@ class DebtorController extends Controller
     {
         if ($store) {
             return [
-                'company_id' => auth_company(),
+                'company_id' => auth_company()->company_id,
                 'guarantor_id' => $request->guarantor_id,
                 'business_id' => $request->business_id,
                 'fullname' => $request->fullname,
@@ -173,25 +173,27 @@ class DebtorController extends Controller
 
     protected function afterToSave(Request $request, Model $model, bool $store): Model
     {
-        $loan = Loan::create([
-            'debtor_id' => $model->getKey(),
-            'currency_id' => $request->currency_id,
-            'fee_amount' => $request->fee_amount,
-            'start_on' => $request->start_on,
-            'thanks_days' => $request->thanks_days ?? 0,
-            'next_on' => $request->start_on,
-            'frequency_id' => $request->frequency_id,
-            'status' => 'active',
-        ]);
+        if ($store) {
+            $loan = Loan::create([
+                'debtor_id' => $model->getKey(),
+                'currency_id' => $request->currency_id,
+                'fee_amount' => $request->fee_amount,
+                'start_on' => $request->start_on,
+                'thanks_days' => $request->thanks_days ?? 0,
+                'next_on' => $request->start_on,
+                'frequency_id' => $request->frequency_id,
+                'status' => 'active',
+            ]);
 
-        $transaction = Transaction::create([
-            'loan_id' => $loan->loan_id,
-            'bank_id' => $request->bank_id,
-            'register_user_id' => Auth::user(),
-            'amount' => $request->balance,
-            'currency_id' => $request->currency_id,
-            'comment' => 'Nuevo prestamo para ' . $model->fullname,
-        ]);
+            $transaction = Transaction::create([
+                'loan_id' => $loan->loan_id,
+                'bank_id' => $request->bank_id,
+                'register_user_id' => Auth::user()->user_id,
+                'amount' => $request->balance,
+                'currency_id' => $request->currency_id,
+                'comment' => 'Nuevo prestamo para ' . $model->fullname,
+            ]);
+        }
 
         return $model;
     }

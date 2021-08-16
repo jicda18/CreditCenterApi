@@ -33,6 +33,16 @@ class FrequencyController extends Controller
         return $this->idx($query);
     }
 
+    public function forSelectList()
+    {
+        return $this->forSelect(Frequency::all(), function (Frequency $frequency) {
+            return [
+                'value' => $frequency->uuid,
+                'label' => $frequency->label,
+            ];
+        });
+    }
+
     /**
      * Display the specified resource.
      *

@@ -38,6 +38,16 @@ class BankController extends Controller
         return $this->idx($query);
     }
 
+    public function forSelectList()
+    {
+        return $this->forSelect(Bank::all(), function (Bank $bank) {
+            return [
+                'value' => $bank->uuid,
+                'label' => $bank->alias,
+            ];
+        });
+    }
+
     /**
      * Store a newly created resource in storage.
      *

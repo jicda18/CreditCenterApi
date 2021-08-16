@@ -74,6 +74,9 @@ class LoanResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
+            'debtor_key' => 'debtor_id',
+            'currency_key' => 'currency_id',
+            'frequency_key' => 'frequency_id',
             'fee_amount' => 'fee_amount',
             'start_at' => 'start_on',
             'thanks_days' => 'thanks_days',

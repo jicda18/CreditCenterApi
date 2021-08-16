@@ -54,6 +54,10 @@ Route::get('companies/{company}/ico', [CompanyController::class, 'ico'])->name('
 // For Select List
 Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
 Route::get('provinces/select', [ProvinceController::class, 'forSelectList']);
+Route::get('guarantors/select', [GuarantorController::class, 'forSelectList']);
+Route::get('businesses/select', [BusinessController::class, 'forSelectList']);
+Route::get('frequencies/select', [FrequencyController::class, 'forSelectList']);
+Route::get('banks/select', [BankController::class, 'forSelectList']);
 
 // Resource
 Route::apiResource('banks', BankController::class);

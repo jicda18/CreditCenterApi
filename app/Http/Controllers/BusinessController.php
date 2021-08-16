@@ -35,6 +35,16 @@ class BusinessController extends Controller
         return $this->idx($query);
     }
 
+    public function forSelectList()
+    {
+        return $this->forSelect(Business::all(), function (Business $business) {
+            return [
+                'value' => $business->uuid,
+                'label' => $business->name,
+            ];
+        });
+    }
+
     /**
      * Store a newly created resource in storage.
      *

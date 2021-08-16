@@ -99,6 +99,15 @@ class DebtorResource extends ApiResource
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',
+
+            'currency_key' => 'currency_id',
+            'frequency_key' => 'frequency_id',
+            'fee_amount' => 'fee_amount',
+            'start_at' => 'start_on',
+            'thanks_days' => 'thanks_days',
+
+            'bank_key' => 'bank_id',
+            'balance' => 'balance',
         ]);
     }
 }
