@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call('migrate:data', ['--fresh' => true]);
 
-        $debtorCount = 8;
+        $debtorCount = 64;
 
         Notification::factory()->count(6)->create();
         Bank::factory()->count(3)->create();
