@@ -26,7 +26,7 @@ class BankFactory extends Factory
             'currency_id' => $this->faker->numberBetween(1, 2),
             'bank_name' => $this->faker->company,
             'account_number' => $this->faker->iban('DO'),
-            'alias' => '',
+            'alias' => 'Bank ' . $this->faker->numberBetween(1, 9999),
             'balance' => 0
         ];
     }

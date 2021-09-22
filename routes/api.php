@@ -53,6 +53,8 @@ Route::get('companies/{company}/ico', [CompanyController::class, 'ico'])->name('
 
 // For Select List
 Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
+Route::get('debtors/select', [DebtorController::class, 'forSelectList']);
+Route::get('debtors/loan/select', [DebtorController::class, 'loanForSelectList']);
 Route::get('provinces/select', [ProvinceController::class, 'forSelectList']);
 Route::get('guarantors/select', [GuarantorController::class, 'forSelectList']);
 Route::get('businesses/select', [BusinessController::class, 'forSelectList']);

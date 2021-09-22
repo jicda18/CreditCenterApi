@@ -39,7 +39,7 @@ class GuarantorController extends Controller
 
     public function forSelectList()
     {
-        return $this->forSelect(Guarantor::all(), function (Guarantor $guarantor) {
+        return $this->forSelect(Guarantor::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Guarantor $guarantor) {
             return [
                 'value' => $guarantor->uuid,
                 'label' => $guarantor->fullname,

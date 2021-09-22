@@ -45,6 +45,35 @@ class DebtorController extends Controller
         return $this->idx($query);
     }
 
+    public function forSelectList()
+    {
+        return $this->forSelect(Debtor::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Debtor $debtor) {
+            $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
+
+            return [
+                'value' => $debtor->uuid,
+                'label' => "{$debtor->fullname}{$nick}",
+            ];
+        });
+    }
+
+    public function loanForSelectList()
+    {
+        return $this->forSelect(Debtor::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get()->filter(function (Debtor $debtor) {
+            $loans = $debtor->loans;
+
+            return $loans->count() > 0;
+        })->values(), function (Debtor $debtor) {
+            $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
+            $loan = $debtor->loans->first();
+
+            return [
+                'value' => null_prevent_property($loan, 'uuid'),
+                'label' => "{$debtor->fullname}{$nick}",
+            ];
+        });
+    }
+
     /**
      * Store a newly created resource in storage.
      *

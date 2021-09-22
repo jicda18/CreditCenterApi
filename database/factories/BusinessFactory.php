@@ -29,6 +29,7 @@ class BusinessFactory extends Factory
             'province_id' => 1,
             'address' => $this->faker->streetAddress,
             'comment' => $this->faker->paragraph($this->faker->numberBetween(1, 3)),
+            'company_id' => $this->faker->numberBetween(1, 2),
         ];
     }
 }

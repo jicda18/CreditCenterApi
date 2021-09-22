@@ -39,7 +39,7 @@ class BankController extends Controller
 
     public function forSelectList()
     {
-        return $this->forSelect(Bank::all(), function (Bank $bank) {
+        return $this->forSelect(Bank::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Bank $bank) {
             return [
                 'value' => $bank->uuid,
                 'label' => $bank->alias,

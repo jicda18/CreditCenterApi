@@ -23,14 +23,17 @@ class CreateBusinessesTable extends Migration
             $table->unsignedInteger('number_of_employee')->default(0);
             $table->string('phone');
             $table->unsignedBigInteger('province_id');
+            $table->unsignedBigInteger('company_id');
             $table->string('address');
             $table->text('comment');
 
             $this->addControlFields($table);
 
             $table->foreign('province_id')->references('province_id')->on('tbProvinces');
+            $table->foreign('company_id')->references('company_id')->on('tbCompanies');
 
             $table->index('province_id');
+            $table->index('company_id');
         });
     }
 

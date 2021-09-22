@@ -37,7 +37,7 @@ class BusinessController extends Controller
 
     public function forSelectList()
     {
-        return $this->forSelect(Business::all(), function (Business $business) {
+        return $this->forSelect(Business::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Business $business) {
             return [
                 'value' => $business->uuid,
                 'label' => $business->name,
@@ -119,6 +119,7 @@ class BusinessController extends Controller
         if ($store) {
             $arr['number_of_employee'] = $request->number_of_employee ?? 1;
             $arr['comment'] = $request->comment ?? '';
+            $arr['company_id'] = auth_company();
         } else {
             if ($request->has('number_of_employee')) {
                 $arr['number_of_employee'] = $request->number_of_employee;

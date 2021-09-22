@@ -14,14 +14,16 @@ class TransactionResource extends ApiResource
      */
     public function toArray($request)
     {
-        $loan_uuid = $this->getResourceKey('loan');
-        $bank_uuid = $this->getResourceKey('bank');
-        $register_uuid = $this->getResourceKey('register');
+        $loan_uuid = $this->getRelationUuid('loan');
+        $bank_uuid = $this->getRelationUuid('bank');
+        $register_uuid = $this->getRelationUuid('register');
+        $currency_uuid = $this->getRelationUuid('currency');
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
             'loan_key' => $loan_uuid,
             'bank_key' => $bank_uuid,
+            'currency_key' => $currency_uuid,
             'register_key' => $register_uuid,
             'was_at' => $this->was_at,
             'amount' => $this->amount,
@@ -35,6 +37,7 @@ class TransactionResource extends ApiResource
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'loan' => new LoanResource($this->whenLoaded('loan')),
             'bank' => new BankResource($this->whenLoaded('bank')),
+            'currency' => new CurrencyResource($this->whenLoaded('currency')),
             'register' => new UserResource($this->whenLoaded('register')),
             'fees' => FeeResource::collection($this->whenLoaded('fees')),
             'links' => [
@@ -49,6 +52,10 @@ class TransactionResource extends ApiResource
                 [
                     'rel' => 'bank',
                     'href' => route('banks.show', $bank_uuid),
+                ],
+                [
+                    'rel' => 'currency',
+                    'href' => route('currencies.show', $currency_uuid),
                 ],
                 [
                     'rel' => 'register',
@@ -73,6 +80,7 @@ class TransactionResource extends ApiResource
             'key' => 'uuid',
             'loan_key' => 'loan_id',
             'bank_key' => 'bank_id',
+            'currency_key' => 'currency_id',
             'register_key' => 'register_id',
             'was_at' => 'was_at',
             'amount' => 'amount',

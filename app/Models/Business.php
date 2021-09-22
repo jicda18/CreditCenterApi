@@ -17,6 +17,7 @@ class Business extends ApiModel
         'province_id',
         'address',
         'comment',
+        'company_id',
     ];
     protected $hidden = ['business_id'];
 
@@ -24,6 +25,7 @@ class Business extends ApiModel
         'business_id' => 'integer',
         'number_of_employee' => 'integer',
         'province_id' => 'integer',
+        'company_id' => 'integer',
     ];
 
     /**
@@ -48,10 +50,6 @@ class Business extends ApiModel
 
     public function authorized(Company $company, User $user): bool
     {
-        if ($this->debtor === null) {
-            return true;
-        }
-
-        return $company->company_id === $this->debtor->company_id;
+        return $company->company_id === $this->company_id;
     }
 }
