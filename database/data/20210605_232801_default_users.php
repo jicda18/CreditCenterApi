@@ -25,6 +25,8 @@ class DefaultUsers extends MigrationData
     {
         return [
             ['username' => 'jicruz', 'password' => 'J1cdA18', 'email' => 'jicda18@outlook.com', 'fullname' => 'Josué Cruz', 'must_change_password' => false, 'admin_at' => Carbon::now(), 'companies' => [1, 2]],
+            ['username' => 'ejaquez', 'password' => 'ejaquez2021', 'email' => 'emiljaquez@gmail.com', 'fullname' => 'Emil Jaquez', 'must_change_password' => false, 'admin_at' => Carbon::now(), 'companies' => [1, 2]],
+            ['username' => 'glanfranco', 'password' => 'glanfranco2021', 'email' => '', 'fullname' => 'Lanfranco', 'must_change_password' => false, 'admin_at' => Carbon::now(), 'companies' => [1, 2]],
         ];
     }
 }
