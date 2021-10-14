@@ -60,7 +60,7 @@ class BankController extends Controller
             'bank_name' => ['required', 'string'],
             'account_number' => ['required', 'string'],
             'alias' => ['required', 'string'],
-            'balance' => [new NotPresent()],
+            'balance' => ['required', 'numeric'],
         ];
 
         return $this->change($request, $rules, new Bank(), true, $this->relations);
@@ -121,7 +121,7 @@ class BankController extends Controller
 
         if ($store) {
             $arr['company_id'] = auth_company()->company_id;
-            $arr['balance'] = 0;
+            $arr['balance'] = $request->balance;
         }
 
         return $arr;
