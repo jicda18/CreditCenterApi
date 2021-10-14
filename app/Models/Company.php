@@ -62,16 +62,6 @@ class Company extends ApiModel
     }
 
     /**
-     * Get all of the guarantors for the Company
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function guarantors(): HasMany
-    {
-        return $this->hasMany(Guarantor::class, 'company_id', 'company_id');
-    }
-
-    /**
      * Get all of the debtors for the Company
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

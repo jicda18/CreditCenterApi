@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Bank;
-use App\Models\Business;
 use App\Models\Debtor;
 use App\Models\Fee;
-use App\Models\Guarantor;
 use App\Models\Loan;
 use App\Models\Notification;
 use App\Models\Transaction;
@@ -28,8 +26,6 @@ class DatabaseSeeder extends Seeder
 
         Notification::factory()->count(6)->create();
         Bank::factory()->count(3)->create();
-        Guarantor::factory()->count($debtorCount)->create();
-        Business::factory()->count($debtorCount)->create();
         Debtor::factory()->count($debtorCount)->create();
         Loan::factory()->count($debtorCount)->create();
         Transaction::factory()->count($debtorCount)->create();

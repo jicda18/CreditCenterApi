@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "bjeavons/zxcvbn-php": "^1.2",
+        "doctrine/dbal": "^3.1",
         "eduardokum/laravel-mail-auto-embed": "^1.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",

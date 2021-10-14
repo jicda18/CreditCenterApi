@@ -31,26 +31,6 @@ class Province extends ApiModel
     }
 
     /**
-     * Get all of the businesses for the Province
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function businesses(): HasMany
-    {
-        return $this->hasMany(Business::class, 'province_id', 'province_id');
-    }
-
-    /**
-     * Get all of the guarantors for the Province
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function guarantors(): HasMany
-    {
-        return $this->hasMany(Guarantor::class, 'province_id', 'province_id');
-    }
-
-    /**
      * Get all of the debtors for the Province
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

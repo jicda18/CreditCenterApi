@@ -25,7 +25,6 @@ class CompanyResource extends ApiResource
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'banks' => BankResource::collection($this->whenLoaded('banks')),
-            'guarantors' => GuarantorResource::collection($this->whenLoaded('guarantors')),
             'debtors' => DebtorResource::collection($this->whenLoaded('debtors')),
             'links' => [
                 [
@@ -39,10 +38,6 @@ class CompanyResource extends ApiResource
                 [
                     'rel' => 'banks',
                     'href' => route('companies.banks.index', $this->resource),
-                ],
-                [
-                    'rel' => 'guarantors',
-                    'href' => route('companies.guarantors.index', $this->resource),
                 ],
                 [
                     'rel' => 'debtors',

@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Business;
 use App\Models\Debtor;
-use App\Models\Guarantor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DebtorFactory extends Factory
@@ -23,13 +21,10 @@ class DebtorFactory extends Factory
      */
     public function definition()
     {
-        $guarantors = Guarantor::doesntHave('debtors')->get()->pluck('guarantor_id')->all();
-        $businesses = Business::doesntHave('debtors')->get()->pluck('business_id')->all();
-
         return [
             'company_id' => $this->faker->numberBetween(1, 2),
-            'guarantor_id' => $this->faker->randomElement($guarantors),
-            'business_id' => $this->faker->randomElement($businesses),
+            'guarantor' => $this->faker->name(),
+            'business' => $this->faker->company,
             'fullname' => $this->faker->name(),
             'nickname' => '',
             'personal_id' => $this->faker->numerify('###-#######-#'),
@@ -41,7 +36,6 @@ class DebtorFactory extends Factory
             'marital_status' => $this->faker->randomElement(['single', 'married', 'divorced', 'widowed']),
             'occupation' => $this->faker->jobTitle,
             'salary' => $this->faker->randomFloat(2, 10000, 100000),
-            'other_income' => $this->faker->randomFloat(2, 10000, 100000),
         ];
     }
 }

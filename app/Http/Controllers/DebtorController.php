@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DebtorResource;
 use App\Models\Bank;
-use App\Models\Business;
 use App\Models\Company;
 use App\Models\Currency;
 use App\Models\Debtor;
 use App\Models\Frequency;
-use App\Models\Guarantor;
 use App\Models\Loan;
 use App\Models\Province;
 use App\Models\Transaction;
@@ -23,7 +21,7 @@ class DebtorController extends Controller
 {
     use GenericController;
 
-    private $relations = ['guarantor', 'business', 'province'];
+    private $relations = ['province'];
 
     public function __construct()
     {
@@ -84,25 +82,24 @@ class DebtorController extends Controller
     {
         $rules = [
             'company_id' => [new NotPresent()],
-            'guarantor_id' => ['required', 'exists:' . Guarantor::class],
-            'business_id' => ['exists:' . Business::class],
+            'guarantor' => ['nullable', 'string'],
+            'business' => ['nullable', 'string'],
             'fullname' => ['required', 'string'],
-            'nickname' => ['string'],
+            'nickname' => ['nullable', 'string'],
             'personal_id' => ['required', 'string', 'unique:' . Debtor::class . ',personal_id'],
             'gender' => ['required', 'in:female,male'],
             'province_id' => ['required', 'exists:' . Province::class],
             'address' => ['required', 'string'],
-            'date_of_birth' => ['date'],
-            'phone' => ['digits:10'],
+            'date_of_birth' => ['nullable', 'date'],
+            'phone' => ['nullable', 'digits:10'],
             'marital_status' => ['required', 'in:single,married,divorced,widowed'],
-            'occupation' => ['required', 'string'],
+            'occupation' => ['nullable', 'string'],
             'salary' => ['required', 'numeric'],
-            'other_income' => ['required', 'numeric'],
             // Loan Configuration
             'currency_id' => ['required', 'exists:' . Currency::class],
             'fee_amount' => ['required', 'numeric'],
             'start_on' => ['required', 'date'],
-            'thanks_days' => ['integer'],
+            'thanks_days' => ['nullable', 'integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
             'bank_id' => ['required', 'exists:' . Bank::class],
             'balance' => ['required', 'numeric', 'min:0'],
@@ -133,8 +130,8 @@ class DebtorController extends Controller
     {
         $rules = [
             'company_id' => [new NotPresent()],
-            'guarantor_id' => ['exists:' . Guarantor::class],
-            'business_id' => ['exists:' . Business::class],
+            'guarantor' => ['nullable', 'string'],
+            'business' => ['nullable', 'string'],
             'fullname' => ['string'],
             'nickname' => ['string'],
             'personal_id' => ['string', 'unique:' . Debtor::class . ',personal_id,' . $debtor->debtor_id . ',debtor_id'],
@@ -146,7 +143,6 @@ class DebtorController extends Controller
             'marital_status' => ['in:single,married,divorced,widowed'],
             'occupation' => ['string'],
             'salary' => ['numeric'],
-            'other_income' => ['numeric'],
         ];
 
         return $this->change($request, $rules, $debtor, false, $this->relations);
@@ -170,18 +166,13 @@ class DebtorController extends Controller
         return $this->modelRelationIndex($company, 'debtors', $this->relations);
     }
 
-    public function guarantorsDebtorsIndex(Guarantor $guarantor)
-    {
-        return $this->modelRelationIndex($guarantor, 'debtors', $this->relations);
-    }
-
     protected function requestToArray(Request $request, bool $store): array
     {
         if ($store) {
             return [
                 'company_id' => auth_company()->company_id,
-                'guarantor_id' => $request->guarantor_id,
-                'business_id' => $request->business_id,
+                'guarantor' => $request->guarantor,
+                'business' => $request->business,
                 'fullname' => $request->fullname,
                 'nickname' => $request->nickname ?? '',
                 'personal_id' => $request->personal_id,
@@ -193,11 +184,10 @@ class DebtorController extends Controller
                 'marital_status' => $request->marital_status ?? '',
                 'occupation' => $request->occupation,
                 'salary' => $request->salary,
-                'other_income' => $request->other_income,
             ];
         }
 
-        return $request->only(['guarantor_id', 'business_id', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'marital_status', 'occupation', 'salary', 'other_income']);
+        return $request->only(['guarantor', 'business', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'marital_status', 'occupation', 'salary']);
     }
 
     protected function afterToSave(Request $request, Model $model, bool $store): Model

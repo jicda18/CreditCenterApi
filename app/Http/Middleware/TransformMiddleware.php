@@ -3,14 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\Bank;
-use App\Models\Business;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Debtor;
 use App\Models\Fee;
 use App\Models\Frequency;
-use App\Models\Guarantor;
 use App\Models\Loan;
 use App\Models\Notification;
 use App\Models\Permission;
@@ -77,14 +75,12 @@ class TransformMiddleware
     {
         $props = [
             'bank_id' => Bank::class,
-            'business_id' => Business::class,
             'company_id' => Company::class,
             'country_id' => Country::class,
             'currency_id' => Currency::class,
             'debtor_id' => Debtor::class,
             'fee_id' => Fee::class,
             'frequency_id' => Frequency::class,
-            'guarantor_id' => Guarantor::class,
             'loan_id' => Loan::class,
             'notification_id' => Notification::class,
             'permission_id' => Permission::class,

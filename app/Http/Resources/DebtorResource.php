@@ -15,15 +15,13 @@ class DebtorResource extends ApiResource
     public function toArray($request)
     {
         $company_uuid = $this->getRelationUuid('company');
-        $guarantor_uuid = $this->getRelationUuid('guarantor');
-        $business_uuid = $this->getRelationUuid('business');
         $province_uuid = $this->getRelationUuid('province');
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
             'company_key' => $company_uuid,
-            'guarantor_key' => $guarantor_uuid,
-            'business_key' => $business_uuid,
+            'guarantor' => $this->guarantor,
+            'business' => $this->business,
             'province_key' => $province_uuid,
             'name' => $this->fullname,
             'nick_name' => $this->nickname,
@@ -35,13 +33,10 @@ class DebtorResource extends ApiResource
             'marital_status' => $this->marital_status,
             'occupation' => $this->occupation,
             'income' => $this->salary,
-            'other_income' => $this->other_income,
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'company' => new CompanyResource($this->whenLoaded('company')),
-            'guarantor' => new GuarantorResource($this->whenLoaded('guarantor')),
-            'business' => new BusinessResource($this->whenLoaded('business')),
             'province' => new ProvinceResource($this->whenLoaded('province')),
             'loans' => LoanResource::collection($this->whenLoaded('loans')),
             'links' => [
@@ -52,14 +47,6 @@ class DebtorResource extends ApiResource
                 [
                     'rel' => 'company',
                     'href' => route('companies.show', $company_uuid),
-                ],
-                [
-                    'rel' => 'guarantor',
-                    'href' => route('guarantors.show', $guarantor_uuid),
-                ],
-                [
-                    'rel' => 'business',
-                    'href' => route('businesses.show', $business_uuid),
                 ],
                 [
                     'rel' => 'province',
@@ -82,8 +69,8 @@ class DebtorResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
-            'guarantor_key' => 'guarantor_id',
-            'business_key' => 'business_id',
+            'guarantor' => 'guarantor',
+            'business' => 'business',
             'province_key' => 'province_id',
             'name' => 'fullname',
             'nick_name' => 'nickname',
@@ -95,7 +82,6 @@ class DebtorResource extends ApiResource
             'marital_status' => 'marital_status',
             'occupation' => 'occupation',
             'income' => 'salary',
-            'other_income' => 'other_income',
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',

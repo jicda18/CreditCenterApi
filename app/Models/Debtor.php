@@ -13,8 +13,8 @@ class Debtor extends ApiModel
     protected $primaryKey = 'debtor_id';
     protected $fillable = [
         'company_id',
-        'guarantor_id',
-        'business_id',
+        'guarantor',
+        'business',
         'fullname',
         'nickname',
         'personal_id',
@@ -26,19 +26,15 @@ class Debtor extends ApiModel
         'marital_status',
         'occupation',
         'salary',
-        'other_income',
     ];
     protected $hidden = ['debtor_id', 'company_id'];
 
     protected $casts = [
         'debtor_id' => 'integer',
         'company_id' => 'integer',
-        'guarantor_id' => 'integer',
-        'business_id' => 'integer',
         'province_id' => 'integer',
         'date_of_birth' => 'datetime',
         'salary' => 'float',
-        'other_income' => 'float',
     ];
 
     public function getFullnameAttribute($fullname)
@@ -59,26 +55,6 @@ class Debtor extends ApiModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id', 'company_id');
-    }
-
-    /**
-     * Get the guarantor that owns the Debtor
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function guarantor(): BelongsTo
-    {
-        return $this->belongsTo(Guarantor::class, 'guarantor_id', 'guarantor_id');
-    }
-
-    /**
-     * Get the business that owns the Debtor
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function business(): BelongsTo
-    {
-        return $this->belongsTo(Business::class, 'business_id', 'business_id');
     }
 
     /**
