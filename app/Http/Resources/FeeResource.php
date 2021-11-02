@@ -15,12 +15,10 @@ class FeeResource extends ApiResource
     public function toArray($request)
     {
         $loan_uuid = $this->getRelationUuid('loan');
-        $transaction_uuid = $this->getRelationUuid('transaction');
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
             'loan_key' => $loan_uuid,
-            'transaction_key' => $transaction_uuid,
             'payment_at' => $this->payment_on,
             'amount' => $this->amount,
             'limit_at' => $this->limit_on,
@@ -38,10 +36,6 @@ class FeeResource extends ApiResource
                 [
                     'rel' => 'loan',
                     'href' => route('loans.show', $loan_uuid),
-                ],
-                [
-                    'rel' => 'transaction',
-                    'href' => route('transactions.show', $transaction_uuid),
                 ],
             ],
         ]);

@@ -96,7 +96,6 @@ class DebtorController extends Controller
             'occupation' => ['nullable', 'string'],
             'salary' => ['required', 'numeric'],
             // Loan Configuration
-            'currency_id' => ['required', 'exists:' . Currency::class],
             'fee_amount' => ['required', 'numeric'],
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
@@ -193,9 +192,12 @@ class DebtorController extends Controller
     protected function afterToSave(Request $request, Model $model, bool $store): Model
     {
         if ($store) {
+            $bank = Bank::find($request->bank_id);
+            $currency_id = $bank->currency_id;
+
             $loan = Loan::create([
                 'debtor_id' => $model->getKey(),
-                'currency_id' => $request->currency_id,
+                'currency_id' => $currency_id,
                 'fee_amount' => $request->fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
@@ -209,7 +211,7 @@ class DebtorController extends Controller
                 'bank_id' => $request->bank_id,
                 'register_user_id' => Auth::user()->user_id,
                 'amount' => $request->balance,
-                'currency_id' => $request->currency_id,
+                'currency_id' => $currency_id,
                 'comment' => 'Nuevo prestamo para ' . $model->fullname,
             ]);
         }

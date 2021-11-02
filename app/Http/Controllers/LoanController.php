@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\LoanResource;
+use App\Models\Bank;
 use App\Models\Debtor;
 use App\Models\Frequency;
 use App\Models\Loan;
@@ -17,7 +18,7 @@ class LoanController extends Controller
 {
     use GenericController;
 
-    private $relations = ['currency', 'debtor', 'fees', 'frequency'];
+    private $relations = ['currency', 'debtor', 'fees', 'frequency', 'transactions'];
 
     public function __construct()
     {
@@ -39,7 +40,7 @@ class LoanController extends Controller
         return $this->idx($query);
     }
 
-    // Todo: update
+
     public function update(Request $request, Loan $loan)
     {
         $rules = [
@@ -75,7 +76,6 @@ class LoanController extends Controller
     {
         $rules = [
             'debtor_id' => ['required', 'exists:' . Debtor::class],
-            'currency_id' => ['required', 'exists:' . Currency::class],
             'fee_amount' => ['required', 'numeric'],
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
@@ -95,9 +95,11 @@ class LoanController extends Controller
     protected function requestToArray(Request $request, bool $store): array
     {
         if ($store) {
+            $bank = Bank::find($request->bank_id);
+
             return [
                 'debtor_id' => $request->debtor_id,
-                'currency_id' => $request->currency_id,
+                'currency_id' => $bank->currency_id,
                 'fee_amount' => $request->fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
@@ -118,7 +120,7 @@ class LoanController extends Controller
                 'bank_id' => $request->bank_id,
                 'register_user_id' => Auth::user()->user_id,
                 'amount' => $request->balance,
-                'currency_id' => $request->currency_id,
+                'currency_id' => $model->currency_id,
                 'comment' => 'Nuevo prestamo para ' . $model->fullname,
             ]);
         }

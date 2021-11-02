@@ -28,6 +28,7 @@ class LoanResource extends ApiResource
             'thanks_days' => $this->thanks_days,
             'next_at' => $this->next_on,
             'status' => $this->status,
+            'summary' => $this->balance,
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
@@ -85,6 +86,9 @@ class LoanResource extends ApiResource
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',
+
+            'bank_key' => 'bank_id',
+            'balance' => 'balance',
         ]);
     }
 }
