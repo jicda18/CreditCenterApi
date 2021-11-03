@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Classes\ToMuchBadAuth;
 use App\Classes\ToMuchRequest;
-use app\Interfaces\BlackListerChecker;
+use App\interfaces\BlackListerChecker;
 use Closure;
 
 class BlacklisterMiddleware
