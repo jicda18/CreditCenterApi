@@ -19,13 +19,14 @@ class CreateTransactionsTable extends Migration
         Schema::create('tbTransactions', function (Blueprint $table) {
             $table->id('transaction_id');
             $table->unsignedBigInteger('loan_id');
-            $table->unsignedBigInteger('bank_id');
+            $table->unsignedBigInteger('bank_id')->nullable();
             $table->unsignedBigInteger('register_user_id');
             $table->timestamp('was_at');
             $table->float('amount');
             $table->unsignedBigInteger('currency_id');
+            $table->boolean('is_interest')->default(false);
             $table->float('loan_amount');
-            $table->float('bank_amount');
+            $table->float('bank_amount')->nullable();
             $table->float('loan_balance')->nullable();
             $table->float('bank_balance')->nullable();
             $table->text('comment');

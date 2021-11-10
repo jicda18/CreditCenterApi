@@ -46,6 +46,7 @@ class FeeGeneratorCommand extends Command
 
         DB::transaction(function () use ($dt) {
             Loan::where('balance', '>', '0')->where('next_on', '=', $dt)->cursor()->each(function (Loan $loan) use ($dt) {
+                // Add interest (transaction that didn't affect bank and balance but interest_balance)
                 Fee::create([
                     'loan_id' => $loan->loan_id,
                     'payment_on' => $dt,

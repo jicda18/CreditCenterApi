@@ -47,6 +47,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        // Todo: Actualizar fee_amount al momento de pagar al capital
         $rules = [
             'loan_id' => ['required', 'exists:' . Loan::class],
             'bank_id' => ['required', 'exists:' . Bank::class],

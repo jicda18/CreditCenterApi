@@ -20,12 +20,17 @@ class CreateLoansTable extends Migration
             $table->id('loan_id');
             $table->unsignedBigInteger('debtor_id');
             $table->unsignedBigInteger('currency_id');
-            $table->float('fee_amount');
-            $table->float('balance');
+            $table->float('amount');
+            $table->enum('type', ['fixed_interest', 'interest_capital']);
+            $table->float('interest');
+            $table->unsignedBigInteger('frequency_id');
             $table->date('start_on');
             $table->unsignedSmallInteger('thanks_days')->default(0);
+
+            $table->float('fee_amount');
+            $table->float('balance');
+            $table->float('interest_balance');
             $table->date('next_on');
-            $table->unsignedBigInteger('frequency_id');
             $table->enum('status', ['active', 'settled', 'paused', 'canceled']);
 
             $this->addControlFields($table);

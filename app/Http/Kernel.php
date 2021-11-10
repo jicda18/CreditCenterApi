@@ -43,7 +43,7 @@ class Kernel extends HttpKernel
             'signature:X-Application-Name',
             'access.list',
             'blacklister',
-            'throttle:256,1',
+            'throttle:1024,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];

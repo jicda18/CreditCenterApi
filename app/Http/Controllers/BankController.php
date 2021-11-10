@@ -43,6 +43,7 @@ class BankController extends Controller
             return [
                 'value' => $bank->uuid,
                 'label' => $bank->alias,
+                'custom' => $bank->currency,
             ];
         });
     }

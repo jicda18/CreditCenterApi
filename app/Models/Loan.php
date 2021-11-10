@@ -18,6 +18,9 @@ class Loan extends ApiModel
         'next_on',
         'frequency_id',
         'status',
+        'type',
+        'interest',
+        'amount',
     ];
     protected $hidden = ['loan_id'];
 
@@ -26,7 +29,9 @@ class Loan extends ApiModel
         'debtor_id' => 'integer',
         'currency_id' => 'integer',
         'fee_amount' => 'float',
+        'amount' => 'float',
         'balance' => 'float',
+        'interest' => 'float',
         'start_on' => 'date',
         'thanks_days' => 'integer',
         'next_on' => 'date',
@@ -35,7 +40,13 @@ class Loan extends ApiModel
 
     protected $attributes = [
         'balance' => 0,
+        'interest_balance' => 0,
     ];
+
+    public function getTotalAttribute()
+    {
+        return $this->balance + $this->interest_balance;
+    }
 
     public function setBalanceAttribute($balance)
     {

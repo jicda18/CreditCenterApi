@@ -96,11 +96,13 @@ class DebtorController extends Controller
             'occupation' => ['nullable', 'string'],
             'salary' => ['required', 'numeric'],
             // Loan Configuration
-            'fee_amount' => ['required', 'numeric'],
+            'fees' => ['requiredIf:type,interest_capital', 'numeric'],
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
             'bank_id' => ['required', 'exists:' . Bank::class],
+            'type' => ['required', 'in:fixed_interest,interest_capital'],
+            'interest' => ['required', 'numeric', 'min:0'],
             'balance' => ['required', 'numeric', 'min:0'],
         ];
 
@@ -195,15 +197,20 @@ class DebtorController extends Controller
             $bank = Bank::find($request->bank_id);
             $currency_id = $bank->currency_id;
 
+            $fee_amount = get_fee_amount($request->type, $request->balance, $request->interest, $request->fees ?? 1);
+
             $loan = Loan::create([
                 'debtor_id' => $model->getKey(),
                 'currency_id' => $currency_id,
-                'fee_amount' => $request->fee_amount,
+                'fee_amount' => $fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
                 'next_on' => $request->start_on,
                 'frequency_id' => $request->frequency_id,
                 'status' => 'active',
+                'amount' => $request->balance,
+                'type' => $request->type,
+                'interest' => $request->interest,
             ]);
 
             $transaction = Transaction::create([

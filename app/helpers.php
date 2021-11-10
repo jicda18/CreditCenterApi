@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Frequency;
 use Laravel\Passport\Token;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token\Plain;
@@ -81,5 +82,23 @@ if (!function_exists('request_ip')) {
         $request = request();
 
         return $request->header('X-Forwarded-For') ?? $request->ip();
+    }
+}
+
+if (!function_exists('get_fee_amount')) {
+    /**
+     * get the current auth company.
+     *
+     * @return  \App\Models\Company|null
+     */
+    function get_fee_amount(string $type, float $balance, float $interest, int $fees = 1)
+    {
+        if ($type === 'interest_capital') {
+            $temp = pow(1 + $interest, $fees);
+
+            return round(($balance * $interest * $temp) / ($temp - 1), 2);
+        }
+
+        return round($balance * $interest, 2);
     }
 }

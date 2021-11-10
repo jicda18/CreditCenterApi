@@ -88,9 +88,11 @@ class DebtorResource extends ApiResource
 
             'currency_key' => 'currency_id',
             'frequency_key' => 'frequency_id',
-            'fee_amount' => 'fee_amount',
+            'fees' => 'fees',
             'start_at' => 'start_on',
             'thanks_days' => 'thanks_days',
+            'type' => 'type',
+            'interest' => 'interest',
 
             'bank_key' => 'bank_id',
             'balance' => 'balance',

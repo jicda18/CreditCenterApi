@@ -20,7 +20,7 @@ class CreateDebtorsTable extends Migration
             $table->id('debtor_id');
             $table->unsignedBigInteger('company_id');
             $table->string('business')->nullable();
-            $table->string('guarantor_id')->nullable();
+            $table->string('guarantor')->nullable();
             $table->string('fullname');
             $table->string('nickname')->nullable();
             $table->string('personal_id');
