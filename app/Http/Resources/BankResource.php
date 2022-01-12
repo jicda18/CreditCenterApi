@@ -14,12 +14,10 @@ class BankResource extends ApiResource
      */
     public function toArray($request)
     {
-        $company_uuid = $this->getRelationUuid('company');
         $currency_uuid = $this->getRelationUuid('currency');
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
-            'company_key' => $company_uuid,
             'currency_key' => $currency_uuid,
             'bank' => $this->bank_name,
             'account' => $this->account_number,
@@ -28,17 +26,12 @@ class BankResource extends ApiResource
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            'company' => new CompanyResource($this->whenLoaded('company')),
             'currency' => new CurrencyResource($this->whenLoaded('currency')),
             'transactions' => TransactionResource::collection($this->whenLoaded('transactions')),
             'links' => [
                 [
                     'rel' => 'self',
                     'href' => route('banks.show', $this->resource),
-                ],
-                [
-                    'rel' => 'company',
-                    'href' => route('companies.show', $company_uuid),
                 ],
                 [
                     'rel' => 'currency',

@@ -54,6 +54,4 @@ abstract class ApiModel extends Model
 
         return $this->getKeyName();
     }
-
-    abstract public function authorized(Company $company, User $user): bool;
 }

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Company;
 use App\Models\Fee;
 use App\Models\Notification;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -50,12 +50,11 @@ class AnomalyNotifierCommand extends Command
                 ->where('limit_on', '<', $dt)
                 ->orWhere('payment_on', '<', $dt)
                 ->cursor()
-                ->groupBy('loan.debtor.company_id')
-                ->each(function ($fees, $company_id) use ($dt) {
-                    $users = $this->getUsersToNotified($company_id);
+                ->each(function ($fees) use ($dt) {
+                    $users = $this->getUsersToNotified();
 
                     if ($users->count() !== 0) {
-                        $fees->groupBy('loan.debtor_id')->each(function ($fees) use ($dt, $company_id, $users) {
+                        $fees->groupBy('loan.debtor_id')->each(function ($fees) use ($dt, $users) {
                             $debtor = $fees->first()->loan->debtor;
                             $overdue = $fees->where('payment_on', '<', $dt);
                             $late = $fees->where('payment_on', '>=', $dt);
@@ -83,7 +82,6 @@ class AnomalyNotifierCommand extends Command
                              * @var \App\Models\Notification
                              */
                             $notification = Notification::create([
-                                'company_id' => $company_id,
                                 'level' => $level,
                                 'text' => $text . '.',
                             ]);
@@ -95,11 +93,11 @@ class AnomalyNotifierCommand extends Command
         });
     }
 
-    protected function getUsersToNotified(int $company_id)
+    protected function getUsersToNotified()
     {
         $default = collect();
 
         // Todo: set the correct users to identified
-        return null_prevent_property(Company::find($company_id), 'users', $default) ?? $default;
+        return User::all();
     }
 }

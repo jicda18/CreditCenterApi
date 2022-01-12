@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\OauthClient;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\Response;
@@ -40,7 +39,6 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addHours(24));
         Passport::refreshTokensExpireIn(Carbon::now()->addHours(36));
 
-        Passport::useClientModel(OauthClient::class);
         Passport::$hashesClientSecrets = false;
     }
 }

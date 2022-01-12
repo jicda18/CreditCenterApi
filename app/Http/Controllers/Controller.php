@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ModelUnauthorizedException;
 use App\Http\Resources\CollectionResource;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,10 +80,6 @@ abstract class Controller extends BaseController
 
     protected function showOne(Model $model, array $valid_relation, int $status_code = 200)
     {
-        if (!$model->authorized(auth_company(), Auth::user())) {
-            throw new ModelUnauthorizedException($model);
-        }
-
         $model = $this->includeRelationsToModel($model, $valid_relation);
 
         return (new $this->resource($model))
@@ -101,8 +96,6 @@ abstract class Controller extends BaseController
         $items = $this->paginate($query);
 
         return $this->showAll($items);
-
-        // Todo: implement authorized
     }
 
     protected function change(Request $request, array $rules, Model $model, bool $store, array $valid_relation)

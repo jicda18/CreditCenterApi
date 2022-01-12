@@ -22,7 +22,6 @@ class DebtorFactory extends Factory
     public function definition()
     {
         return [
-            'company_id' => $this->faker->numberBetween(1, 2),
             'guarantor' => $this->faker->name(),
             'business' => $this->faker->company,
             'fullname' => $this->faker->name(),

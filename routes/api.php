@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BlacklistController;
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DebtorController;
@@ -45,8 +44,6 @@ Route::get('users/me', [UserController::class, 'usersMeShow'])->name('users.me.s
 Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.changePassword'); // Todo: create endpoint
 Route::get('users/request-change-password', [UserController::class, 'requestChangePassword'])->name('users.requestChangePassword'); // Todo: create endpoint
 Route::get('users/{user}/change-password-confirm/{token}', [UserController::class, 'changePasswordConfirm'])->name('users.changePasswordConfirm'); // Todo: create endpoint
-Route::get('companies/{company}/logo', [CompanyController::class, 'logo'])->name('companies.logo.show');
-Route::get('companies/{company}/ico', [CompanyController::class, 'ico'])->name('companies.ico.show');
 
 // For Select List
 Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
@@ -59,7 +56,6 @@ Route::get('banks/select', [BankController::class, 'forSelectList']);
 // Resource
 Route::apiResource('banks', BankController::class);
 Route::apiResource('blacklists', BlacklistController::class);
-Route::apiResource('companies', CompanyController::class)->only(['index', 'show', 'destroy']);
 Route::apiResource('countries', CountryController::class)->only(['index', 'show']);
 Route::apiResource('currencies', CurrencyController::class);
 Route::apiResource('debtors', DebtorController::class);
@@ -77,16 +73,12 @@ Route::apiResource('whitelists', WhitelistController::class);
 
 // Relations
 // Route::get('types/{type}/logs', [LogController::class, 'typesLogsIndex'])->name('types.logs.index');
-Route::get('companies/{company}/users', [UserController::class, 'companiesUsersIndex'])->name('companies.users.index');
-Route::get('companies/{company}/banks', [BankController::class, 'companiesBanksIndex'])->name('companies.banks.index');
-Route::get('companies/{company}/debtors', [DebtorController::class, 'companiesDebtorsIndex'])->name('companies.debtors.index');
 Route::get('banks/{bank}/transactions', [TransactionController::class, 'banksTransactionsIndex'])->name('banks.transactions.index');
 Route::get('countries/{country}/provinces', [ProvinceController::class, 'countriesProvincesIndex'])->name('countries.provinces.index');
 Route::get('debtors/{debtor}/loans', [LoanController::class, 'debtorsLoansIndex'])->name('debtors.loans.index');
 Route::get('loans/{loan}/transactions', [TransactionController::class, 'loansTransactionsIndex'])->name('loans.transactions.index');
 Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name('loans.fees.index');
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
-// Route::get('users/{user}/companies', [CompanyController::class, 'usersCompaniesIndex'])->name('users.companies.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
 Route::get('users/{user}/notifications', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
 

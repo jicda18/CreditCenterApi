@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\BankResource;
 use App\Models\Bank;
-use App\Models\Company;
 use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
@@ -30,16 +29,14 @@ class BankController extends Controller
      */
     public function index()
     {
-        $company = auth_company();
-
-        $query = $this->includeRelations($company->banks()->getQuery(), $this->relations);
+        $query = $this->includeRelations(Bank::query(), $this->relations);
 
         return $this->idx($query);
     }
 
     public function forSelectList()
     {
-        return $this->forSelect(Bank::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Bank $bank) {
+        return $this->forSelect(Bank::all(), function (Bank $bank) {
             return [
                 'value' => $bank->uuid,
                 'label' => $bank->alias,
@@ -111,17 +108,11 @@ class BankController extends Controller
         return  $this->showOne($bank, []);
     }
 
-    public function companiesBanksIndex(Company $company)
-    {
-        return $this->modelRelationIndex($company, 'banks', $this->relations);
-    }
-
     protected function requestToArray(Request $request, bool $store): array
     {
         $arr = $request->only(['bank_name', 'account_number', 'alias', 'currency_id']);
 
         if ($store) {
-            $arr['company_id'] = auth_company()->company_id;
             $arr['balance'] = $request->balance;
         }
 

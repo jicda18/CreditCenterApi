@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
-use App\Models\Company;
 use App\Models\User;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
@@ -18,7 +17,7 @@ class UserController extends Controller
     use GenericController, PasswordScore;
 
     // Todo: add permission
-    private $relations = ['companies'];
+    private $relations = [];
 
     /**
      * function name that don't required Authentication
@@ -142,11 +141,6 @@ class UserController extends Controller
     public function changePasswordConfirm(Request $request, User $user, string $token)
     {
         //
-    }
-
-    public function companiesUsersIndex(Company $company)
-    {
-        return $this->modelRelationIndex($company, 'users', $this->relations);
     }
 
     public function avatar(User $user)

@@ -24,7 +24,6 @@ class Log extends Model
     ];
     protected $hidden = ['log_id'];
 
-    // Todo: add company_id
     protected $casts = [
         'log_id' => 'integer',
         'log_type_id' => 'integer',
@@ -137,10 +136,5 @@ class Log extends Model
     public function getRouteKeyName()
     {
         return 'uuid';
-    }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $user->isAdmin();
     }
 }

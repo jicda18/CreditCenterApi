@@ -87,9 +87,4 @@ class Transaction extends ApiModel
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'currency_id');
     }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $company->company_id === $this->bank->company_id;
-    }
 }

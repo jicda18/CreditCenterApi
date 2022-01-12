@@ -48,9 +48,4 @@ class Fee extends ApiModel
     {
         return $this->belongsToMany(Transaction::class, 'tbFeesTransactionsPivot', 'fee_id', 'transaction_id', 'fee_id', 'transaction_id')->withTimestamps()->withPivot(['payment']);
     }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $company->company_id === $this->loan->debtor->company_id;
-    }
 }

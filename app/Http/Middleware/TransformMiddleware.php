@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Models\Bank;
-use App\Models\Company;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Debtor;
@@ -74,7 +73,6 @@ class TransformMiddleware
     {
         $props = [
             'bank_id' => Bank::class,
-            'company_id' => Company::class,
             'country_id' => Country::class,
             'currency_id' => Currency::class,
             'debtor_id' => Debtor::class,

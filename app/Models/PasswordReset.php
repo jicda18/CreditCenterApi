@@ -53,9 +53,4 @@ class PasswordReset extends ApiModel
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $user->user_id === $this->user->user_id;
-    }
 }

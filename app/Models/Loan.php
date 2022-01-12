@@ -102,9 +102,4 @@ class Loan extends ApiModel
     {
         return $this->belongsTo(Frequency::class, 'frequency_id', 'frequency_id');
     }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $company->company_id === $this->debtor->company_id;
-    }
 }

@@ -18,7 +18,6 @@ class CreateBanksTable extends Migration
     {
         Schema::create('tbBanks', function (Blueprint $table) {
             $table->id('bank_id');
-            $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('currency_id');
             $table->string('bank_name');
             $table->string('account_number');
@@ -27,10 +26,8 @@ class CreateBanksTable extends Migration
 
             $this->addControlFields($table);
 
-            $table->foreign('company_id')->references('company_id')->on('tbCompanies');
             $table->foreign('currency_id')->references('currency_id')->on('tbCurrencies');
 
-            $table->index('company_id');
             $table->index('currency_id');
         });
     }

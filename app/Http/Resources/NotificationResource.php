@@ -14,25 +14,17 @@ class NotificationResource extends ApiResource
      */
     public function toArray($request)
     {
-        $company_uuid = $this->getRelationUuid('company_id');
-
         return $this->includeHistory($request, [
             'key' => $this->uuid,
-            'company_key' => $company_uuid,
             'lvl' => $this->level,
             'msg' => $this->text,
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            'company' => new CompanyResource($this->whenLoaded('company')),
             'links' => [
                 [
                     'rel' => 'self',
                     'href' => route('notifications.show', $this->resource),
-                ],
-                [
-                    'rel' => 'company',
-                    'href' => route('companies.show', $company_uuid),
                 ],
             ],
         ]);
@@ -47,7 +39,6 @@ class NotificationResource extends ApiResource
     {
         return collect([
             'key' => 'uuid',
-            'company_key' => 'company_uuid',
             'lvl' => 'level',
             'msg' => 'text',
             'inserted_at' => 'created_at',

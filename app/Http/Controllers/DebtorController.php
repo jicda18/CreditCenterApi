@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DebtorResource;
 use App\Models\Bank;
-use App\Models\Company;
-use App\Models\Currency;
 use App\Models\Debtor;
 use App\Models\Frequency;
 use App\Models\Loan;
@@ -45,7 +43,7 @@ class DebtorController extends Controller
 
     public function forSelectList()
     {
-        return $this->forSelect(Debtor::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get(), function (Debtor $debtor) {
+        return $this->forSelect(Debtor::all(), function (Debtor $debtor) {
             $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
 
             return [
@@ -57,7 +55,7 @@ class DebtorController extends Controller
 
     public function loanForSelectList()
     {
-        return $this->forSelect(Debtor::where('company_id', '=', null_prevent_property(auth_company(), 'company_id'))->get()->filter(function (Debtor $debtor) {
+        return $this->forSelect(Debtor::all()->filter(function (Debtor $debtor) {
             $loans = $debtor->loans;
 
             return $loans->count() > 0;
@@ -81,7 +79,6 @@ class DebtorController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'company_id' => [new NotPresent()],
             'guarantor' => ['nullable', 'string'],
             'business' => ['nullable', 'string'],
             'fullname' => ['required', 'string'],
@@ -130,7 +127,6 @@ class DebtorController extends Controller
     public function update(Request $request, Debtor $debtor)
     {
         $rules = [
-            'company_id' => [new NotPresent()],
             'guarantor' => ['nullable', 'string'],
             'business' => ['nullable', 'string'],
             'fullname' => ['string'],
@@ -162,16 +158,10 @@ class DebtorController extends Controller
         return  $this->showOne($debtor, []);
     }
 
-    public function companiesDebtorsIndex(Company $company)
-    {
-        return $this->modelRelationIndex($company, 'debtors', $this->relations);
-    }
-
     protected function requestToArray(Request $request, bool $store): array
     {
         if ($store) {
             return [
-                'company_id' => auth_company()->company_id,
                 'guarantor' => $request->guarantor,
                 'business' => $request->business,
                 'fullname' => $request->fullname,

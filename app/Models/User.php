@@ -72,19 +72,7 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
 
     public function findForPassport($username)
     {
-        $request = request();
-        if ($request->has('client_id')) {
-            $user = $this->where('username', $username)->first();
-
-            $client = Passport::client();
-
-            $company_id = null_prevent_property($client->where($client->getKeyName(), $request->client_id)->first(), 'company_id');
-            if ($user->companies()->where('tbCompanies.company_id', '=', $company_id)->count()) {
-                return $user;
-            }
-        }
-
-        return null;
+        return $this->where('username', $username)->first();
     }
 
     public function validatePassword($password)
@@ -95,16 +83,6 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
     public function validateForPassportPasswordGrant($password)
     {
         return $this->validatePassword($password);
-    }
-
-    /**
-     * The companies that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function companies(): BelongsToMany
-    {
-        return $this->belongsToMany(Company::class, 'tbCompaniesUsersPivot', 'user_id', 'company_id', 'user_id', 'company_id')->withTimestamps();
     }
 
     /**
@@ -155,11 +133,5 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
     public function securities(): HasMany
     {
         return $this->hasMany(SecurityLog::class, 'user_id', 'user_id');
-    }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        // Todo: validate if user is from this company
-        return $user->isAdmin();
     }
 }

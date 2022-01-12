@@ -56,9 +56,4 @@ class Currency extends ApiModel
     {
         return round($value * ($this->exchange_value / $currency->exchange_value), 4);
     }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return true;
-    }
 }

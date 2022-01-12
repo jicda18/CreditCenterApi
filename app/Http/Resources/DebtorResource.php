@@ -14,12 +14,10 @@ class DebtorResource extends ApiResource
      */
     public function toArray($request)
     {
-        $company_uuid = $this->getRelationUuid('company');
         $province_uuid = $this->getRelationUuid('province');
 
         return $this->includeHistory($request, [
             'key' => $this->uuid,
-            'company_key' => $company_uuid,
             'guarantor' => $this->guarantor,
             'business' => $this->business,
             'province_key' => $province_uuid,
@@ -36,17 +34,12 @@ class DebtorResource extends ApiResource
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            'company' => new CompanyResource($this->whenLoaded('company')),
             'province' => new ProvinceResource($this->whenLoaded('province')),
             'loans' => LoanResource::collection($this->whenLoaded('loans')),
             'links' => [
                 [
                     'rel' => 'self',
                     'href' => route('debtors.show', $this->resource),
-                ],
-                [
-                    'rel' => 'company',
-                    'href' => route('companies.show', $company_uuid),
                 ],
                 [
                     'rel' => 'province',

@@ -10,31 +10,19 @@ class Bank extends ApiModel
     protected $table = 'tbBanks';
     protected $primaryKey = 'bank_id';
     protected $fillable = [
-        'company_id',
         'currency_id',
         'bank_name',
         'account_number',
         'alias',
         'balance',
     ];
-    protected $hidden = ['bank_id', 'company_id'];
+    protected $hidden = ['bank_id'];
 
     protected $casts = [
         'bank_id' => 'integer',
-        'company_id' => 'integer',
         'currency_id' => 'integer',
         'balance' => 'float',
     ];
-
-    /**
-     * Get the company that owns the Bank
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class, 'company_id', 'company_id');
-    }
 
     /**
      * Get the currency that owns the Bank
@@ -54,10 +42,5 @@ class Bank extends ApiModel
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'bank_id', 'bank_id');
-    }
-
-    public function authorized(Company $company, User $user): bool
-    {
-        return $company->company_id === $this->company_id;
     }
 }

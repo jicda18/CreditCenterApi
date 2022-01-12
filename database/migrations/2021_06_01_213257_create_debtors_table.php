@@ -18,7 +18,6 @@ class CreateDebtorsTable extends Migration
     {
         Schema::create('tbDebtors', function (Blueprint $table) {
             $table->id('debtor_id');
-            $table->unsignedBigInteger('company_id');
             $table->string('business')->nullable();
             $table->string('guarantor')->nullable();
             $table->string('fullname');
@@ -35,10 +34,8 @@ class CreateDebtorsTable extends Migration
 
             $this->addControlFields($table);
 
-            $table->foreign('company_id')->references('company_id')->on('tbCompanies');
             $table->foreign('province_id')->references('province_id')->on('tbProvinces');
 
-            $table->index('company_id');
             $table->index('province_id');
             $table->unique('personal_id');
         });
