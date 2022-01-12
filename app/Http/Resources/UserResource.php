@@ -25,7 +25,7 @@ class UserResource extends ApiResource
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             // 'companies' => CompanyResource::collection($this->whenLoaded('companies')), // Todo: Only admin
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')), // Todo: Only admin
+            // 'permissions' => PermissionResource::collection($this->whenLoaded('permissions')), // Todo: Only admin
             'links' => [
                 [
                     'rel' => 'self',
@@ -35,10 +35,10 @@ class UserResource extends ApiResource
                 //     'rel' => 'companies', // Todo: Only admin
                 //     'href' => route('users.companies.index', $this->resource),
                 // ],
-                [
-                    'rel' => 'permissions', // Todo: Only admin
-                    'href' => route('users.permissions.index', $this->resource),
-                ],
+                // [
+                //     'rel' => 'permissions', // Todo: Only admin
+                //     'href' => route('users.permissions.index', $this->resource),
+                // ],
             ],
         ]);
     }

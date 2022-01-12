@@ -118,16 +118,6 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
     }
 
     /**
-     * The permissions that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function permissions(): BelongsToMany
-    {
-        return $this->belongsToMany(Permission::class, 'tbPermissionsUsersPivot', 'user_id', 'permission_id', 'user_id', 'permission_id')->withTimestamps()->withPivot(['company_id']);
-    }
-
-    /**
      * Get all of the resets for the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

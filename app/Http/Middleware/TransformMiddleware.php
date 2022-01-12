@@ -11,7 +11,6 @@ use App\Models\Fee;
 use App\Models\Frequency;
 use App\Models\Loan;
 use App\Models\Notification;
-use App\Models\Permission;
 use App\Models\Province;
 use App\Models\User;
 use Closure;
@@ -83,7 +82,6 @@ class TransformMiddleware
             'frequency_id' => Frequency::class,
             'loan_id' => Loan::class,
             'notification_id' => Notification::class,
-            'permission_id' => Permission::class,
             'province_id' => Province::class,
             'user_id' => User::class,
         ];

@@ -73,9 +73,8 @@ if (!function_exists('auth_company')) {
 
 if (!function_exists('request_ip')) {
     /**
-     * get the current auth company.
-     *
-     * @return  \App\Models\Company|null
+     * get the request ip
+     * @return string
      */
     function request_ip()
     {
@@ -87,9 +86,9 @@ if (!function_exists('request_ip')) {
 
 if (!function_exists('get_fee_amount')) {
     /**
-     * get the current auth company.
+     * get the fee amount.
      *
-     * @return  \App\Models\Company|null
+     * @return  float
      */
     function get_fee_amount(string $type, float $balance, float $interest, int $fees = 1)
     {

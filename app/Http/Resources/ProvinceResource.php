@@ -27,7 +27,7 @@ class ProvinceResource extends ApiResource
             'links' => [
                 [
                     'rel' => 'self',
-                    'href' => route('permissions.show', $this->resource),
+                    'href' => route('provinces.show', $this->resource),
                 ],
                 [
                     'rel' => 'country',

@@ -37,10 +37,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->isAdmin() ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
         });
 
-        Gate::define('required-permission', function (User $user, int $permission) {
-            return $user->permissions->pluck('permission_id')->contains($permission) ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
-        });
-
         Passport::tokensExpireIn(Carbon::now()->addHours(24));
         Passport::refreshTokensExpireIn(Carbon::now()->addHours(36));
 

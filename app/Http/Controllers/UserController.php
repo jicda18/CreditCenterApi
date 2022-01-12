@@ -17,7 +17,8 @@ class UserController extends Controller
 {
     use GenericController, PasswordScore;
 
-    private $relations = ['companies', 'permissions'];
+    // Todo: add permission
+    private $relations = ['companies'];
 
     /**
      * function name that don't required Authentication
@@ -122,7 +123,8 @@ class UserController extends Controller
             throw new ModelNotFoundException('');
         }
 
-        $user->permissions;
+        // Todo: add permissions
+        // $user->permissions;
 
         return $this->showOne($user, []);
     }

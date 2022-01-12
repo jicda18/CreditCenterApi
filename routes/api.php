@@ -12,7 +12,6 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\LogTypeController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProvinceController;
 use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\TransactionController;
@@ -70,7 +69,6 @@ Route::apiResource('loans', LoanController::class)->only(['index', 'show', 'upda
 Route::apiResource('logs', LogController::class)->only(['index', 'show']);
 Route::apiResource('types', LogTypeController::class)->only(['index', 'show']);
 Route::apiResource('notifications', NotificationController::class)->only(['index', 'show']);
-Route::apiResource('permissions', PermissionController::class)->only(['index', 'show']);
 Route::apiResource('provinces', ProvinceController::class)->only(['index', 'show']);
 Route::apiResource('securities', SecurityLogController::class)->only(['index', 'show']);
 Route::apiResource('transactions', TransactionController::class)->only(['index', 'store', 'show']);
@@ -89,7 +87,6 @@ Route::get('loans/{loan}/transactions', [TransactionController::class, 'loansTra
 Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name('loans.fees.index');
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
 // Route::get('users/{user}/companies', [CompanyController::class, 'usersCompaniesIndex'])->name('users.companies.index');
-Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermissionsIndex'])->name('users.permissions.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
 Route::get('users/{user}/notifications', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
 

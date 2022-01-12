@@ -23,9 +23,4 @@ abstract class ApiPolicy
             return $this->allow();
         }
     }
-
-    protected function hasPermissions(Company $company, User $user, array $required): bool
-    {
-        return $user->permissions()->where('company_id', '=', $company->company_id)->whereIn('permission_id', $required)->count() === count($required);
-    }
 }
