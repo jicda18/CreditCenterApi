@@ -89,6 +89,7 @@ class DebtorController extends Controller
             'address' => ['required', 'string'],
             'date_of_birth' => ['nullable', 'date'],
             'phone' => ['nullable', 'digits:10'],
+            'email' => ['nullable', 'email'],
             'marital_status' => ['required', 'in:single,married,divorced,widowed'],
             'occupation' => ['nullable', 'string'],
             'salary' => ['required', 'numeric'],
@@ -137,6 +138,7 @@ class DebtorController extends Controller
             'address' => ['string'],
             'date_of_birth' => ['date'],
             'phone' => ['digits:10'],
+            'email' => ['email'],
             'marital_status' => ['in:single,married,divorced,widowed'],
             'occupation' => ['string'],
             'salary' => ['numeric'],
@@ -172,13 +174,14 @@ class DebtorController extends Controller
                 'address' => $request->address,
                 'date_of_birth' => $request->date_of_birth,
                 'phone' => $request->phone ?? '',
+                'email' => $request->email ?? '',
                 'marital_status' => $request->marital_status ?? '',
                 'occupation' => $request->occupation,
                 'salary' => $request->salary,
             ];
         }
 
-        return $request->only(['guarantor', 'business', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'marital_status', 'occupation', 'salary']);
+        return $request->only(['guarantor', 'business', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'email', 'marital_status', 'occupation', 'salary']);
     }
 
     protected function afterToSave(Request $request, Model $model, bool $store): Model

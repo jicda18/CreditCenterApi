@@ -10,11 +10,11 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Laravel\Passport\Passport;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends ApiModel implements AuthenticatableContract, AuthorizableContract
 {
-    use HasApiTokens, Authenticatable, Authorizable;
+    use HasApiTokens, Authenticatable, Authorizable, HasRoles;
 
     protected $table = 'tbUsers';
     protected $primaryKey = 'user_id';
@@ -26,13 +26,12 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
         'must_change_password',
         'block_at',
     ];
-    protected $hidden = ['user_id', 'password', 'admin_at', 'must_change_password', 'block_at'];
+    protected $hidden = ['user_id', 'password', 'must_change_password', 'block_at'];
 
     protected $casts = [
         'user_id' => 'integer',
         'block_at' => 'datetime',
         'must_change_password' => 'boolean',
-        'admin_at' => 'datetime',
     ];
 
     public function setPasswordAttribute($password)
@@ -62,7 +61,8 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
 
     public function isAdmin(): bool
     {
-        return $this->admin_at !== null;
+        return false;
+        return $this->hasRole('admin');
     }
 
     public function isBlocked(): bool

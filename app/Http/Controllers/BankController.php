@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BankController extends Controller
 {

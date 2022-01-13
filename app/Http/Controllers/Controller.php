@@ -62,6 +62,13 @@ abstract class Controller extends BaseController
      */
     protected $withoutAuth = [];
 
+    /**
+     * current user
+     *
+     * @var \App\Models\User|null
+     */
+    protected $user;
+
     public function __construct()
     {
         $this->request = request();
@@ -72,6 +79,8 @@ abstract class Controller extends BaseController
             $this->sort_field_key,
             $this->sort_direction_key,
         ];
+
+        $this->user = Auth::user();
 
         // Todo: uncomment
         $this->middleware('auth:api')->except($this->withoutAuth);

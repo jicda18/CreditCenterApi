@@ -17,7 +17,7 @@ class UserController extends Controller
     use GenericController, PasswordScore;
 
     // Todo: add permission
-    private $relations = [];
+    private $relations = ['roles', 'permissions'];
 
     /**
      * function name that don't required Authentication

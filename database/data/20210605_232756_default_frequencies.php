@@ -25,7 +25,10 @@ class DefaultFrequencies extends MigrationData
         return [
             ['function_name' => 'daily', 'label' => 'Diario'],
             ['function_name' => 'weekly', 'label' => 'Semanal'],
+            ['function_name' => 'biweekly', 'label' => 'Quincenal'],
             ['function_name' => 'monthly', 'label' => 'Mensual'],
+            ['function_name' => 'trimonthly', 'label' => 'Trimestral'],
+            ['function_name' => 'biannual', 'label' => 'Semestral'],
             ['function_name' => 'yearly', 'label' => 'Anual'],
         ];
     }

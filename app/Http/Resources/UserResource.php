@@ -24,16 +24,21 @@ class UserResource extends ApiResource
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
-            // 'permissions' => PermissionResource::collection($this->whenLoaded('permissions')), // Todo: Only admin
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
+            'permisions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'links' => [
                 [
                     'rel' => 'self',
                     'href' => route('users.show', $this->resource),
                 ],
-                // [
-                //     'rel' => 'permissions', // Todo: Only admin
-                //     'href' => route('users.permissions.index', $this->resource),
-                // ],
+                [
+                    'rel' => 'permissions',
+                    'href' => route('users.permissions.index', $this->resource),
+                ],
+                [
+                    'rel' => 'roles',
+                    'href' => route('users.roles.index', $this->resource),
+                ],
             ],
         ]);
     }

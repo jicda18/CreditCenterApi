@@ -11,11 +11,14 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\LogTypeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhitelistController;
+use App\Http\Resources\RoleResource;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
@@ -52,6 +55,8 @@ Route::get('debtors/loan/select', [DebtorController::class, 'loanForSelectList']
 Route::get('provinces/select', [ProvinceController::class, 'forSelectList']);
 Route::get('frequencies/select', [FrequencyController::class, 'forSelectList']);
 Route::get('banks/select', [BankController::class, 'forSelectList']);
+Route::get('permissions/select', [PermissionController::class, 'forSelectList']);
+Route::get('roles/select', [RolesController::class, 'forSelectList']);
 
 // Resource
 Route::apiResource('banks', BankController::class);
@@ -69,6 +74,8 @@ Route::apiResource('provinces', ProvinceController::class)->only(['index', 'show
 Route::apiResource('securities', SecurityLogController::class)->only(['index', 'show']);
 Route::apiResource('transactions', TransactionController::class)->only(['index', 'store', 'show']);
 Route::apiResource('users', UserController::class);
+Route::apiResource('permissions', PermissionController::class)->only(['index', 'show']);
+Route::apiResource('roles', RolesController::class)->only(['index', 'show']);
 Route::apiResource('whitelists', WhitelistController::class);
 
 // Relations
@@ -81,5 +88,8 @@ Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name(
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
 Route::get('users/{user}/notifications', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
+Route::get('users/{user}/roles', [RolesController::class, 'usersRoleIndex'])->name('users.roles.index');
+Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermisionIndex'])->name('users.permissions.index');
+Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermisionIndex'])->name('roles.permissions.index');
 
 Route::get('users/{user}/avatar', [UserController::class, 'avatar'])->name('users.avatar.show');

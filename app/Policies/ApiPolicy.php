@@ -18,7 +18,7 @@ abstract class ApiPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->isAdmin()) {
+        if ($user->admin) {
             return $this->allow();
         }
     }

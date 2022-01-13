@@ -22,6 +22,7 @@ class Debtor extends ApiModel
         'address',
         'date_of_birth',
         'phone',
+        'email',
         'marital_status',
         'occupation',
         'salary',

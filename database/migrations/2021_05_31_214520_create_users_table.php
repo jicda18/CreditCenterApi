@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('fullname');
             $table->boolean('must_change_password')->default(true);
             $table->timestamp('blocked_at')->nullable();
-            $table->timestamp('admin_at')->nullable();
 
             $this->addControlFields($table);
 

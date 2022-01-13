@@ -1,9 +1,9 @@
 <?php
 
 use App\Classes\MigrationData;
-use App\Models\Frequency;
+use Spatie\Permission\Models\Role;
 
-class NewsFrequncy extends MigrationData
+class DefaultRoles extends MigrationData
 {
     /**
      * Get the model reference class to use to insert the data.
@@ -12,7 +12,7 @@ class NewsFrequncy extends MigrationData
      */
     public function getModel(): string
     {
-        return Frequency::class;
+        return Role::class;
     }
 
     /**
@@ -23,9 +23,9 @@ class NewsFrequncy extends MigrationData
     public function getEntities(): array
     {
         return [
-            ['function_name' => 'biweekly', 'label' => 'Quincenal'],
-            ['function_name' => 'trimonthly', 'label' => 'Trimestral'],
-            ['function_name' => 'biannual', 'label' => 'Semestral'],
+            ['guard_name' => 'api', 'name' => 'admin', 'description' => 'Administrador'],
+            // Todo Definir permisos al role
+            ['guard_name' => 'api', 'name' => 'agent', 'description' => 'Agente', 'permissions' => []],
         ];
     }
 }

@@ -28,6 +28,7 @@ class CreateDebtorsTable extends Migration
             $table->string('address');
             $table->date('date_of_birth')->nullable();
             $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
             $table->string('occupation')->nullable();
             $table->float('salary');
