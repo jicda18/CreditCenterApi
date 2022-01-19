@@ -18,6 +18,10 @@ class TransactionObserver
     {
         $transaction->was_at = Carbon::now();
 
+        if ($transaction->is_cash) {
+            $transaction->bank_id = null;
+        }
+
         /**
          * @var \App\Models\Currency
          */
@@ -30,7 +34,7 @@ class TransactionObserver
             $transaction->loan_amount = $currency->convertTo($loan->currency, $transaction->amount);
         }
 
-        if ($transaction->bank_amount === null) {
+        if ($transaction->bank_id !== null && $transaction->bank_amount === null) {
             /**
              * @var \App\Models\Bank
              */

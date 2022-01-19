@@ -99,7 +99,9 @@ class LoanResource extends ApiResource
             'interest' => 'interest',
 
             'bank_key' => 'bank_id',
+            'currency_key' => 'currency_id',
             'balance' => 'balance',
+            'cash' => 'is_cash',
         ]);
     }
 }

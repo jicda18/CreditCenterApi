@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LoanResource;
 use App\Models\Bank;
+use App\Models\Currency;
 use App\Models\Debtor;
 use App\Models\Frequency;
 use App\Models\Loan;
@@ -79,7 +80,9 @@ class LoanController extends Controller
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
-            'bank_id' => ['required', 'exists:' . Bank::class],
+            'is_cash' => ['required', 'boolean'],
+            'bank_id' => ['required_if:is_cash,0', 'nullable', 'exists:' . Bank::class],
+            'currency_id' => ['required_if:is_cash,1', 'nullable', 'exists:' . Currency::class],
             'type' => ['required', 'in:fixed_interest,interest_capital'],
             'interest' => ['required', 'numeric', 'min:0'],
             'balance' => ['required', 'numeric', 'min:0'],
@@ -97,12 +100,12 @@ class LoanController extends Controller
     protected function requestToArray(Request $request, bool $store): array
     {
         if ($store) {
-            $bank = Bank::find($request->bank_id);
+            $currency_id = (bool) $request->is_cash ? $request->currency_id : Bank::find($request->bank_id)->currency_id;
             $fee_amount = get_fee_amount($request->type, $request->balance, $request->interest, $request->fees ?? 1);
 
             return [
                 'debtor_id' => $request->debtor_id,
-                'currency_id' => $bank->currency_id,
+                'currency_id' => $currency_id,
                 'fee_amount' => $fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
@@ -124,6 +127,7 @@ class LoanController extends Controller
             $transaction = Transaction::create([
                 'loan_id' => $model->loan_id,
                 'bank_id' => $request->bank_id,
+                'is_cash' => $request->is_cash,
                 'register_user_id' => Auth::user()->user_id,
                 'amount' => $request->balance,
                 'currency_id' => $model->currency_id,

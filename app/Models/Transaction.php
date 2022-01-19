@@ -12,6 +12,7 @@ class Transaction extends ApiModel
     protected $fillable = [
         'loan_id',
         'bank_id',
+        'is_cash',
         'register_user_id',
         'was_at',
         'amount',
@@ -28,6 +29,7 @@ class Transaction extends ApiModel
         'transaction_id' => 'integer',
         'loan_id' => 'integer',
         'bank_id' => 'integer',
+        'is_cash' => 'boolean',
         'register_user_id' => 'integer',
         'currency_id' => 'integer',
         'was_at' => 'datetime',

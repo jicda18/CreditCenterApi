@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DebtorResource;
 use App\Models\Bank;
+use App\Models\Currency;
 use App\Models\Debtor;
 use App\Models\Frequency;
 use App\Models\Loan;
@@ -98,7 +99,9 @@ class DebtorController extends Controller
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
-            'bank_id' => ['required', 'exists:' . Bank::class],
+            'is_cash' => ['required', 'boolean'],
+            'bank_id' => ['required_if:is_cash,0', 'nullable', 'exists:' . Bank::class],
+            'currency_id' => ['required_if:is_cash,1', 'nullable', 'exists:' . Currency::class],
             'type' => ['required', 'in:fixed_interest,interest_capital'],
             'interest' => ['required', 'numeric', 'min:0'],
             'balance' => ['required', 'numeric', 'min:0'],
@@ -131,16 +134,16 @@ class DebtorController extends Controller
             'guarantor' => ['nullable', 'string'],
             'business' => ['nullable', 'string'],
             'fullname' => ['string'],
-            'nickname' => ['string'],
+            'nickname' => ['nullable', 'string'],
             'personal_id' => ['string', 'unique:' . Debtor::class . ',personal_id,' . $debtor->debtor_id . ',debtor_id'],
             'gender' => ['in:female,male'],
             'province_id' => ['exists:' . Province::class],
             'address' => ['string'],
-            'date_of_birth' => ['date'],
-            'phone' => ['digits:10'],
-            'email' => ['email'],
+            'date_of_birth' => ['nullable', 'date'],
+            'phone' => ['nullable', 'digits:10'],
+            'email' => ['nullable', 'email'],
             'marital_status' => ['in:single,married,divorced,widowed'],
-            'occupation' => ['string'],
+            'occupation' => ['nullable', 'string'],
             'salary' => ['numeric'],
         ];
 
@@ -187,9 +190,7 @@ class DebtorController extends Controller
     protected function afterToSave(Request $request, Model $model, bool $store): Model
     {
         if ($store) {
-            $bank = Bank::find($request->bank_id);
-            $currency_id = $bank->currency_id;
-
+            $currency_id = (bool) $request->is_cash ? $request->currency_id : Bank::find($request->bank_id)->currency_id;
             $fee_amount = get_fee_amount($request->type, $request->balance, $request->interest, $request->fees ?? 1);
 
             $loan = Loan::create([

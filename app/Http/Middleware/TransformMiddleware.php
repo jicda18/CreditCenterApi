@@ -85,7 +85,7 @@ class TransformMiddleware
         ];
 
         $transformed = collect($inputs)->map(function ($input, $prop) use ($props) {
-            if (key_exists($prop, $props)) {
+            if ($input !== null && key_exists($prop, $props)) {
                 $model = $props[$prop]::where('uuid', '=', $input)->first();
 
                 if ($model === null) {

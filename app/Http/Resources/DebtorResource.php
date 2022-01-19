@@ -91,6 +91,7 @@ class DebtorResource extends ApiResource
 
             'bank_key' => 'bank_id',
             'balance' => 'balance',
+            'cash' => 'is_cash',
         ]);
     }
 }

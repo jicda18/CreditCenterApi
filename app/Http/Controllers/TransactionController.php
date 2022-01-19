@@ -9,7 +9,6 @@ use App\Models\Loan;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Traits\GenericController;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +49,8 @@ class TransactionController extends Controller
         // Todo: Actualizar fee_amount al momento de pagar al capital
         $rules = [
             'loan_id' => ['required', 'exists:' . Loan::class],
-            'bank_id' => ['required', 'exists:' . Bank::class],
+            'is_cash' => ['required', 'boolean'],
+            'bank_id' => ['required_if:is_cash,0', 'exists:' . Bank::class],
             'amount' => ['required', 'numeric'],
             'currency_id' => ['required', 'exists:' . Currency::class],
             'comment' => ['required', 'string'],
@@ -90,6 +90,7 @@ class TransactionController extends Controller
         if ($store) {
             return [
                 'loan_id' => $request->loan_id,
+                'is_cash' => $request->is_cash,
                 'bank_id' => $request->bank_id,
                 'register_user_id' => Auth::user()->user_id,
                 'amount' => $request->amount,
