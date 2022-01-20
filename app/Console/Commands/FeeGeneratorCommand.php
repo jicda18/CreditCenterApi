@@ -45,7 +45,7 @@ class FeeGeneratorCommand extends Command
         $dt = new Carbon(strtotime($dte));
 
         DB::transaction(function () use ($dt) {
-            Loan::where('balance', '>', '0')->where('next_on', '=', $dt)->cursor()->each(function (Loan $loan) use ($dt) {
+            Loan::where('balance', '>', '0')->where('next_on', '=', $dt->isoFormat('YYYY-MM-DD'))->cursor()->each(function (Loan $loan) use ($dt) {
                 // Add interest (transaction that didn't affect bank and balance but interest_balance)
                 Fee::create([
                     'loan_id' => $loan->loan_id,

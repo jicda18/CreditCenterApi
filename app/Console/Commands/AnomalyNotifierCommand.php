@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Debtor;
 use App\Models\Fee;
 use App\Models\Notification;
 use App\Models\User;
@@ -50,44 +51,43 @@ class AnomalyNotifierCommand extends Command
                 ->where('limit_on', '<', $dt)
                 ->orWhere('payment_on', '<', $dt)
                 ->cursor()
-                ->each(function ($fees) use ($dt) {
+                ->groupBy('loan.debtor_id')
+                ->each(function ($fees, $debtor_id) use ($dt) {
                     $users = $this->getUsersToNotified();
 
                     if ($users->count() !== 0) {
-                        $fees->groupBy('loan.debtor_id')->each(function ($fees) use ($dt, $users) {
-                            $debtor = $fees->first()->loan->debtor;
-                            $overdue = $fees->where('payment_on', '<', $dt);
-                            $late = $fees->where('payment_on', '>=', $dt);
-                            $level = 2;
+                        $debtor = Debtor::find($debtor_id);
+                        $overdue = $fees->where('limit_on', '<', $dt);
+                        $late = $fees->where('limit_on', '>=', $dt);
+                        $level = 2;
 
-                            $text = "{$debtor->fullname} tiene";
-                            if ($overdue->count() !== 0) {
-                                $level = 3;
-                                $plural = $overdue->count() === 1 ? '' : 's';
+                        $text = "{$debtor->fullname} tiene";
+                        if ($overdue->count() !== 0) {
+                            $level = 3;
+                            $plural = $overdue->count() === 1 ? '' : 's';
 
-                                $text .= " {$overdue->count()} couta{$plural} vencida{$plural}";
-
-                                if ($late->count() !== 0) {
-                                    $text .= ' y';
-                                }
-                            }
+                            $text .= " {$overdue->count()} couta{$plural} vencida{$plural}";
 
                             if ($late->count() !== 0) {
-                                $plural = $overdue->count() === 1 ? '' : 's';
-
-                                $text .= " {$late->count()} couta{$plural} atrasada{$plural}";
+                                $text .= ' y';
                             }
+                        }
 
-                            /**
-                             * @var \App\Models\Notification
-                             */
-                            $notification = Notification::create([
-                                'level' => $level,
-                                'text' => $text . '.',
-                            ]);
+                        if ($late->count() !== 0) {
+                            $plural = $late->count() === 1 ? '' : 's';
 
-                            $notification->users()->sync($users->pluck('user_id')->all());
-                        });
+                            $text .= " {$late->count()} couta{$plural} atrasada{$plural}";
+                        }
+
+                        /**
+                         * @var \App\Models\Notification
+                         */
+                        $notification = Notification::create([
+                            'level' => $level,
+                            'text' => $text . '.',
+                        ]);
+
+                        $notification->users()->sync($users->pluck('user_id')->all());
                     }
                 });
         });
