@@ -18,8 +18,15 @@ class LoanResource extends ApiResource
         $currency_uuid = $this->getRelationUuid('currency');
         $frequency_uuid = $this->getRelationUuid('frequency');
 
+        $frequency = $this->frequency->label;
+        $currency = $this->currency->name;
+        $simbol = $this->currency->simbol;
+        $amount = number_format($this->amount, 2);
+        $balance = number_format($this->balance, 2);
+
         return $this->includeHistory($request, [
             'key' => $this->uuid,
+            'label' => "{$currency} - {$frequency} - {$simbol}{$balance}|{$simbol}{$amount}",
             'debtor_key' => $debtor_uuid,
             'currency_key' => $currency_uuid,
             'frequency_key' => $frequency_uuid,

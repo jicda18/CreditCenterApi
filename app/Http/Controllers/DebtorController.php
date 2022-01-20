@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DebtorResource;
+use App\Http\Resources\LoanResource;
 use App\Models\Bank;
 use App\Models\Currency;
 use App\Models\Debtor;
@@ -54,19 +55,27 @@ class DebtorController extends Controller
         });
     }
 
-    public function loanForSelectList()
+    public function loanForSelectList(Request $request)
     {
-        return $this->forSelect(Debtor::all()->filter(function (Debtor $debtor) {
-            $loans = $debtor->loans;
-
-            return $loans->count() > 0;
-        })->values(), function (Debtor $debtor) {
+        // Todo: loan is open
+        return $this->forSelect(Debtor::has('loans')->with('loans')->get(), function (Debtor $debtor) use ($request) {
             $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
-            $loan = $debtor->loans->first();
 
             return [
-                'value' => null_prevent_property($loan, 'uuid'),
+                'value' => $debtor->uuid,
                 'label' => "{$debtor->fullname}{$nick}",
+                'custom' => $debtor->loans->map(function (Loan $loan) use ($request) {
+                    $frequency = $loan->frequency->label;
+                    $currency = $loan->currency->name;
+                    $simbol = $loan->currency->simbol;
+                    $amount = number_format($loan->amount, 2);
+                    $balance = number_format($loan->balance, 2);
+
+                    return [
+                        'value' => $loan->uuid,
+                        'label' => "{$currency} - {$frequency} - {$simbol}{$balance}|{$simbol}{$amount}",
+                    ];
+                }),
             ];
         });
     }

@@ -61,7 +61,7 @@ abstract class ApiResource extends JsonResource
 
         $relation = $this->whenLoaded($relationName);
         if (!($relation instanceof MissingValue)) {
-            return $relation->{$property};
+            return null_prevent_property($relation, $property) ?? '';
         }
 
         $relation = $this->resource->{$relationName}();

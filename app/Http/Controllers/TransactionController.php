@@ -50,11 +50,12 @@ class TransactionController extends Controller
         $rules = [
             'loan_id' => ['required', 'exists:' . Loan::class],
             'is_cash' => ['required', 'boolean'],
-            'bank_id' => ['required_if:is_cash,0', 'exists:' . Bank::class],
+            'bank_id' => ['required_if:is_cash,0', 'nullable', 'exists:' . Bank::class],
             'amount' => ['required', 'numeric'],
-            'currency_id' => ['required', 'exists:' . Currency::class],
             'comment' => ['required', 'string'],
         ];
+
+        // Todo: validate if loan is active
 
         return $this->change($request, $rules, new Transaction(), true, $this->relations);
     }
@@ -88,13 +89,15 @@ class TransactionController extends Controller
     protected function requestToArray(Request $request, bool $store): array
     {
         if ($store) {
+            $currency_id = (bool) $request->is_cash ? Loan::find($request->loan_id)->currency_id : Bank::find($request->bank_id)->currency_id;
+
             return [
                 'loan_id' => $request->loan_id,
                 'is_cash' => $request->is_cash,
                 'bank_id' => $request->bank_id,
                 'register_user_id' => Auth::user()->user_id,
-                'amount' => $request->amount,
-                'currency_id' => $request->currency_id,
+                'amount' => -$request->amount,
+                'currency_id' => $currency_id,
                 'comment' => $request->comment,
             ];
         }
