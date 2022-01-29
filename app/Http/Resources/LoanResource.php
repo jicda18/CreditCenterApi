@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class LoanResource extends ApiResource
@@ -40,6 +41,7 @@ class LoanResource extends ApiResource
             'amount' => $this->amount,
             'type' => $this->type,
             'interest' => $this->interest,
+            'number_fees' => $this->number_fees,
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
@@ -97,6 +99,7 @@ class LoanResource extends ApiResource
             'status' => 'status',
             'type' => 'type',
             'interest' => 'interest',
+            'number_fees' => 'number_fees',
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',

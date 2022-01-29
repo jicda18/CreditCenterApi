@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('password');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
             $table->string('fullname');
             $table->boolean('must_change_password')->default(true);
             $table->timestamp('blocked_at')->nullable();

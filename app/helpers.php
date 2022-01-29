@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\Frequency;
-use Laravel\Passport\Token;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Token\Plain;
+use App\Models\Loan;
+
+const precision = 2;
 
 if (!function_exists('null_prevent_property')) {
     /**
@@ -58,6 +57,18 @@ if (!function_exists('request_ip')) {
     }
 }
 
+if (!function_exists('apply_interest')) {
+    /**
+     * calcule the interest for a period.
+     *
+     * @return  float
+     */
+    function apply_interest(float $balance, float $interest)
+    {
+        return round($balance * $interest, precision);
+    }
+}
+
 if (!function_exists('get_fee_amount')) {
     /**
      * get the fee amount.
@@ -66,12 +77,49 @@ if (!function_exists('get_fee_amount')) {
      */
     function get_fee_amount(string $type, float $balance, float $interest, int $fees = 1)
     {
-        if ($type === 'interest_capital') {
+        if ($type === Loan::INTEREST_CAPITAL) {
             $temp = pow(1 + $interest, $fees);
 
-            return round(($balance * $interest * $temp) / ($temp - 1), 2);
+            return round(($balance * $interest * $temp) / ($temp - 1), precision);
         }
 
-        return round($balance * $interest, 2);
+        return apply_interest($balance, $interest);
+    }
+}
+
+if (!function_exists('get_fees_detail')) {
+    /**
+     * get the fees details.
+     *
+     * @return  float|array
+     */
+    function get_fees_detail(string $type, float $balance, float $interest, int $fees = 1)
+    {
+        if ($type === Loan::INTEREST_CAPITAL) {
+            $array = [];
+            $capital = $balance;
+
+            for ($i = $fees; $i > 0; $i--) {
+                $fee_amount = get_fee_amount($type, $capital, $interest, $i);
+
+                $interest_amount = round($capital * $interest, precision);
+                $payment = round($fee_amount - $interest_amount, precision);
+                $pending = round($capital - $payment, precision);
+
+                $array[] = [
+                    'preview' => $capital,
+                    'amount' => $fee_amount,
+                    'interest' => $interest_amount,
+                    'payment' => $payment,
+                    'pending' => $pending,
+                ];
+
+                $capital = $pending;
+            }
+
+            return $array;
+        }
+
+        return apply_interest($balance, $interest);
     }
 }

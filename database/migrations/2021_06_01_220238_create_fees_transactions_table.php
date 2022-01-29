@@ -16,7 +16,9 @@ class CreateFeesTransactionsTable extends Migration
         Schema::create('tbFeesTransactionsPivot', function (Blueprint $table) {
             $table->unsignedBigInteger('fee_id');
             $table->unsignedBigInteger('transaction_id');
-            $table->float('payment');
+            $table->double('interest'); // Monto a intere
+            $table->double('capital'); // Monto al capital
+            $table->double('late_payment'); // Monto a mora
             $table->timestamps();
 
             $table->foreign('fee_id')->references('fee_id')->on('tbFees');

@@ -22,7 +22,7 @@ class CreateBanksTable extends Migration
             $table->string('bank_name');
             $table->string('account_number');
             $table->string('alias');
-            $table->float('balance');
+            $table->double('balance');
 
             $this->addControlFields($table);
 

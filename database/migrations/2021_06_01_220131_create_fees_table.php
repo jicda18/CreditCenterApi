@@ -20,8 +20,12 @@ class CreateFeesTable extends Migration
             $table->id('fee_id');
             $table->unsignedBigInteger('loan_id');
             $table->date('payment_on');
-            $table->float('amount');
-            $table->float('balance');
+            $table->double('amount'); // Monto de la couta
+            $table->double('interest'); // Monto de intereses
+            $table->double('capital'); // Monto del capital
+            $table->double('late_payment'); // Monto por mora
+            $table->boolean('extra')->default(false);
+
             $table->date('limit_on');
             $table->timestamp('paid_at')->nullable();
 

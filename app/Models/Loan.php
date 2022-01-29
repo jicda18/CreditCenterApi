@@ -2,25 +2,27 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Loan extends ApiModel
 {
+    const FIXED_INTEREST = 'fixed_interest';
+    const INTEREST_CAPITAL = 'interest_capital';
+
     protected $table = 'tbLoans';
     protected $primaryKey = 'loan_id';
     protected $fillable = [
         'debtor_id',
         'currency_id',
-        'fee_amount',
         'start_on',
         'thanks_days',
-        'next_on',
         'frequency_id',
-        'status',
         'type',
         'interest',
         'amount',
+        'number_fees',
     ];
     protected $hidden = ['loan_id'];
 
@@ -28,7 +30,7 @@ class Loan extends ApiModel
         'loan_id' => 'integer',
         'debtor_id' => 'integer',
         'currency_id' => 'integer',
-        'fee_amount' => 'float',
+        'number_fees' => 'integer',
         'amount' => 'float',
         'balance' => 'float',
         'interest' => 'float',
@@ -40,8 +42,20 @@ class Loan extends ApiModel
 
     protected $attributes = [
         'balance' => 0,
-        'interest_balance' => 0,
+        'number_fees' => 0,
+        'status' => 'active',
     ];
+
+    public function getFeeAmountAttribute()
+    {
+        return get_fee_amount($this->type, $this->amount, $this->interest, $this->number_fees);
+    }
+
+    public function getInterestBalanceAttribute()
+    {
+        return $this->fees()->whereNull('paid_at')->where('payment_on', '<=', Carbon::now())
+            ->get()->sum('pending_interest');
+    }
 
     public function getTotalAttribute()
     {

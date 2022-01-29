@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Create fee
-        $schedule->command('fee:generate')->daily()->at('00:00')->runInBackground();
+        $dte = date('Y-m-d', strtotime("yesterday"));
+        $schedule->command("fee:generate {$dte}")->daily()->at('00:00')->runInBackground();
 
         // add notifications
         $schedule->command('notification:anomaly')->daily()->at('06:00')->runInBackground();

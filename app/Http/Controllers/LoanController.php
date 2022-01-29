@@ -6,6 +6,7 @@ use App\Http\Resources\LoanResource;
 use App\Models\Bank;
 use App\Models\Currency;
 use App\Models\Debtor;
+use App\Models\Fee;
 use App\Models\Frequency;
 use App\Models\Loan;
 use App\Models\Transaction;
@@ -14,6 +15,7 @@ use App\Traits\GenericController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 
 class LoanController extends Controller
 {
@@ -41,16 +43,12 @@ class LoanController extends Controller
         return $this->idx($query);
     }
 
-
     public function update(Request $request, Loan $loan)
     {
         $rules = [
             'currency_id' => [new NotPresent],
             'frequency_id' => ['exists:' . Frequency::class],
-            'fee_amount' => ['numeric'],
             'thanks_days' => ['integer'],
-            'next_on' => [new NotPresent],
-            'status' => ['in:active,settled,paused,canceled'],
         ];
 
         return $this->change($request, $rules, $loan, false, $this->relations);
@@ -86,7 +84,7 @@ class LoanController extends Controller
             'type' => ['required', 'in:fixed_interest,interest_capital'],
             'interest' => ['required', 'numeric', 'min:0'],
             'balance' => ['required', 'numeric', 'min:0'],
-            'fees' => ['requiredIf:type,interest_capital', 'numeric'],
+            'fees' => ['requiredIf:type,interest_capital', 'numeric', 'min:1'],
         ];
 
         return $this->change($request, $rules, new Loan(), true, $this->relations);
@@ -101,20 +99,17 @@ class LoanController extends Controller
     {
         if ($store) {
             $currency_id = (bool) $request->is_cash ? $request->currency_id : Bank::find($request->bank_id)->currency_id;
-            $fee_amount = get_fee_amount($request->type, $request->balance, $request->interest, $request->fees ?? 1);
 
             return [
                 'debtor_id' => $request->debtor_id,
                 'currency_id' => $currency_id,
-                'fee_amount' => $fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
-                'next_on' => $request->start_on,
                 'frequency_id' => $request->frequency_id,
-                'status' => 'active',
                 'amount' => $request->balance,
                 'type' => $request->type,
                 'interest' => $request->interest,
+                'number_fees' => $request->fees ?? 0,
             ];
         }
 

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CollectionResource;
 use App\Http\Resources\FeeResource;
 use App\Models\Fee;
 use App\Models\Loan;
 use App\Models\Transaction;
 use App\Traits\GenericController;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class FeeController extends Controller
 {
@@ -59,5 +62,24 @@ class FeeController extends Controller
     protected function requestToArray(Request $request, bool $store): array
     {
         return [];
+    }
+
+    protected function cxc(Request $request)
+    {
+        $dte = Carbon::now()->addDays(env('CXC_DAYS', 5))->endOfDay();
+
+        $fees = Fee::whereNull('paid_at')->where('payment_on', '<=', $dte)
+            ->with(['loan', 'loan.debtor', 'loan.currency', 'loan.fees'])
+            ->get()
+
+            ->map(function (Fee $fee) use ($request) {
+                return (new $this->resource($fee))->response()->getData()->data;
+            })
+            ->groupBy('loan_key')
+            ->values();
+
+        return response()->json([
+            'data' => $fees,
+        ], 200);
     }
 }

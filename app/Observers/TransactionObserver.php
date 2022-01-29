@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Fee;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +17,11 @@ class TransactionObserver
      */
     public function creating(Transaction $transaction)
     {
+        // Set paid datetime
         $transaction->was_at = Carbon::now();
 
         if ($transaction->is_cash) {
+            // if cash doesn't affect bank balance
             $transaction->bank_id = null;
         }
 
@@ -31,6 +34,7 @@ class TransactionObserver
              * @var \App\Models\Loan
              */
             $loan = $transaction->loan;
+            // Convert to loan currency
             $transaction->loan_amount = $currency->convertTo($loan->currency, $transaction->amount);
         }
 
@@ -39,6 +43,7 @@ class TransactionObserver
              * @var \App\Models\Bank
              */
             $bank = $transaction->bank;
+            // Convert to bank currency
             $transaction->bank_amount = -$currency->convertTo($bank->currency, $transaction->amount);
         }
     }
@@ -69,31 +74,81 @@ class TransactionObserver
          */
         $loan = $transaction->loan;
         if ($loan !== null) {
-            $loan->balance += $transaction->loan_amount;
-            $loan->save();
+            // if a payment then update fees
+            if ($transaction->amount < 0) {
+                /**
+                 * @var \App\Models\Fee[]
+                 */
+                $fees = $loan->fees()->whereNull('paid_at')->orderBy('payment_on')->get()->all();
 
-            $transaction->loan_balance = $loan->balance;
+                $relaction = [];
+                $amount = -$transaction->loan_amount;
 
-            // If a payment
-            if ($transaction->loan_amount < 0) {
-                // Update Fees
-                $balance = $transaction->loan_amount;
-                while ($balance > 0) {
-                    /**
-                     * @var \App\Models\Fee
-                     */
-                    $fee = $loan->fees()->where('balance', '>', '0')->orderDesc('payment_on')->first();
-                    $payment = min($balance, $fee->balance);
-                    $fee->balance -= $payment;
-                    $fee->save();
+                $i = 0;
+                while ($amount > 0) {
+                    if ($i < count($fees)) {
+                        $fee = $fees[$i];
 
-                    $fee->transactions()->syncWithoutDetaching([$transaction->transaction_id => ['payment' => $payment]]);
+                        $interest = min($fee->pending_interest, $amount);
+                        $amount = round($amount - $interest, precision);
 
-                    $balance -= $payment;
+                        $late_payment = min($fee->pending_late_payment, $amount);
+                        $amount = round($amount - $late_payment, precision);
+
+                        $capital = min($fee->pending_capital, $amount);
+                        $amount = round($amount - $capital, precision);
+
+                        $loan->balance -= $capital;
+
+                        $relaction[$fee->fee_id] = [
+                            'interest' => $interest,
+                            'capital' => $capital,
+                            'late_payment' => $late_payment,
+                        ];
+                    } else {
+                        $interest = 0;
+                        $capital = $amount;
+                        $late_payment = 0;
+
+                        $fee = Fee::create([
+                            'loan_id' => $loan->loan_id,
+                            'payment_on' => Carbon::now(),
+                            'limit_on' => Carbon::now(),
+                            'amount' => $capital,
+                            'interest' => $interest,
+                            'capital' => $capital,
+                            'paid_at' => Carbon::now(),
+                            'extra' => true,
+                        ]);
+
+                        $amount -= $capital;
+
+                        $loan->balance -= $capital;
+
+                        $relaction[$fee->fee_id] = [
+                            'interest' => $interest,
+                            'capital' => $capital,
+                            'late_payment' => $late_payment,
+                        ];
+                    }
+
+                    $i++;
                 }
+
+                $transaction->fees()->syncWithoutDetaching($relaction);
+
+                $transaction->fees->each(function (Fee $fee) {
+                    $fee->paid_at = Carbon::now();
+                    $fee->save();
+                });
+            } else {
+                $loan->balance = $transaction->loan_amount;
             }
         }
 
+        $loan->save();
+
+        $transaction->loan_balance = $loan->balance;
         $transaction->save();
     }
 }

@@ -45,20 +45,16 @@ class FeeGeneratorCommand extends Command
         $dt = new Carbon(strtotime($dte));
 
         DB::transaction(function () use ($dt) {
-            Loan::where('balance', '>', '0')->where('next_on', '=', $dt->isoFormat('YYYY-MM-DD'))->cursor()->each(function (Loan $loan) use ($dt) {
-                // Add interest (transaction that didn't affect bank and balance but interest_balance)
-                Fee::create([
-                    'loan_id' => $loan->loan_id,
-                    'payment_on' => $dt,
-                    'amount' => min($loan->fee_amount, $loan->balance),
-                    'limit_on' => $dt->copy()->addDays($loan->thanks_days),
-                ]);
-
+            Loan::where('status', '=', 'active')->where('next_on', '=', $dt->isoFormat('YYYY-MM-DD'))->cursor()->each(function (Loan $loan) use ($dt) {
                 /**
                  * @var \App\Models\Frequency
                  */
                 $frequency = $loan->frequency;
+
                 $loan->next_on = $frequency->nextDate($dt);
+
+                Fee::makeFromLoan($loan);
+
                 $loan->save();
             });
         });

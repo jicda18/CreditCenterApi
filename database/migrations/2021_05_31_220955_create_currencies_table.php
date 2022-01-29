@@ -21,7 +21,7 @@ class CreateCurrenciesTable extends Migration
             $table->string('name');
             $table->string('symbol');
             $table->boolean('default')->default(false);
-            $table->float('exchange_value', 32, 15, true);
+            $table->double('exchange_value');
 
             $this->addControlFields($table);
         });

@@ -23,6 +23,7 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
         'password',
         'email',
         'fullname',
+        'phone',
         'must_change_password',
         'block_at',
     ];
@@ -61,7 +62,6 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
 
     public function isAdmin(): bool
     {
-        return false;
         return $this->hasRole('admin');
     }
 

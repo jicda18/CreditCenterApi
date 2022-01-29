@@ -19,6 +19,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhitelistController;
 use App\Http\Resources\RoleResource;
+use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
@@ -42,12 +43,6 @@ Route::post('tokens', [AccessTokenController::class, 'issueToken'])->name('token
 // Todo: set myself controller and resource
 Route::get('users/me', [UserController::class, 'usersMeShow'])->name('users.me.show');
 
-// Special
-// Todo: set specials route
-Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.changePassword'); // Todo: create endpoint
-Route::get('users/request-change-password', [UserController::class, 'requestChangePassword'])->name('users.requestChangePassword'); // Todo: create endpoint
-Route::get('users/{user}/change-password-confirm/{token}', [UserController::class, 'changePasswordConfirm'])->name('users.changePasswordConfirm'); // Todo: create endpoint
-
 // For Select List
 Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
 Route::get('debtors/select', [DebtorController::class, 'forSelectList']);
@@ -57,6 +52,13 @@ Route::get('frequencies/select', [FrequencyController::class, 'forSelectList']);
 Route::get('banks/select', [BankController::class, 'forSelectList']);
 Route::get('permissions/select', [PermissionController::class, 'forSelectList']);
 Route::get('roles/select', [RolesController::class, 'forSelectList']);
+
+// Special
+// Todo: set specials route
+Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.changePassword'); // Todo: create endpoint
+Route::get('users/request-change-password', [UserController::class, 'requestChangePassword'])->name('users.requestChangePassword'); // Todo: create endpoint
+Route::get('users/{user}/change-password-confirm/{token}', [UserController::class, 'changePasswordConfirm'])->name('users.changePasswordConfirm'); // Todo: create endpoint
+Route::get('fees/cxc', [FeeController::class, 'cxc'])->name('fees.cxc');
 
 // Resource
 Route::apiResource('banks', BankController::class);

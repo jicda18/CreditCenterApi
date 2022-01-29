@@ -23,13 +23,13 @@ class CreateTransactionsTable extends Migration
             $table->boolean('is_cash')->default(false);
             $table->unsignedBigInteger('register_user_id');
             $table->timestamp('was_at');
-            $table->float('amount');
+            $table->double('amount');
             $table->unsignedBigInteger('currency_id');
             $table->boolean('is_interest')->default(false);
-            $table->float('loan_amount')->nullable();
-            $table->float('loan_balance')->nullable();
-            $table->float('bank_amount')->nullable();
-            $table->float('bank_balance')->nullable();
+            $table->double('loan_amount')->nullable();
+            $table->double('loan_balance')->nullable();
+            $table->double('bank_amount')->nullable();
+            $table->double('bank_balance')->nullable();
             $table->text('comment');
 
             $this->addControlFields($table);

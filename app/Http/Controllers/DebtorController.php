@@ -104,7 +104,7 @@ class DebtorController extends Controller
             'occupation' => ['nullable', 'string'],
             'salary' => ['required', 'numeric'],
             // Loan Configuration
-            'fees' => ['requiredIf:type,interest_capital', 'numeric'],
+            'fees' => ['requiredIf:type,interest_capital', 'numeric', 'min:1'],
             'start_on' => ['required', 'date'],
             'thanks_days' => ['nullable', 'integer'],
             'frequency_id' => ['required', 'exists:' . Frequency::class],
@@ -200,20 +200,17 @@ class DebtorController extends Controller
     {
         if ($store) {
             $currency_id = (bool) $request->is_cash ? $request->currency_id : Bank::find($request->bank_id)->currency_id;
-            $fee_amount = get_fee_amount($request->type, $request->balance, $request->interest, $request->fees ?? 1);
 
             $loan = Loan::create([
                 'debtor_id' => $model->getKey(),
                 'currency_id' => $currency_id,
-                'fee_amount' => $fee_amount,
                 'start_on' => $request->start_on,
                 'thanks_days' => $request->thanks_days ?? 0,
-                'next_on' => $request->start_on,
                 'frequency_id' => $request->frequency_id,
-                'status' => 'active',
                 'amount' => $request->balance,
                 'type' => $request->type,
                 'interest' => $request->interest,
+                'number_fees' => $request->fees ?? 0,
             ]);
 
             $transaction = Transaction::create([

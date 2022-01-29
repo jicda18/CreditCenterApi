@@ -77,7 +77,7 @@ class Transaction extends ApiModel
      */
     public function fees(): BelongsToMany
     {
-        return $this->belongsToMany(Fee::class, 'tbFeesTransactionsPivot', 'transaction_id', 'fee_id', 'transaction_id', 'fee_id')->withTimestamps()->withPivot(['payment']);
+        return $this->belongsToMany(Fee::class, 'tbFeesTransactionsPivot', 'transaction_id', 'fee_id', 'transaction_id', 'fee_id')->withTimestamps()->withPivot(['interest', 'capital', 'late_payment']);
     }
 
     /**
