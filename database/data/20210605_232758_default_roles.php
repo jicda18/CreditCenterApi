@@ -24,8 +24,7 @@ class DefaultRoles extends MigrationData
     {
         return [
             ['guard_name' => 'api', 'name' => 'admin', 'description' => 'Administrador'],
-            // Todo Definir permisos al role
-            ['guard_name' => 'api', 'name' => 'agent', 'description' => 'Agente', 'permissions' => []],
+            ['guard_name' => 'api', 'name' => 'agent', 'description' => 'Agente', 'permissions' => [1, 5, 9, 13, 14, 18, 22, 26, 30, 31, 32, 34,]],
         ];
     }
 }

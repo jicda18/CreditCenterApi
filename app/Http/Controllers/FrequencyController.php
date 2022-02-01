@@ -28,6 +28,8 @@ class FrequencyController extends Controller
      */
     public function index()
     {
+        required_permission('frequency.view');
+
         $query = $this->includeRelations(Frequency::query(), $this->relations);
 
         return $this->idx($query);
@@ -35,6 +37,8 @@ class FrequencyController extends Controller
 
     public function forSelectList()
     {
+        required_permission('frequency.view');
+
         return $this->forSelect(Frequency::all(), function (Frequency $frequency) {
             return [
                 'value' => $frequency->uuid,
@@ -51,6 +55,8 @@ class FrequencyController extends Controller
      */
     public function show(Frequency $frequency)
     {
+        required_permission('frequency.view');
+
         return  $this->showOne($frequency, $this->relations);
     }
 

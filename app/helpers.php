@@ -1,6 +1,9 @@
 <?php
 
+use App\Exceptions\PermissionRequiredException;
 use App\Models\Loan;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 const precision = 2;
 
@@ -121,5 +124,43 @@ if (!function_exists('get_fees_detail')) {
         }
 
         return apply_interest($balance, $interest);
+    }
+}
+
+if (!function_exists('user')) {
+    /**
+     * get the fees details.
+     *
+     * @return  \App\Models\User | null
+     */
+    function user(): ?User
+    {
+        return Auth::user();
+    }
+}
+
+if (!function_exists('user')) {
+    /**
+     * get the fees details.
+     *
+     * @return  \App\Models\User | null
+     */
+    function user(): ?User
+    {
+        return Auth::user();
+    }
+}
+
+if (!function_exists('required_permission')) {
+    /**
+     * get the fees details.
+     *
+     * @return  \App\Models\User | null
+     */
+    function required_permission(string $permission_name)
+    {
+        if (!user()->can($permission_name)) {
+            throw new PermissionRequiredException($permission_name);
+        }
     }
 }

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-
     use GenericController;
 
     private $relations = [];
@@ -29,6 +28,8 @@ class CountryController extends Controller
      */
     public function index()
     {
+        required_permission('country.view');
+
         $query = $this->includeRelations(Country::query(), $this->relations);
 
         return $this->idx($query);
@@ -42,6 +43,8 @@ class CountryController extends Controller
      */
     public function show(Country $country)
     {
+        required_permission('country.view');
+
         return  $this->showOne($country, $this->relations);
     }
 

@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Todo: move message to centered file
         Gate::define('admin-required', function (User $user) {
-            return $user->admin() ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
+            return $user->admin ? Response::allow() : Response::deny('No tiene pivilegios para realizar esta acción.');
         });
 
         Gate::before(function ($user, $ability) {

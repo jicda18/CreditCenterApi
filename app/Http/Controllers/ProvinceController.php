@@ -29,6 +29,8 @@ class ProvinceController extends Controller
      */
     public function index()
     {
+        required_permission('province.view');
+
         $query = $this->includeRelations(Province::query(), $this->relations);
 
         return $this->idx($query);
@@ -36,6 +38,8 @@ class ProvinceController extends Controller
 
     public function forSelectList()
     {
+        required_permission('province.view');
+
         return $this->forSelect(Province::all(), function (Province $province) {
             return [
                 'value' => $province->uuid,
@@ -52,11 +56,15 @@ class ProvinceController extends Controller
      */
     public function show(Province $province)
     {
+        required_permission('province.view');
+
         return  $this->showOne($province, $this->relations);
     }
 
     public function countriesProvincesIndex(Country $country)
     {
+        required_permission('province.view');
+
         return $this->modelRelationIndex($country, 'provinces', $this->relations);
     }
 

@@ -6,7 +6,6 @@ use App\Http\Resources\LoanResource;
 use App\Models\Bank;
 use App\Models\Currency;
 use App\Models\Debtor;
-use App\Models\Fee;
 use App\Models\Frequency;
 use App\Models\Loan;
 use App\Models\Transaction;
@@ -14,8 +13,6 @@ use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
 
 class LoanController extends Controller
 {
@@ -38,6 +35,8 @@ class LoanController extends Controller
      */
     public function index()
     {
+        required_permission('loan.view');
+
         $query = $this->includeRelations(Loan::query(), $this->relations);
 
         return $this->idx($query);
@@ -45,6 +44,8 @@ class LoanController extends Controller
 
     public function update(Request $request, Loan $loan)
     {
+        required_permission('loan.update');
+
         $rules = [
             'currency_id' => [new NotPresent],
             'frequency_id' => ['exists:' . Frequency::class],
@@ -62,6 +63,8 @@ class LoanController extends Controller
      */
     public function show(Loan $loan)
     {
+        required_permission('loan.view');
+
         return  $this->showOne($loan, $this->relations);
     }
 
@@ -73,6 +76,8 @@ class LoanController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('loan.store');
+
         $rules = [
             'debtor_id' => ['required', 'exists:' . Debtor::class],
             'start_on' => ['required', 'date'],
@@ -92,6 +97,8 @@ class LoanController extends Controller
 
     public function debtorsLoansIndex(Debtor $debtor)
     {
+        required_permission('loan.view');
+
         return $this->modelRelationIndex($debtor, 'loans', $this->relations);
     }
 
@@ -123,7 +130,7 @@ class LoanController extends Controller
                 'loan_id' => $model->loan_id,
                 'bank_id' => $request->bank_id,
                 'is_cash' => $request->is_cash,
-                'register_user_id' => Auth::user()->user_id,
+                'register_user_id' => user()->user_id,
                 'amount' => $request->balance,
                 'currency_id' => $model->currency_id,
                 'comment' => 'Nuevo prestamo para ' . $model->fullname,

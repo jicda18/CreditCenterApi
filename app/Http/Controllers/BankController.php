@@ -8,7 +8,6 @@ use App\Models\Currency;
 use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BankController extends Controller
 {
@@ -23,6 +22,7 @@ class BankController extends Controller
 
         parent::__construct();
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,6 +30,8 @@ class BankController extends Controller
      */
     public function index()
     {
+        required_permission('bank.view');
+
         $query = $this->includeRelations(Bank::query(), $this->relations);
 
         return $this->idx($query);
@@ -37,6 +39,8 @@ class BankController extends Controller
 
     public function forSelectList()
     {
+        required_permission('bank.view');
+
         return $this->forSelect(Bank::all(), function (Bank $bank) {
             return [
                 'value' => $bank->uuid,
@@ -54,6 +58,8 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('bank.store');
+
         $rules = [
             'currency_id' => ['required', 'exists:' . Currency::class],
             'bank_name' => ['required', 'string'],
@@ -73,6 +79,8 @@ class BankController extends Controller
      */
     public function show(Bank $bank)
     {
+        required_permission('bank.view');
+
         return  $this->showOne($bank, $this->relations);
     }
 
@@ -85,6 +93,8 @@ class BankController extends Controller
      */
     public function update(Request $request, Bank $bank)
     {
+        required_permission('bank.update');
+
         $rules = [
             'currency_id' => [new NotPresent()],
             'bank_name' => ['string'],
@@ -104,6 +114,8 @@ class BankController extends Controller
      */
     public function destroy(Bank $bank)
     {
+        required_permission('bank.delete');
+
         $bank->delete();
 
         return  $this->showOne($bank, []);

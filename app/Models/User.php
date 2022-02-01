@@ -16,6 +16,11 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
 {
     use HasApiTokens, Authenticatable, Authorizable, HasRoles;
 
+    public static function get_avatar_directory(string $filename = '')
+    {
+        return storage_path('uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . $filename);
+    }
+
     protected $table = 'tbUsers';
     protected $primaryKey = 'user_id';
     protected $fillable = [

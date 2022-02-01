@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CollectionResource;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -344,6 +345,12 @@ abstract class Controller extends BaseController
 
         foreach ($relations as $relation) {
             $model->{$relation};
+
+            if ($model instanceof User && $relation === 'permissions') {
+                $permissions = $model->getAllPermissions();
+
+                $model->setRelation($relation, $permissions);
+            }
         }
 
         return $model;

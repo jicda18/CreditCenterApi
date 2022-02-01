@@ -23,8 +23,8 @@ class DefaultPermissions extends MigrationData
     public function getEntities(): array
     {
         return [
-            ['guard_name' => 'api', 'name' => 'Country.view', 'description' => 'Ver Paises.'],
-            ['guard_name' => 'api', 'name' => 'Country.store', 'description' => 'Crear Paises.'],
+            ['guard_name' => 'api', 'name' => 'country.view', 'description' => 'Ver Paises.'],
+            ['guard_name' => 'api', 'name' => 'country.store', 'description' => 'Crear Paises.'],
             ['guard_name' => 'api', 'name' => 'country.update', 'description' => 'Actualizar Paises.'],
             ['guard_name' => 'api', 'name' => 'country.delete', 'description' => 'Eliminar Paises.'],
             ['guard_name' => 'api', 'name' => 'province.view', 'description' => 'Ver Provincias.'],
@@ -36,6 +36,10 @@ class DefaultPermissions extends MigrationData
             ['guard_name' => 'api', 'name' => 'debtor.update', 'description' => 'Actualizar Deudores.'],
             ['guard_name' => 'api', 'name' => 'debtor.delete', 'description' => 'Eliminar Deudores.'],
             ['guard_name' => 'api', 'name' => 'permision.view', 'description' => 'Ver Permisos.'],
+            ['guard_name' => 'api', 'name' => 'role.view', 'description' => 'Ver Roles.'],
+            ['guard_name' => 'api', 'name' => 'role.store', 'description' => 'Crear Roles.'],
+            ['guard_name' => 'api', 'name' => 'role.update', 'description' => 'Actualizar Roles.'],
+            ['guard_name' => 'api', 'name' => 'role.delete', 'description' => 'Eliminar Roles.'],
             ['guard_name' => 'api', 'name' => 'user.view', 'description' => 'Ver Usuarios.'],
             ['guard_name' => 'api', 'name' => 'user.store', 'description' => 'Crear Usuarios.'],
             ['guard_name' => 'api', 'name' => 'user.update', 'description' => 'Actualizar Usuarios.'],
@@ -51,13 +55,14 @@ class DefaultPermissions extends MigrationData
             ['guard_name' => 'api', 'name' => 'fee.view', 'description' => 'Ver Coutas.'],
             ['guard_name' => 'api', 'name' => 'frecuency.view', 'description' => 'Ver Frecuencias.'],
             ['guard_name' => 'api', 'name' => 'transantions.view', 'description' => 'Ver Transaciones.'],
+            ['guard_name' => 'api', 'name' => 'transantions.store', 'description' => 'Crear Pagos.'],
             ['guard_name' => 'api', 'name' => 'currency.view', 'description' => 'Ver Monedas.'],
             ['guard_name' => 'api', 'name' => 'currency.store', 'description' => 'Crear Monedas.'],
             ['guard_name' => 'api', 'name' => 'currency.update', 'description' => 'Actualizar Monedas.'],
             ['guard_name' => 'api', 'name' => 'currency.delete', 'description' => 'Eliminar Monedas.'],
-            ['guard_name' => 'api', 'name' => 'logType.view', 'description' => 'Ver Tipos de Log.'],
+            ['guard_name' => 'api', 'name' => 'logtype.view', 'description' => 'Ver Tipos de Log.'],
             ['guard_name' => 'api', 'name' => 'log.view', 'description' => 'Ver Logs.'],
-            ['guard_name' => 'api', 'name' => 'securityLog.view', 'description' => 'Ver Logs de Seguridad.'],
+            ['guard_name' => 'api', 'name' => 'securitylog.view', 'description' => 'Ver Logs de Seguridad.'],
             ['guard_name' => 'api', 'name' => 'accesslist.view', 'description' => 'Ver Accesslist.'],
         ];
     }

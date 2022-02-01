@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
 use App\Models\User;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
@@ -31,6 +29,8 @@ class RolesController extends Controller
      */
     public function index()
     {
+        required_permission('role.view');
+
         $query = $this->includeRelations(Role::query(), $this->relations);
 
         return $this->idx($query);
@@ -38,6 +38,8 @@ class RolesController extends Controller
 
     public function forSelectList()
     {
+        required_permission('role.view');
+
         return $this->forSelect(Role::all(), function (Role $role) {
             return [
                 'value' => $role->id,
@@ -54,6 +56,8 @@ class RolesController extends Controller
      */
     public function show(Role $role)
     {
+        required_permission('role.view');
+
         if ($this->request->has($this->with_key) && count($this->relations) === 0) {
             $relations = collect(explode(static::WITH_DELIMITER, $this->request->get($this->with_key)))
                 ->flip()
@@ -78,6 +82,8 @@ class RolesController extends Controller
      */
     public function usersRoleIndex(User $user)
     {
+        required_permission('role.view');
+
         $query = $this->includeRelations($user->roles()->getQuery(), $this->relations);
 
         return $this->idx($query);

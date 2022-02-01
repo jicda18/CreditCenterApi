@@ -25,7 +25,7 @@ class UserResource extends ApiResource
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'permisions' => PermissionResource::collection($this->whenLoaded('permissions')),
+            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'links' => [
                 [
                     'rel' => 'self',

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
 use App\Models\Bank;
-use App\Models\Currency;
 use App\Models\Loan;
 use App\Models\Transaction;
 use App\Models\User;
@@ -33,6 +32,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
+        required_permission('transantions.view');
+
         $query = $this->includeRelations(Transaction::query(), $this->relations);
 
         return $this->idx($query);
@@ -46,6 +47,8 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('transantions.store');
+
         $rules = [
             'loan_id' => ['required', 'exists:' . Loan::class],
             'is_cash' => ['required', 'boolean'],
@@ -67,21 +70,29 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
+        required_permission('transantions.view');
+
         return  $this->showOne($transaction, $this->relations);
     }
 
     public function banksTransactionsIndex(Bank $bank)
     {
+        required_permission('transantions.view');
+
         return $this->modelRelationIndex($bank, 'transactions', $this->relations);
     }
 
     public function loansTransactionsIndex(Loan $loan)
     {
+        required_permission('transantions.view');
+
         return $this->modelRelationIndex($loan, 'transactions', $this->relations);
     }
 
     public function usersTransactionsIndex(User $user)
     {
+        required_permission('transantions.view');
+
         return $this->modelRelationIndex($user, 'transactions', $this->relations);
     }
 

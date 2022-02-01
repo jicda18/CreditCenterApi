@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\NotificationResource;
 use App\Models\Notification;
-use App\Models\User;
 use App\Traits\GenericController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class NotificationController extends Controller
 {
@@ -29,6 +29,8 @@ class NotificationController extends Controller
      */
     public function index()
     {
+        Gate::authorize('admin-required', user());
+
         $query = $this->includeRelations(Notification::query(), $this->relations);
 
         return $this->idx($query);
@@ -42,12 +44,14 @@ class NotificationController extends Controller
      */
     public function show(Notification $notification)
     {
+        Gate::authorize('admin-required', user());
+
         return  $this->showOne($notification, $this->relations);
     }
 
-    public function usersNotificationsIndex(User $user)
+    public function usersNotificationsIndex()
     {
-        return $this->modelRelationIndex($user, 'notifications', $this->relations);
+        return $this->modelRelationIndex(user(), 'notifications', $this->relations);
     }
 
     protected function requestToArray(Request $request, bool $store): array

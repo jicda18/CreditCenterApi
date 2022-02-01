@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DebtorResource;
-use App\Http\Resources\LoanResource;
 use App\Models\Bank;
 use App\Models\Currency;
 use App\Models\Debtor;
@@ -11,7 +10,6 @@ use App\Models\Frequency;
 use App\Models\Loan;
 use App\Models\Province;
 use App\Models\Transaction;
-use App\Rules\NotPresent;
 use App\Traits\GenericController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -38,6 +36,8 @@ class DebtorController extends Controller
      */
     public function index()
     {
+        required_permission('debtor.view');
+
         $query = $this->includeRelations(Debtor::query(), $this->relations);
 
         return $this->idx($query);
@@ -45,6 +45,8 @@ class DebtorController extends Controller
 
     public function forSelectList()
     {
+        required_permission('debtor.view');
+
         return $this->forSelect(Debtor::all(), function (Debtor $debtor) {
             $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
 
@@ -57,6 +59,9 @@ class DebtorController extends Controller
 
     public function loanForSelectList(Request $request)
     {
+        required_permission('debtor.view');
+        required_permission('loan.view');
+
         // Todo: loan is open
         return $this->forSelect(Debtor::has('loans')->with('loans')->get(), function (Debtor $debtor) use ($request) {
             $nick = $debtor->nickname == null ? "" : " ({$debtor->nickname})";
@@ -88,6 +93,8 @@ class DebtorController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('debtor.store');
+
         $rules = [
             'guarantor' => ['nullable', 'string'],
             'business' => ['nullable', 'string'],
@@ -127,6 +134,8 @@ class DebtorController extends Controller
      */
     public function show(Debtor $debtor)
     {
+        required_permission('debtor.view');
+
         return  $this->showOne($debtor, $this->relations);
     }
 
@@ -139,6 +148,8 @@ class DebtorController extends Controller
      */
     public function update(Request $request, Debtor $debtor)
     {
+        required_permission('debtor.update');
+
         $rules = [
             'guarantor' => ['nullable', 'string'],
             'business' => ['nullable', 'string'],
@@ -167,6 +178,8 @@ class DebtorController extends Controller
      */
     public function destroy(Debtor $debtor)
     {
+        required_permission('debtor.delete');
+
         $debtor->delete();
 
         return  $this->showOne($debtor, []);

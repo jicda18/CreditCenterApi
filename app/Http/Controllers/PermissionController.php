@@ -30,6 +30,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
+        required_permission('permision.view');
+
         $query = $this->includeRelations(Permission::query(), $this->relations);
 
         return $this->idx($query);
@@ -37,6 +39,8 @@ class PermissionController extends Controller
 
     public function forSelectList()
     {
+        required_permission('permision.view');
+
         return $this->forSelect(Permission::all(), function (Permission $permission) {
             return [
                 'value' => $permission->id,
@@ -53,6 +57,8 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
+        required_permission('permision.view');
+
         if ($this->request->has($this->with_key) && count($this->relations) === 0) {
             $relations = collect(explode(static::WITH_DELIMITER, $this->request->get($this->with_key)))
                 ->flip()
@@ -76,6 +82,8 @@ class PermissionController extends Controller
      */
     public function rolesPermisionIndex(Role $role)
     {
+        required_permission('permision.view');
+
         $query = $this->includeRelations($role->permissions()->getQuery(), $this->relations);
 
         return $this->idx($query);
@@ -88,6 +96,8 @@ class PermissionController extends Controller
      */
     public function usersPermisionIndex(User $user)
     {
+        required_permission('permision.view');
+
         $query = $this->includeRelations($user->permissions()->getQuery(), $this->relations);
 
         return $this->idx($query);

@@ -18,8 +18,6 @@ use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhitelistController;
-use App\Http\Resources\RoleResource;
-use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
@@ -42,6 +40,7 @@ Route::post('tokens', [AccessTokenController::class, 'issueToken'])->name('token
 // Myself
 // Todo: set myself controller and resource
 Route::get('users/me', [UserController::class, 'usersMeShow'])->name('users.me.show');
+Route::get('notifications/me', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
 
 // For Select List
 Route::get('currencies/select', [CurrencyController::class, 'forSelectList']);
@@ -62,7 +61,7 @@ Route::get('fees/cxc', [FeeController::class, 'cxc'])->name('fees.cxc');
 
 // Resource
 Route::apiResource('banks', BankController::class);
-Route::apiResource('blacklists', BlacklistController::class);
+// Route::apiResource('blacklists', BlacklistController::class); // Todo: enable when done
 Route::apiResource('countries', CountryController::class)->only(['index', 'show']);
 Route::apiResource('currencies', CurrencyController::class);
 Route::apiResource('debtors', DebtorController::class);
@@ -89,7 +88,6 @@ Route::get('loans/{loan}/transactions', [TransactionController::class, 'loansTra
 Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name('loans.fees.index');
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
-Route::get('users/{user}/notifications', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
 Route::get('users/{user}/roles', [RolesController::class, 'usersRoleIndex'])->name('users.roles.index');
 Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermisionIndex'])->name('users.permissions.index');
 Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermisionIndex'])->name('roles.permissions.index');

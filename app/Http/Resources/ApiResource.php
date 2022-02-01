@@ -6,7 +6,6 @@ use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 abstract class ApiResource extends JsonResource
@@ -30,7 +29,7 @@ abstract class ApiResource extends JsonResource
         $headerKey = 'X-add-history';
 
         if ($request->hasHeader($headerKey) && $request->header($headerKey) === 'all') {
-            Gate::authorize('admin-required', Auth::user());
+            Gate::authorize('admin-required', user());
 
             return array_push($array, [
                 'create_user_key' => $this->created_user_id,

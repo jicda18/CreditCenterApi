@@ -30,6 +30,8 @@ class CurrencyController extends Controller
      */
     public function index()
     {
+        required_permission('currency.view');
+
         $query = $this->includeRelations(Currency::query(), $this->relations);
 
         return $this->idx($query);
@@ -37,6 +39,8 @@ class CurrencyController extends Controller
 
     public function forSelectList()
     {
+        required_permission('currency.view');
+
         return $this->forSelect(Currency::all(), function (Currency $currency) {
             return [
                 'value' => $currency->uuid,
@@ -53,6 +57,8 @@ class CurrencyController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('currency.store');
+
         $rules =  [
             'name' => ['required', 'string'],
             'symbol' => ['required', 'string'],
@@ -71,6 +77,8 @@ class CurrencyController extends Controller
      */
     public function show(Currency $currency)
     {
+        required_permission('currency.view');
+
         return  $this->showOne($currency, $this->relations);
     }
 
@@ -83,6 +91,8 @@ class CurrencyController extends Controller
      */
     public function update(Request $request, Currency $currency)
     {
+        required_permission('currency.update');
+
         $rules =  [
             'name' => ['string'],
             'symbol' => ['string'],
@@ -101,6 +111,8 @@ class CurrencyController extends Controller
      */
     public function destroy(Currency $currency)
     {
+        required_permission('currency.delete');
+
         if ($currency->banks()->count() > 0) {
             throw ValidationException::withMessages(['delete' => "Can't delete {$currency->name} because is assigned in some banks."]);
         }

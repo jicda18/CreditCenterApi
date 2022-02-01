@@ -41,6 +41,8 @@ class UserController extends Controller
      */
     public function index()
     {
+        required_permission('user.view');
+
         $query = $this->includeRelations(User::query(), $this->relations);
 
         return $this->idx($query);
@@ -54,6 +56,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        required_permission('user.store');
+
         // Todo: Storage a image
         $rules = [
             'username' => ['required', 'alpha_num'],
@@ -73,6 +77,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        required_permission('user.view');
+
         return  $this->showOne($user, $this->relations);
     }
 
@@ -85,6 +91,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        required_permission('user.update');
+
         // Todo: Storage a image
         $rules = [
             'username' => [new NotPresent],
@@ -105,6 +113,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        required_permission('user.delete');
+
         $user->delete();
 
         return  $this->showOne($user, []);
@@ -122,32 +132,33 @@ class UserController extends Controller
             throw new ModelNotFoundException('');
         }
 
-        // Todo: add permissions
-        // $user->permissions;
-
-        return $this->showOne($user, []);
+        return $this->showOne($user, $this->relations);
     }
 
     public function changePassword(Request $request, User $user)
     {
-        //
+        // Todo: Implement
+        // required_permission('role.view');
+
     }
 
     public function requestChangePassword(Request $request)
     {
-        //
+        // Todo: Implement
     }
 
     public function changePasswordConfirm(Request $request, User $user, string $token)
     {
-        //
+        // Todo: Implement
     }
 
     public function avatar(User $user)
     {
-        // return response()->file(storage_path('resources' . DIRECTORY_SEPARATOR . $user->logo));
-        // Todo: completed
-        return response()->file(storage_path('uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . 'no-user.png'));
+        if ($user->avatar !== null) {
+            return response()->file(User::get_avatar_directory($user->avatar));
+        }
+
+        return response()->file(User::get_avatar_directory('no-user.png'));
     }
 
     protected function requestToArray(Request $request, bool $store): array

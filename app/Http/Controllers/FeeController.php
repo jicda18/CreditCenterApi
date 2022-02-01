@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CollectionResource;
 use App\Http\Resources\FeeResource;
 use App\Models\Fee;
 use App\Models\Loan;
@@ -10,7 +9,6 @@ use App\Models\Transaction;
 use App\Traits\GenericController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class FeeController extends Controller
 {
@@ -33,6 +31,8 @@ class FeeController extends Controller
      */
     public function index()
     {
+        required_permission('fee.view');
+
         $query = $this->includeRelations(Fee::query(), $this->relations);
 
         return $this->idx($query);
@@ -46,16 +46,22 @@ class FeeController extends Controller
      */
     public function show(Fee $fee)
     {
+        required_permission('fee.view');
+
         return  $this->showOne($fee, $this->relations);
     }
 
     public function loansFeesIndex(Loan $loan)
     {
+        required_permission('fee.view');
+
         return $this->modelRelationIndex($loan, 'fees', $this->relations);
     }
 
     public function transactionsFeesIndex(Transaction $transaction)
     {
+        required_permission('transation.view');
+
         return $this->modelRelationIndex($transaction, 'fees', $this->relations);
     }
 
@@ -66,10 +72,13 @@ class FeeController extends Controller
 
     protected function cxc(Request $request)
     {
+        required_permission('fee.view');
+
         $dte = Carbon::now()->addDays(env('CXC_DAYS', 5))->endOfDay();
 
         $fees = Fee::whereNull('paid_at')->where('payment_on', '<=', $dte)
             ->with(['loan', 'loan.debtor', 'loan.currency', 'loan.fees'])
+            ->orderBy('payment_on')
             ->get()
 
             ->map(function (Fee $fee) use ($request) {
