@@ -13,6 +13,7 @@ use App\Http\Controllers\LogTypeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProvinceController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\TransactionController;
@@ -93,3 +94,5 @@ Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermi
 Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermisionIndex'])->name('roles.permissions.index');
 
 Route::get('users/{user}/avatar', [UserController::class, 'avatar'])->name('users.avatar.show');
+
+Route::post('calculator', [ReportController::class, 'calculator'])->name('calculator');

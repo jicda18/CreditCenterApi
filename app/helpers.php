@@ -139,18 +139,6 @@ if (!function_exists('user')) {
     }
 }
 
-if (!function_exists('user')) {
-    /**
-     * get the fees details.
-     *
-     * @return  \App\Models\User | null
-     */
-    function user(): ?User
-    {
-        return Auth::user();
-    }
-}
-
 if (!function_exists('required_permission')) {
     /**
      * get the fees details.
