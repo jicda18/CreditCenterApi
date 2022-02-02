@@ -81,6 +81,10 @@ if (!function_exists('get_fee_amount')) {
     function get_fee_amount(string $type, float $balance, float $interest, int $fees = 1)
     {
         if ($type === Loan::INTEREST_CAPITAL) {
+            if ($interest === (float) 0) {
+                return round($balance / $fees, precision);
+            }
+
             $temp = pow(1 + $interest, $fees);
 
             return round(($balance * $interest * $temp) / ($temp - 1), precision);
