@@ -47,7 +47,9 @@ class LoanController extends Controller
         required_permission('loan.update');
 
         $rules = [
-            'currency_id' => [new NotPresent],
+            'interest' => ['numeric', 'min:0'],
+            'type' => ['in:fixed_interest,interest_capital'],
+            'fees' => ['requiredIf:type,interest_capital', 'numeric', 'min:1'],
             'frequency_id' => ['exists:' . Frequency::class],
             'thanks_days' => ['integer'],
         ];
@@ -120,7 +122,13 @@ class LoanController extends Controller
             ];
         }
 
-        return [];
+        return [
+            'interest' => $request->interest,
+            'type' => $request->type,
+            'number_fees' => $request->fees ?? 0,
+            'frequency_id' => $request->frequency_id,
+            'thanks_days' => $request->thanks_days,
+        ];
     }
 
     protected function afterToSave(Request $request, Model $model, bool $store): Model

@@ -19,6 +19,9 @@ class DebtorResource extends ApiResource
         return $this->includeHistory($request, [
             'key' => $this->uuid,
             'guarantor' => $this->guarantor,
+            'guarantor_email' => $this->guarantor_email,
+            'guarantor_phone' => $this->guarantor_phone,
+            'guarantor_personal_id' => $this->guarantor_personal_id,
             'business' => $this->business,
             'province_key' => $province_uuid,
             'name' => $this->fullname,
@@ -64,6 +67,9 @@ class DebtorResource extends ApiResource
         return collect([
             'key' => 'uuid',
             'guarantor' => 'guarantor',
+            'guarantor_email' => 'guarantor_email',
+            'guarantor_phone' => 'guarantor_phone',
+            'guarantor_personal_id' => 'guarantor_personal_id',
             'business' => 'business',
             'province_key' => 'province_id',
             'name' => 'fullname',

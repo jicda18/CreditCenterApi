@@ -96,7 +96,10 @@ class DebtorController extends Controller
         required_permission('debtor.store');
 
         $rules = [
-            'guarantor' => ['nullable', 'string'],
+            'guarantor' => ['nullable', 'string', 'required_with:guarantor_email,guarantor_phone,guarantor_personal_id'],
+            'guarantor_email' => ['nullable', 'string', 'required_with:guarantor,guarantor_phone,guarantor_personal_id'],
+            'guarantor_phone' => ['nullable', 'string', 'required_with:guarantor_email,guarantor,guarantor_personal_id'],
+            'guarantor_personal_id' => ['nullable', 'string', 'required_with:guarantor_email,guarantor_phone,guarantor'],
             'business' => ['nullable', 'string'],
             'fullname' => ['required', 'string'],
             'nickname' => ['nullable', 'string'],
@@ -151,7 +154,10 @@ class DebtorController extends Controller
         required_permission('debtor.update');
 
         $rules = [
-            'guarantor' => ['nullable', 'string'],
+            'guarantor' => ['nullable', 'string', 'required_with:guarantor_email,guarantor_phone,guarantor_personal_id'],
+            'guarantor_email' => ['nullable', 'string', 'required_with:guarantor,guarantor_phone,guarantor_personal_id'],
+            'guarantor_phone' => ['nullable', 'string', 'required_with:guarantor_email,guarantor,guarantor_personal_id'],
+            'guarantor_personal_id' => ['nullable', 'string', 'required_with:guarantor_email,guarantor_phone,guarantor'],
             'business' => ['nullable', 'string'],
             'fullname' => ['string'],
             'nickname' => ['nullable', 'string'],
@@ -190,6 +196,9 @@ class DebtorController extends Controller
         if ($store) {
             return [
                 'guarantor' => $request->guarantor,
+                'guarantor_email' => $request->guarantor_email,
+                'guarantor_phone' => $request->guarantor_phone,
+                'guarantor_personal_id' => $request->guarantor_personal_id,
                 'business' => $request->business,
                 'fullname' => $request->fullname,
                 'nickname' => $request->nickname ?? '',
@@ -206,7 +215,7 @@ class DebtorController extends Controller
             ];
         }
 
-        return $request->only(['guarantor', 'business', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'email', 'marital_status', 'occupation', 'salary']);
+        return $request->only(['guarantor', 'guarantor_email', 'guarantor_phone', 'guarantor_personal_id', 'business', 'fullname', 'nickname', 'personal_id', 'gender', 'province_id', 'address', 'date_of_birth', 'phone', 'email', 'marital_status', 'occupation', 'salary']);
     }
 
     protected function afterToSave(Request $request, Model $model, bool $store): Model

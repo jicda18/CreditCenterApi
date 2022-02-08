@@ -33,13 +33,13 @@ class TransactionResource extends ApiResource
             'bank_amount' => $this->bank_amount,
             'loan_balance' => $this->loan_balance,
             'bank_balance' => $this->bank_balance,
+            'register' => new UserResource($this->register),
             'inserted_at' => $this->created_at->toIso8601String(),
             'edited_at' => $this->updated_at->toIso8601String(),
             'removed_at' => null_prevent_function($this->deleted_at, 'toIso8601String'),
             'loan' => new LoanResource($this->whenLoaded('loan')),
             'bank' => new BankResource($this->whenLoaded('bank')),
             'currency' => new CurrencyResource($this->whenLoaded('currency')),
-            'register' => new UserResource($this->whenLoaded('register')),
             'fees' => FeeResource::collection($this->whenLoaded('fees')),
             'links' => [
                 [

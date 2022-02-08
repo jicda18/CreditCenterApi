@@ -13,6 +13,9 @@ class Debtor extends ApiModel
     protected $primaryKey = 'debtor_id';
     protected $fillable = [
         'guarantor',
+        'guarantor_email',
+        'guarantor_phone',
+        'guarantor_personal_id',
         'business',
         'fullname',
         'nickname',
