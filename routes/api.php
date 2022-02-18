@@ -90,8 +90,8 @@ Route::get('loans/{loan}/fees', [FeeController::class, 'loansFeesIndex'])->name(
 Route::get('transactions/{transaction}/fees', [FeeController::class, 'transactionsFeesIndex'])->name('transactions.fees.index');
 Route::get('users/{user}/transactions', [TransactionController::class, 'usersTransactionsIndex'])->name('users.transactions.index');
 Route::get('users/{user}/roles', [RolesController::class, 'usersRoleIndex'])->name('users.roles.index');
-Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermisionIndex'])->name('users.permissions.index');
-Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermisionIndex'])->name('roles.permissions.index');
+Route::get('users/{user}/permissions', [PermissionController::class, 'usersPermissionIndex'])->name('users.permissions.index');
+Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermissionIndex'])->name('roles.permissions.index');
 
 Route::get('users/{user}/avatar', [UserController::class, 'avatar'])->name('users.avatar.show');
 
