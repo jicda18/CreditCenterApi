@@ -1,9 +1,11 @@
 <?php
 
 use App\Exceptions\PermissionRequiredException;
+use App\Mail\Basic;
 use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 const precision = 2;
 
@@ -154,5 +156,21 @@ if (!function_exists('required_permission')) {
         if (!user()->can($permission_name)) {
             throw new PermissionRequiredException($permission_name);
         }
+    }
+}
+
+if (!function_exists('send_email')) {
+    /**
+     * get the fees details.
+     *
+     * @return  \App\Models\User | null
+     */
+    function send_email(string $name, string $subject, string $body, array $to, array $attaches = null, array $cc = [], array $bcc = [])
+    {
+        $message = new Basic($name, $subject, $subject, $body, $attaches);
+
+        $mail = Mail::to($to)->cc($cc)->bcc($bcc);
+
+        $mail->send($message);
     }
 }
