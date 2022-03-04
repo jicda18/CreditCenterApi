@@ -94,6 +94,8 @@ class TransactionResource extends ApiResource
             'inserted_at' => 'created_at',
             'edited_at' => 'updated_at',
             'removed_at' => 'deleted_at',
+
+            'type' => 'type',
         ]);
     }
 }

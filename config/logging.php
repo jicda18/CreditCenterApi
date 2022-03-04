@@ -37,8 +37,9 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily'],
             'ignore_exceptions' => false,
+            'days' => 14,
         ],
 
         'single' => [

@@ -22,6 +22,7 @@ class Transaction extends ApiModel
         'loan_balance',
         'bank_balance',
         'comment',
+        'type',
     ];
     protected $hidden = ['transaction_id'];
 

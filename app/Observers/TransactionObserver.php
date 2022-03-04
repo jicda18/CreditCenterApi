@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Fee;
+use App\Models\Loan;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,7 @@ class TransactionObserver
          * @var \App\Models\Currency
          */
         $currency = $transaction->currency;
-        if ($transaction->loan_amount === null) {
+        if ($transaction->loan !== null &&  $transaction->loan_amount === null) {
             /**
              * @var \App\Models\Loan
              */
@@ -76,66 +77,23 @@ class TransactionObserver
         if ($loan !== null) {
             // if a payment then update fees
             if ($transaction->amount < 0) {
-                /**
-                 * @var \App\Models\Fee[]
-                 */
-                $fees = $loan->fees()->whereNull('paid_at')->orderBy('payment_on')->get()->all();
-
-                $relaction = [];
                 $amount = -$transaction->loan_amount;
 
-                $i = 0;
-                while ($amount > 0) {
-                    if ($i < count($fees)) {
-                        $fee = $fees[$i];
-
-                        $interest = min($fee->pending_interest, $amount);
-                        $amount = round($amount - $interest, precision);
-
-                        $late_payment = min($fee->pending_late_payment, $amount);
-                        $amount = round($amount - $late_payment, precision);
-
-                        $capital = min($fee->pending_capital, $amount);
-                        $amount = round($amount - $capital, precision);
-
-                        $loan->balance -= $capital;
-
-                        $relaction[$fee->fee_id] = [
-                            'interest' => $interest,
-                            'capital' => $capital,
-                            'late_payment' => $late_payment,
-                        ];
-                    } else {
-                        $interest = 0;
-                        $capital = $amount;
-                        $late_payment = 0;
-
-                        $fee = Fee::create([
-                            'loan_id' => $loan->loan_id,
-                            'payment_on' => Carbon::now(),
-                            'limit_on' => Carbon::now(),
-                            'amount' => $capital,
-                            'interest' => $interest,
-                            'capital' => $capital,
-                            'paid_at' => Carbon::now(),
-                            'extra' => true,
-                        ]);
-
-                        $amount -= $capital;
-
-                        $loan->balance -= $capital;
-
-                        $relaction[$fee->fee_id] = [
-                            'interest' => $interest,
-                            'capital' => $capital,
-                            'late_payment' => $late_payment,
-                        ];
-                    }
-
-                    $i++;
+                if ($transaction->type === 'capital') {
+                    $relations = $this->capital($loan, $amount);
+                } elseif ($transaction->type === 'total') {
+                    $relations = $this->total($loan, $amount);
+                } else {
+                    $relations = $this->regular($loan, $amount);
                 }
 
-                $transaction->fees()->syncWithoutDetaching($relaction);
+                // update balance
+                foreach ($relations as $key => $relation) {
+                    $loan->balance -= $relation['capital'];
+                }
+
+                // attach fees to transaction
+                $transaction->fees()->syncWithoutDetaching($relations);
 
                 $transaction->fees->each(function (Fee $fee) {
                     $fee->paid_at = Carbon::now();
@@ -144,11 +102,114 @@ class TransactionObserver
             } else {
                 $loan->balance = $transaction->loan_amount;
             }
+
+            $loan->save();
+            $transaction->loan_balance = $loan->balance;
+            $transaction->save();
+        }
+    }
+
+    private function total(Loan $loan, float $amount)
+    {
+        $loan->fees()->whereNull('paid_at')->where('payment_on', '>', Carbon::now())->delete();
+
+        return $this->processFees($loan, $amount);
+
+        // $loan->balance = 0;
+        // $loan->save();
+
+        // return $relation;
+    }
+
+    private function regular(Loan $loan, float $amount)
+    {
+        return $this->processFees($loan, $amount);
+    }
+
+    private function capital(Loan $loan, float $amount)
+    {
+        $interest = 0;
+        $capital = $amount;
+        $late_payment = 0;
+
+        $fee = Fee::create([
+            'loan_id' => $loan->loan_id,
+            'payment_on' => Carbon::now(),
+            'limit_on' => Carbon::now(),
+            'amount' => $capital,
+            'interest' => $interest,
+            'capital' => $capital,
+            'paid_at' => Carbon::now(),
+            'extra' => true,
+        ]);
+
+        return [
+            $fee->fee_id => [
+                'interest' => $interest,
+                'capital' => $capital,
+                'late_payment' => $late_payment,
+            ],
+        ];
+    }
+
+    /**
+     * @return \App\Models\Fee[]
+     */
+    private function processFees(Loan $loan, float $amount)
+    {
+        /**
+         * @var \App\Models\Fee[]
+         */
+        $fees = $loan->fees()->whereNull('paid_at')->orderBy('payment_on')->get()->all();
+
+        $relation = [];
+        $i = 0;
+        while ($amount > 0) {
+            if ($i < count($fees)) {
+                $fee = $fees[$i];
+
+                $interest = min($fee->pending_interest, $amount);
+                $amount = round($amount - $interest, precision);
+
+                $late_payment = min($fee->pending_late_payment, $amount);
+                $amount = round($amount - $late_payment, precision);
+
+                $capital = min($fee->pending_capital, $amount);
+                $amount = round($amount - $capital, precision);
+
+                $relation[$fee->fee_id] = [
+                    'interest' => $interest,
+                    'capital' => $capital,
+                    'late_payment' => $late_payment,
+                ];
+            } else {
+                $interest = 0;
+                $capital = $amount;
+                $late_payment = 0;
+
+                $fee = Fee::create([
+                    'loan_id' => $loan->loan_id,
+                    'payment_on' => Carbon::now(),
+                    'limit_on' => Carbon::now(),
+                    'amount' => $capital,
+                    'interest' => $interest,
+                    'capital' => $capital,
+                    'paid_at' => Carbon::now(),
+                    'extra' => true,
+                ]);
+
+                $amount -= $capital;
+
+                $relation[$fee->fee_id] = [
+                    'interest' => $interest,
+                    'capital' => $capital,
+                    'late_payment' => $late_payment,
+                ];
+            }
+
+            $i++;
         }
 
-        $loan->save();
-
-        $transaction->loan_balance = $loan->balance;
-        $transaction->save();
+        return $relation;
     }
 }

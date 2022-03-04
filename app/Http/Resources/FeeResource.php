@@ -18,8 +18,8 @@ class FeeResource extends ApiResource
         $loan_uuid = $this->getRelationUuid('loan');
 
         $now = Carbon::now();
-        $payment_on = $this->payment_on->copy()->endOfDay();
-        $limit_on = $this->limit_on->copy()->endOfDay();
+        $payment_on = $this->payment_on->copy()->startOfDay();
+        $limit_on = $this->limit_on->copy()->startOfDay();
         $status = $this->paid_at !== null ? 'paid' : ($payment_on->gt($now) ? 'in-time' : ($limit_on->gt($now) ? 'in-thanks' : 'overdue'));
 
         return $this->includeHistory($request, [

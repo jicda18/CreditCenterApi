@@ -18,7 +18,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('tbTransactions', function (Blueprint $table) {
             $table->id('transaction_id');
-            $table->unsignedBigInteger('loan_id');
+            $table->unsignedBigInteger('loan_id')->nullable();
             $table->unsignedBigInteger('bank_id')->nullable();
             $table->boolean('is_cash')->default(false);
             $table->unsignedBigInteger('register_user_id');

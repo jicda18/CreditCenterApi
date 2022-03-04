@@ -8,6 +8,7 @@ use App\Models\Loan;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Traits\GenericController;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,10 +55,9 @@ class TransactionController extends Controller
             'is_cash' => ['required', 'boolean'],
             'bank_id' => ['required_if:is_cash,0', 'nullable', 'exists:' . Bank::class],
             'amount' => ['required', 'numeric'],
+            'type' => ['required', 'in:regular,capital,total'],
             'comment' => ['required', 'string'],
         ];
-
-        // Todo: validate if loan is active
 
         return $this->change($request, $rules, new Transaction(), true, $this->relations);
     }
@@ -109,9 +109,37 @@ class TransactionController extends Controller
                 'amount' => -$request->amount,
                 'currency_id' => $currency_id,
                 'comment' => $request->comment,
+                'type' => $request->type,
             ];
         }
 
         return [];
+    }
+
+    protected function otherValidations(Request $request, Model $model, bool $store): ?array
+    {
+        $errors = [];
+
+        $loan = Loan::find($request->loan_id);
+
+
+        // Todo: validate if loan is active
+        // Todo: validate amount if max loan total
+
+        if ($request->type === 'total') {
+            $total = $loan->total;
+            if ($request->amount != $total) {
+                $formatTotal = '$' . number_format($total, precision);
+                $errors['amount'] = ["El monto es diferente al total de {$formatTotal}."];
+            }
+        }
+
+        if ($request->type === 'capital') {
+            if ($loan->pending_balance) {
+                $errors['type'] = ["Prestamo con balance pendiente."];
+            }
+        }
+
+        return $errors;
     }
 }

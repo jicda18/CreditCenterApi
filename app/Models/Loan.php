@@ -57,9 +57,27 @@ class Loan extends ApiModel
             ->get()->sum('pending_interest');
     }
 
+    public function getLateBalanceAttribute()
+    {
+        return $this->fees()->whereNull('paid_at')->where('payment_on', '<=', Carbon::now())
+            ->get()->sum('pending_late');
+    }
+
+    public function getPayBalanceAttribute()
+    {
+        return $this->fees()->whereNull('paid_at')->where('payment_on', '<=', Carbon::now())
+            ->get()->sum('pending_capital');
+    }
+
+    public function getPendingBalanceAttribute()
+    {
+        return $this->fees()->whereNull('paid_at')->where('payment_on', '<=', Carbon::now())
+            ->get()->sum('pending');
+    }
+
     public function getTotalAttribute()
     {
-        return $this->balance + $this->interest_balance;
+        return $this->balance + $this->interest_balance + $this->late_balance;
     }
 
     public function setBalanceAttribute($balance)

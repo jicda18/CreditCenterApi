@@ -69,7 +69,7 @@ class DebtorController extends Controller
             return [
                 'value' => $debtor->uuid,
                 'label' => "{$debtor->fullname}{$nick}",
-                'custom' => $debtor->loans->map(function (Loan $loan) use ($request) {
+                'custom' => $debtor->loans()->where('status', '=', 'active')->get()->map(function (Loan $loan) use ($request) {
                     $frequency = $loan->frequency->label;
                     $currency = $loan->currency->name;
                     $simbol = $loan->currency->simbol;

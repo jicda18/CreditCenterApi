@@ -7,7 +7,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
-const precision = 2;
+if (!defined('precision')) {
+    define('precision', 2);
+}
 
 if (!function_exists('null_prevent_property')) {
     /**
