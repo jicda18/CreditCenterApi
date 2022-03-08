@@ -47,6 +47,7 @@ class LoanController extends Controller
         required_permission('loan.update');
 
         $rules = [
+            'next_on' => ['date'],
             'interest' => ['numeric', 'min:0'],
             'type' => ['in:fixed_interest,interest_capital'],
             'fees' => ['requiredIf:type,interest_capital', 'numeric', 'min:1'],
@@ -127,6 +128,7 @@ class LoanController extends Controller
             'type' => $request->type,
             'number_fees' => $request->fees ?? 0,
             'frequency_id' => $request->frequency_id,
+            'next_on' => $request->next_on,
             'thanks_days' => $request->thanks_days,
         ];
     }
@@ -143,6 +145,30 @@ class LoanController extends Controller
                 'currency_id' => $model->currency_id,
                 'comment' => 'Nuevo prestamo para ' . $model->fullname,
             ]);
+        }
+
+        return $model;
+    }
+
+    protected function beforeToSave(Request $request, Model $model, bool $store): Model
+    {
+        if (!$store) {
+            $next_on_original = $model->getOriginal('next_on');
+            $next_on = $model->next_on;
+
+            $thanks_days_original = $model->getOriginal('thanks_days');
+            $thanks_days = $model->thanks_days;
+
+            if ($thanks_days !== $thanks_days_original || $next_on->ne($next_on_original)) {
+                $fee = $model->fees()->where('payment_on', '=', $next_on_original)->first();
+
+                if ($fee !== null && $fee->paid_at === null) {
+                    $fee->payment_on = $model->next_on;
+                    $fee->limit_on = $model->next_on->addDays($model->thanks_days);
+
+                    $fee->save();
+                }
+            }
         }
 
         return $model;

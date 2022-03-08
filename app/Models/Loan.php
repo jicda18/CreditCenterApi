@@ -23,6 +23,7 @@ class Loan extends ApiModel
         'interest',
         'amount',
         'number_fees',
+        'next_on'
     ];
     protected $hidden = ['loan_id'];
 
