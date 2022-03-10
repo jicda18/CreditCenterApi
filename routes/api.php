@@ -83,6 +83,7 @@ Route::apiResource('whitelists', WhitelistController::class);
 // Relations
 // Route::get('types/{type}/logs', [LogController::class, 'typesLogsIndex'])->name('types.logs.index');
 Route::get('banks/{bank}/transactions', [TransactionController::class, 'banksTransactionsIndex'])->name('banks.transactions.index');
+Route::post('banks/{bank}/transactions', [TransactionController::class, 'banksTransactionsStore'])->name('banks.transactions.store');
 Route::get('countries/{country}/provinces', [ProvinceController::class, 'countriesProvincesIndex'])->name('countries.provinces.index');
 Route::get('debtors/{debtor}/loans', [LoanController::class, 'debtorsLoansIndex'])->name('debtors.loans.index');
 Route::get('loans/{loan}/transactions', [TransactionController::class, 'loansTransactionsIndex'])->name('loans.transactions.index');

@@ -62,6 +62,33 @@ class TransactionController extends Controller
         return $this->change($request, $rules, new Transaction(), true, $this->relations);
     }
 
+    public function banksTransactionsStore(Request $request, Bank $bank)
+    {
+        required_permission('transactions.bank.store');
+
+        $rules = [
+            'amount' => ['required', 'numeric'],
+            'comment' => ['required', 'string'],
+        ];
+
+        $this->validate($request, $rules);
+
+        $transaction = new Transaction([
+            'loan_id' => null,
+            'is_cash' => false,
+            'bank_id' => $bank->bank_id,
+            'register_user_id' => user()->user_id,
+            'amount' => -$request->amount,
+            'currency_id' => $bank->currency_id,
+            'comment' => $request->comment,
+            'type' => 'manual',
+        ]);
+
+        $transaction->save();
+
+        return $this->showOne($transaction, $this->relations, 201);
+    }
+
     /**
      * Display the specified resource.
      *

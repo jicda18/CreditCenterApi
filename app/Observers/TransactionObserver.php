@@ -105,8 +105,9 @@ class TransactionObserver
 
             $loan->save();
             $transaction->loan_balance = $loan->balance;
-            $transaction->save();
         }
+
+        $transaction->save();
     }
 
     private function total(Loan $loan, float $amount)
