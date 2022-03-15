@@ -1,16 +1,11 @@
 @component('mail::message', ['from' => $from_name, 'name' => $name])
 
-# Greetings {{$name}},
 
-@component('mail::panel')
+<h1 class="m-0 w-100 text-center">{{$title ?? ''}}<h1>
 
-<h2 class="m-0">{{$title ?? ''}}<h2>
-<hr class="p-0 m-0">
-
-<br>
 
 {!! $msg ?? '' !!}
 
-@endcomponent
+{{-- Add Call to action --}}
 
 @endcomponent
