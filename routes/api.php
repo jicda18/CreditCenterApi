@@ -34,6 +34,7 @@ use Laravel\Passport\Http\Controllers\AccessTokenController;
 */
 
 // Todo: define a login route
+Route::redirect('', 'tokens', 301)->name('login');
 
 // Authentications
 Route::post('tokens', [AccessTokenController::class, 'issueToken'])->name('tokens.store')->middleware('token.response');
@@ -41,6 +42,7 @@ Route::post('tokens', [AccessTokenController::class, 'issueToken'])->name('token
 // Myself
 // Todo: set myself controller and resource
 Route::get('users/me', [UserController::class, 'usersMeShow'])->name('users.me.show');
+Route::put('users/me', [UserController::class, 'usersMeUpdate'])->name('users.me.update');
 Route::get('notifications/me', [NotificationController::class, 'usersNotificationsIndex'])->name('users.notifications.index');
 
 // For Select List
@@ -55,9 +57,9 @@ Route::get('roles/select', [RolesController::class, 'forSelectList']);
 
 // Special
 // Todo: set specials route
-Route::post('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.changePassword'); // Todo: create endpoint
-Route::get('users/request-change-password', [UserController::class, 'requestChangePassword'])->name('users.requestChangePassword'); // Todo: create endpoint
-Route::get('users/{user}/change-password-confirm/{token}', [UserController::class, 'changePasswordConfirm'])->name('users.changePasswordConfirm'); // Todo: create endpoint
+Route::post('users/request-change-password', [UserController::class, 'requestChangePassword'])->name('users.requestChangePassword'); // Todo: create endpoint
+Route::get('users/{user}/change-password-confirm/{reset}', [UserController::class, 'revokeChangePassword'])->name('users.revokeChangePassword');
+Route::put('users/{user}/change-password-confirm/{reset}', [UserController::class, 'changePasswordConfirm'])->name('users.changePasswordConfirm'); // Todo: create endpoint
 Route::get('fees/cxc', [FeeController::class, 'cxc'])->name('fees.cxc');
 
 // Resource

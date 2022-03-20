@@ -34,8 +34,12 @@ blockquote {
 	font-weight: 400;
 }
 
+blockquote p:last-child {
+	margin-bottom: 0;
+}
+
 a {
-	color: #00E5D2;
+	color: #4A89B4;
 }
 
 a img {
@@ -199,7 +203,7 @@ img {
 }
 
 .footer a {
-	color: #b0adc5;
+	color: #4A89B4;
 	text-decoration: underline;
 }
 

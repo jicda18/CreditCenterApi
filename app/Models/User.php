@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Interfaces\MailableInterfaces;
+use App\Traits\Mailable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Authenticatable;
@@ -12,9 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends ApiModel implements AuthenticatableContract, AuthorizableContract
+class User extends ApiModel implements AuthenticatableContract, AuthorizableContract, MailableInterfaces
 {
-    use HasApiTokens, Authenticatable, Authorizable, HasRoles;
+    use HasApiTokens, Authenticatable, Authorizable, HasRoles, Mailable;
 
     public static function get_avatar_directory(string $filename = '')
     {
@@ -39,6 +41,11 @@ class User extends ApiModel implements AuthenticatableContract, AuthorizableCont
         'block_at' => 'datetime',
         'must_change_password' => 'boolean',
     ];
+
+    public function getProfileFileAttribute()
+    {
+        return route('users.avatar.show', $this) . '?' . $this->updated_at->timestamp;
+    }
 
     public function setPasswordAttribute($password)
     {

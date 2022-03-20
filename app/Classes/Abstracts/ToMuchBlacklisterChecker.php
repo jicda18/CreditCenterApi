@@ -4,7 +4,7 @@ namespace App\Classes\Abstracts;
 
 
 use App\Exceptions\ToMuchRequestException;
-use App\interfaces\BlackListerChecker;
+use App\Interfaces\BlackListerChecker;
 use App\Models\Blacklist;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpKernel\Exception\HttpException;

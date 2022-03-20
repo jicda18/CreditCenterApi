@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Classes\ToMuchBadAuth;
 use App\Classes\ToMuchRequest;
-use App\interfaces\BlackListerChecker;
+use App\Interfaces\BlackListerChecker;
 use Closure;
 
 class BlacklisterMiddleware
@@ -61,9 +61,10 @@ class BlacklisterMiddleware
     /**
      *  Validate any blocker until find true.
      *
-     * @param  \App\Interfaces\BlackListerHandler[] $pre_blockers
+     * @param  \App\Interfaces\BlackListerChecker[] $pre_blockers
      * @param  string $key
-     * @return  \App\Interfaces\BlackListerHandler[] | null
+     *
+     * @return  \App\Interfaces\BlackListerChecker | null
      */
     protected function validate_blockers($pre_blockers, $key): ?BlackListerChecker
     {

@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Interfaces\MailableInterfaces;
+use App\Traits\Mailable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Debtor extends ApiModel
+class Debtor extends ApiModel implements MailableInterfaces
 {
+    use Mailable;
+
     protected $table = 'tbDebtors';
     protected $primaryKey = 'debtor_id';
     protected $fillable = [

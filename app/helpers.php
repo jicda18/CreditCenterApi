@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\PermissionRequiredException;
+use App\Interfaces\MailableInterfaces;
 use App\Mail\Basic;
 use App\Models\Loan;
 use App\Models\User;
@@ -163,16 +164,47 @@ if (!function_exists('required_permission')) {
 
 if (!function_exists('send_email')) {
     /**
-     * get the fees details.
+     * Send a Email.
      *
-     * @return  \App\Models\User | null
+     * @param string $name
+     * @param string $subject
+     * @param string $body
+     * @param \App\Interfaces\MailableInterfaces[] $to
+     * @param array $attaches
+     * @param \App\Interfaces\MailableInterfaces[] $cc
+     * @param \App\Interfaces\MailableInterfaces[] $bcc
+     *
+     * @return void
      */
     function send_email(string $name, string $subject, string $body, array $to, array $attaches = null, array $cc = [], array $bcc = [])
     {
+        $mapper = function (array $mailables): array {
+            return array_map(function (MailableInterfaces $mailable) {
+                return $mailable->getAddress();
+            }, $mailables);
+        };
+
         $message = new Basic($name, $subject, $subject, $body, $attaches);
 
-        $mail = Mail::to($to)->cc($cc)->bcc($bcc);
+        $mail = Mail::to($mapper($to))->cc($mapper($cc))->bcc($mapper($bcc));
 
         $mail->send($message);
+    }
+}
+
+if (!function_exists('generateRandomString')) {
+    /**
+     * generate random string
+     */
+    function generateRandomString($length, $alphabet = '0123456789'): string
+    {
+        $charactersLength = strlen($alphabet);
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $alphabet[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
     }
 }

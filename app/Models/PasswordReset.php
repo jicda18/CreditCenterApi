@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class PasswordReset extends ApiModel
 {
@@ -14,9 +17,6 @@ class PasswordReset extends ApiModel
         'token',
         'expired_at',
         'created_ip',
-        'completed_at',
-        'revoked_at',
-        'closed_ip',
         'old_password',
     ];
     protected $hidden = ['password_reset_id', 'token', 'old_password'];
@@ -27,6 +27,7 @@ class PasswordReset extends ApiModel
         'expired_at' => 'datetime',
         'completed_at' => 'datetime',
         'revoked_at' => 'datetime',
+        'failed_at' => 'datetime',
     ];
 
     public function getEmailAttribute($email)
@@ -42,6 +43,48 @@ class PasswordReset extends ApiModel
     public function setEmailAttribute($email)
     {
         $this->attributes['email'] = mb_strtolower($email);
+    }
+
+    public function expired()
+    {
+        if (Carbon::now()->gt($this->expired_at)) {
+            throw ValidationException::withMessages([
+                'expired' => ['Codigo de recuperación expirado.']
+            ]);
+        }
+    }
+
+    public function used()
+    {
+        if ($this->completed_at !== null || $this->failed_at !== null ||  $this->revoked_at !== null) {
+            throw ValidationException::withMessages([
+                'used' => ['Codigo de recuperación no existe.']
+            ]);
+        }
+    }
+
+    public function validateUser(int $user_id)
+    {
+        if ($this->user_id !== $user_id) {
+            throw ValidationException::withMessages([
+                'user_key' => ['Codigo de usuario invalido.']
+            ]);
+        }
+    }
+
+    public function validate(int $user_id, string $token)
+    {
+        $this->expired();
+
+        $this->used();
+
+        $this->validateUser($user_id);
+
+        if (!Hash::check($token, $this->token)) {
+            throw ValidationException::withMessages([
+                'code' => ['Codigo de recuperación invalido.']
+            ]);
+        }
     }
 
     /**
