@@ -7,6 +7,9 @@ class Basic extends Base
     public $name;
     public $title;
     public $msg;
+    public $rnc;
+    public $address;
+    public $phone;
     public $attaches;
 
     /**
@@ -19,6 +22,9 @@ class Basic extends Base
         $this->name = $name;
         $this->title = $title;
         $this->msg = $msg;
+        $this->rnc = env('COMPANY_RNC', '');
+        $this->address = env('COMPANY_ADDRESS', '');
+        $this->phone = env('COMPANY_PHONE', '');
 
         $this->attaches = $attaches ?? [];
 

@@ -137,6 +137,18 @@ img {
 	text-decoration: none;
 }
 
+.header .company-info {
+	color: #c6c5c3;
+	font-size: 14px;
+	word-wrap: break-word;
+	width: 288px;
+	padding: 0 16px;
+}
+
+.header .company-info strong {
+	color: #F9F871;
+}
+
 /* Logo */
 
 .logo {

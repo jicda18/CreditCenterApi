@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Frequency;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -39,8 +40,6 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        $f = Frequency::find(1);
-
-        dd($f->day(Carbon::now()));
+        send_email('Josue Cruz', 'Test', 'Hola Mundo', [User::find(1)]);
     }
 }
