@@ -86,6 +86,11 @@ class Loan extends ApiModel
         $this->attributes['balance'] = $balance < 0  ? 0 : $balance;
     }
 
+    public function getDayAttribute()
+    {
+        return $this->frequency->day($this->start_on);
+    }
+
     /**
      * Get all of the transactions for the Loan
      *

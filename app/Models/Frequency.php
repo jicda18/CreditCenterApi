@@ -26,6 +26,13 @@ class Frequency extends ApiModel
         return $this->{$functionName}($dte);
     }
 
+    public function day(Carbon $dte): string
+    {
+        $functionName = $this->function_name . 'Day';
+
+        return $this->{$functionName}($dte);
+    }
+
     /**
      * Get all of the loans for the Frequency
      *
@@ -116,5 +123,107 @@ class Frequency extends ApiModel
     private function yearly(Carbon $dte): Carbon
     {
         return $dte->copy()->addYear();
+    }
+
+    /**
+     * Return the next daily date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function dailyDay(Carbon $dte): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Return the next weekly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function weeklyDay(Carbon $dte): string
+    {
+        $days = [
+            'Domingo',
+            'Lunes',
+            'Martes',
+            'Miercoles',
+            'Jueves',
+            'Viernes',
+            'Sabados',
+        ];
+
+        return $days[$dte->dayOfWeek];
+    }
+
+    /**
+     * Return the next daily date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function biweeklyDay(Carbon $dte): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Return the next monthly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function monthlyDay(Carbon $dte): string
+    {
+        return "{$dte->day}";
+    }
+
+    /**
+     * Return the next monthly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function trimonthlyDay(Carbon $dte): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Return the next monthly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function biannualDay(Carbon $dte): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * Return the next yearly date.
+     *
+     * @param   \Carbon\Carbon   $dte
+     * @return  string
+     */
+    private function yearlyDay(Carbon $dte): string
+    {
+        $moth = [
+            'Enero',
+            'Febrero',
+            'Marzo',
+            'Abril',
+            'Mayo',
+            'Junio',
+            'Julio',
+            'Agosto',
+            'Septiembre',
+            'Octubre',
+            'Noviembre',
+            'Diciembre',
+        ];
+
+        return "{$dte->day} {$moth[$dte->month - 1]}";
     }
 }
