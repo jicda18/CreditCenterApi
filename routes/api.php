@@ -99,3 +99,4 @@ Route::get('roles/{role}/permissions', [PermissionController::class, 'rolesPermi
 Route::get('users/{user}/avatar', [UserController::class, 'avatar'])->name('users.avatar.show');
 
 Route::post('calculator', [ReportController::class, 'calculator'])->name('calculator');
+Route::post('calculator/email', [ReportController::class, 'calculatorEmail'])->name('calculator.email');

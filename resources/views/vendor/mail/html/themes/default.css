@@ -139,7 +139,7 @@ img {
 
 .header .company-info {
 	color: #c6c5c3;
-	font-size: 14px;
+	font-size: 16px;
 	word-wrap: break-word;
 	width: 288px;
 	padding: 0 16px;
@@ -230,9 +230,11 @@ img {
 }
 
 .table th {
+	font-family: Palatino;
 	border-bottom: 1px solid #edeff2;
 	margin: 0;
 	padding-bottom: 8px;
+	font-size: 24px;
 }
 
 .table td {
